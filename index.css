@@ -1,0 +1,18 @@
+#map-canvas-container {
+	width: 100%;
+	float: left;
+	margin-right: -300px;
+}
+
+#map-canvas {
+	margin-right: 300px;
+}
+
+#controls {
+	width: 300px;
+	float: right;
+}
+
+html, body, #map-canvas-container, #map-canvas, #controls {
+	height: 100%
+}
