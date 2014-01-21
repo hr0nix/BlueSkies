@@ -1,26 +1,52 @@
+html, body, #map-canvas-container, #map-canvas, #right-panel {
+	height: 100%
+}
+
 #map-canvas-container {
 	width: 100%;
 	float: left;
-	margin-right: -300px;
+	margin-right: -350px;
 }
 
 #map-canvas {
-	margin-right: 300px;
+	margin-right: 350px;
 }
 
-#controls {
-	width: 300px;
+#right-panel {
+	width: 350px;
 	float: right;
 }
 
-#wind-bearing-slider, #wind-speed-slider {
-	margin: 20px 20px 40px 20px;
+#controls , #status, #legend {
+	border: 2px solid black;
+	margin: 0px 10px 10px 10px;
 }
 
-#wind-bearing-value, #wind-speed-value {
-	margin: 0px 20px 10px 20px;
+#controls , #status {
+	padding-bottom: 30px;
 }
 
-html, body, #map-canvas-container, #map-canvas, #controls {
-	height: 100%
+#legend  {
+	padding: 15px;
+}
+
+#status {
+	display: none;
+}
+
+#wind-bearing-slider, #wind-speed-slider, #opening-altitude-slider {
+	margin: 10px 20px 0px 20px;
+}
+
+#wind-bearing-value, #wind-speed-value, #opening-altitude-value {
+	margin: 30px 20px 10px 20px;
+}
+
+#altitude-value, #horizontal-speed-value, #vertical-speed-value, #canopy-bearing-value {
+	margin: 30px 20px 0px 20px;
+}
+
+#wind-bearing-value, #wind-speed-value, #opening-altitude-value, #altitude-value, #horizontal-speed-value, #vertical-speed-value, #canopy-bearing-value {
+	font-family: Georgia, serif;
+	font-size: x-large;
 }
