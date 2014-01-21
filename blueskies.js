@@ -1,14 +1,14 @@
 var sibsonAirfieldLocation = new google.maps.LatLng(52.55976, -0.394505);
 
-var map;
-
-var currentCanopyLocation = sibsonAirfieldLocation;
-var currentCanopyBearing = 0;
-var currentCanopySpeed = 10;
-
+// State
+var canopyLocation = sibsonAirfieldLocation;
+var canopyBearing = 0;
+var canopySpeed = 10;
 var windSpeed = 5;
-var windBearing = Math.PI / 2;
+var windBearing = canopyBearing + Math.PI; // Into the wind
 
+// UI objects
+var map;
 var canopyCircle;
 var canopyBearingLine;
 
@@ -17,12 +17,57 @@ var updateFrequency = 20.0;
 var bearingLineLength = 25;
 var bearingUpdateSpeed = Math.PI * 0.003;
 
+// Helpers
+
+function degToRad(deg) {
+	return deg * Math.PI / 180;
+}
+
+function radToDeg(rad) {
+	return rad * 180 / Math.PI;
+}
+
 function moveCoords(coords, dx, dy) {
 	var earthRadius = 6378137;
-	var newLat = coords.lat() + (180 / Math.PI) * (dy / earthRadius);
-	var newLng = coords.lng() + (180 / Math.PI) * (dx / earthRadius) / Math.cos(Math.PI / 180 * coords.lat());
+	var newLat = coords.lat() + radToDeg(dy / earthRadius);
+	var newLng = coords.lng() + radToDeg((dx / earthRadius) / Math.cos(degToRad(coords.lat())));
 	return new google.maps.LatLng(newLat, newLng);
 }
+
+// Event handlers
+
+function onKeyDown(e) {
+    e = e || window.event;
+    if (e.keyCode == '37') { // left arrow
+        canopyBearing += bearingUpdateSpeed;
+    }
+    else if (e.keyCode == '39') { // right arrow
+        canopyBearing -= bearingUpdateSpeed;
+    }
+}
+
+function onTimeTick() {
+	  var speedCoeff = updateFrequency / 1000.0;
+	  var dx = canopySpeed * Math.cos(canopyBearing) + windSpeed * Math.cos(windBearing);
+	  var dy = canopySpeed * Math.sin(canopyBearing) + windSpeed * Math.sin(windBearing);
+	  canopyLocation = moveCoords(canopyLocation, dx * speedCoeff, dy * speedCoeff);	  
+	  var bearingLineEnd = moveCoords(canopyLocation, bearingLineLength * Math.cos(canopyBearing), bearingLineLength * Math.sin(canopyBearing));
+	  
+	  canopyCircle.setCenter(canopyLocation);
+	  canopyBearingLine.setPath([canopyLocation, bearingLineEnd]);
+}
+
+function onWindBearingSliderValueChange(event, ui) {
+	windBearing = degToRad(ui.value);
+	$("#wind-bearing-value").html(ui.value);
+}
+
+function onWindSpeedSliderValueChange(event, ui) {
+	windSpeed = ui.value;
+	$("#wind-speed-value").html(ui.value);
+}
+
+// Initialization
 
 function initializeCanopyDrawing() {
 	var circleOptions = {
@@ -59,34 +104,31 @@ function initializeMap(location) {
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 }
 
-function runCanopyPositionUpdate() {
-	window.setInterval(function() {
-	  var speedCoeff = updateFrequency / 1000.0;
-	  var dx = currentCanopySpeed * Math.cos(currentCanopyBearing) + windSpeed * Math.cos(windBearing);
-	  var dy = currentCanopySpeed * Math.sin(currentCanopyBearing) + windSpeed * Math.sin(windBearing);
-	  currentCanopyLocation = moveCoords(currentCanopyLocation, dx * speedCoeff, dy * speedCoeff);	  
-	  var bearingLineEnd = moveCoords(currentCanopyLocation, bearingLineLength * Math.cos(currentCanopyBearing), bearingLineLength * Math.sin(currentCanopyBearing));
-	  
-	  canopyCircle.setCenter(currentCanopyLocation);
-	  canopyBearingLine.setPath([currentCanopyLocation, bearingLineEnd]);
-  }, updateFrequency);
-}
-
-function onKeyDown(e) {
-    e = e || window.event;
-    if (e.keyCode == '37') { // left arrow
-        currentCanopyBearing += bearingUpdateSpeed;
-    }
-    else if (e.keyCode == '39') { // right arrow
-        currentCanopyBearing -= bearingUpdateSpeed;
-    }
+function initializeControls() {
+	var windBearingSliderOptions = {
+		min: 0,
+		max: 360,
+		value: radToDeg(windBearing),
+		change: onWindBearingSliderValueChange
+	}
+	$("#wind-bearing-slider").slider(windBearingSliderOptions);
+	
+	var windSpeedSliderOptions = {
+		min: 0,
+		max: 8,
+		value: windSpeed,
+		change: onWindSpeedSliderValueChange
+	}
+	$("#wind-speed-slider").slider(windSpeedSliderOptions);
 }
 
 function initialize() {
-  initializeMap(sibsonAirfieldLocation);
-  initializeCanopyDrawing(sibsonAirfieldLocation);
-  runCanopyPositionUpdate();
+	initializeControls();
+	initializeMap(sibsonAirfieldLocation);
+	initializeCanopyDrawing(sibsonAirfieldLocation);
+
+	document.onkeydown = onKeyDown;
+	window.setInterval(onTimeTick, updateFrequency);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
-document.onkeydown = onKeyDown;

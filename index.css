@@ -13,6 +13,10 @@
 	float: right;
 }
 
+#wind-bearing-slider, #wind-speed-slider {
+	margin: 20px;
+}
+
 html, body, #map-canvas-container, #map-canvas, #controls {
 	height: 100%
 }

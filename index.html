@@ -6,6 +6,9 @@
 		<meta charset="utf-8">
 		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry"></script>
 		<script src="blueskies.js"></script>
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 		<link rel="stylesheet" type="text/css" href="index.css" />
 	</head>
 	<body>		
@@ -14,11 +17,10 @@
 		</div>
 		
 		<div id="controls">
-			<h1>sidebar</h1>
-			<ul>
-				<li>link one</li>
-				<li>link two</li>
-			</ul>
+			Wind bearing: <div id="wind-bearing-value"></div>
+			<div id="wind-bearing-slider"></div>
+			Wind speed: <div id="wind-speed-value"></div>
+			<div id="wind-speed-slider"></div>
 		</div>
 	</body>
 </html>
