@@ -57,14 +57,22 @@ function onTimeTick() {
 	  canopyBearingLine.setPath([canopyLocation, bearingLineEnd]);
 }
 
+function updateWindBearing(newValue) {
+	windBearing = newValue;
+	$("#wind-bearing-value").html("Wind bearing: " + Math.round(radToDeg(newValue)) + "°");
+}
+
+function updateWindSpeed(newValue) {
+	windSpeed = newValue;
+	$("#wind-speed-value").html("Wind speed: " + newValue + " m/s");
+}
+
 function onWindBearingSliderValueChange(event, ui) {
-	windBearing = degToRad(ui.value);
-	$("#wind-bearing-value").html(ui.value);
+	updateWindBearing(degToRad(ui.value));
 }
 
 function onWindSpeedSliderValueChange(event, ui) {
-	windSpeed = ui.value;
-	$("#wind-speed-value").html(ui.value);
+	updateWindSpeed(ui.value);
 }
 
 // Initialization
@@ -109,17 +117,21 @@ function initializeControls() {
 		min: 0,
 		max: 360,
 		value: radToDeg(windBearing),
-		change: onWindBearingSliderValueChange
+		change: onWindBearingSliderValueChange,
+		slide: onWindBearingSliderValueChange
 	}
 	$("#wind-bearing-slider").slider(windBearingSliderOptions);
+	updateWindBearing(windBearing); // To update UI
 	
 	var windSpeedSliderOptions = {
 		min: 0,
 		max: 8,
 		value: windSpeed,
-		change: onWindSpeedSliderValueChange
+		change: onWindSpeedSliderValueChange,
+		slide: onWindSpeedSliderValueChange
 	}
 	$("#wind-speed-slider").slider(windSpeedSliderOptions);
+	updateWindSpeed(windSpeed); // To update UI
 }
 
 function initialize() {

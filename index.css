@@ -14,7 +14,11 @@
 }
 
 #wind-bearing-slider, #wind-speed-slider {
-	margin: 20px;
+	margin: 20px 20px 40px 20px;
+}
+
+#wind-bearing-value, #wind-speed-value {
+	margin: 0px 20px 10px 20px;
 }
 
 html, body, #map-canvas-container, #map-canvas, #controls {
