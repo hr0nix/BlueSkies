@@ -137,13 +137,14 @@ function onShowSteadyPointCheckboxToggle() {
 
 function initializeCanopyImage() {	
 	var canopyCircleOptions = {
-      strokeColor: '#000000',
-      strokeOpacity: 1,
-      strokeWeight: 1,
+      //strokeColor: '#000000',
+      //strokeOpacity: 1,
+      //strokeWeight: 1,
+	  strokeWeight: 0,
       fillColor: '#FF0000',
       fillOpacity: 1.0,
       map: map,
-      radius: 5,
+      radius: 6,
 	  zIndex: 1
     };
     canopyCircle = new google.maps.Circle(canopyCircleOptions);
@@ -158,14 +159,15 @@ function initializeCanopyImage() {
 	canopyHeadingLine.setMap(map);
 	
 	var steadyPointCircleOptions = {
-      strokeColor: '#000000',
-      strokeOpacity: 1,
-      strokeWeight: 1,
+      //strokeColor: '#000000',
+      //strokeOpacity: 1,
+      //strokeWeight: 1,
+	  strokeWeight: 0,
       fillColor: '#FF00FF',
       fillOpacity: 1.0,
 	  visible: showSteadyPoint,
       map: map,
-      radius: 5,
+      radius: 6,
 	  zIndex: 0
     };
     steadyPointCircle = new google.maps.Circle(steadyPointCircleOptions);
