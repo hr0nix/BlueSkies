@@ -1,8 +1,10 @@
 // State
+var showSteadyPoint = false;
 var isSimulationRunning = false;
 var canopyLocation;
 var canopyAltitude;
 var canopyHeading;
+var steadyPointLocation;
 var canopyHorizontalSpeed = 10;
 var canopyVerticalSpeed = 5;
 var windSpeed = 5;
@@ -12,6 +14,7 @@ var openingAltitude = 1000;
 // UI objects
 var map;
 var canopyCircle;
+var steadyPointCircle;
 var canopyHeadingLine;
 
 // Options
@@ -47,6 +50,7 @@ function updateCanopyControls() {
 	var headingLineEnd = moveCoords(canopyLocation, headingLineLength * Math.sin(canopyHeading), headingLineLength * Math.cos(canopyHeading));
 	canopyCircle.setCenter(canopyLocation);
 	canopyHeadingLine.setPath([canopyLocation, headingLineEnd]);
+	steadyPointCircle.setCenter(steadyPointLocation);
 	
 	$("#altitude-value").html("Altitude: " + Math.round(canopyAltitude) + " m");
 	$("#horizontal-speed-value").html("Horizontal speed: " + Math.round(canopyHorizontalSpeed) + " m/s");
@@ -93,8 +97,13 @@ function onTimeTick() {
 	var speedCoeff = updateFrequency / 1000.0;
 	var dx = canopyHorizontalSpeed * Math.sin(canopyHeading) + windSpeed * Math.sin(windDirection);
 	var dy = canopyHorizontalSpeed * Math.cos(canopyHeading) + windSpeed * Math.cos(windDirection);
-	canopyLocation = moveCoords(canopyLocation, dx * speedCoeff, dy * speedCoeff);	  
+	canopyLocation = moveCoords(canopyLocation, dx * speedCoeff, dy * speedCoeff);
 	canopyAltitude -= speedCoeff * canopyVerticalSpeed;
+	
+	if (showSteadyPoint) {
+		var timeToLanding = canopyAltitude / canopyVerticalSpeed;
+		steadyPointLocation = moveCoords(canopyLocation, dx * timeToLanding, dy * timeToLanding);
+	}
 	
 	updateCanopyControls();
 }
@@ -119,28 +128,47 @@ function onDzMenuItemSelected(event, ui) {
 	map.setCenter(dropzones[dzId]);
 }
 
+function onShowSteadyPointCheckboxToggle() {
+	showSteadyPoint = !showSteadyPoint;
+	steadyPointCircle.setVisible(showSteadyPoint);
+}
+
 // Initialization
 
-function initializeCanopyImage() {
-	var circleOptions = {
+function initializeCanopyImage() {	
+	var canopyCircleOptions = {
       strokeColor: '#000000',
       strokeOpacity: 1,
       strokeWeight: 1,
       fillColor: '#FF0000',
       fillOpacity: 1.0,
       map: map,
-      radius: 5
+      radius: 5,
+	  zIndex: 1
     };
-	
-    canopyCircle = new google.maps.Circle(circleOptions);
+    canopyCircle = new google.maps.Circle(canopyCircleOptions);
 	
 	canopyHeadingLine = new google.maps.Polyline({
 		geodesic: false,
 		strokeColor: '#000000',
 		strokeOpacity: 1.0,
-		strokeWeight: 2
+		strokeWeight: 2,
+		zIndex: 2
 	});
 	canopyHeadingLine.setMap(map);
+	
+	var steadyPointCircleOptions = {
+      strokeColor: '#000000',
+      strokeOpacity: 1,
+      strokeWeight: 1,
+      fillColor: '#FF00FF',
+      fillOpacity: 1.0,
+	  visible: showSteadyPoint,
+      map: map,
+      radius: 5,
+	  zIndex: 0
+    };
+    steadyPointCircle = new google.maps.Circle(steadyPointCircleOptions);
 }
 
 function initialize() {
@@ -194,6 +222,8 @@ function initialize() {
 	}
 	$("#dz-selection-menu").menu(dzMenuOptions);
 	
+	$("#steady-point-checkbox").prop("checked", showSteadyPoint);
+	$("#steady-point-checkbox").click(onShowSteadyPointCheckboxToggle);
 	
 	document.onkeydown = onKeyDown;
 	window.setInterval(onTimeTick, updateFrequency);
