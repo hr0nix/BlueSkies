@@ -1,25 +1,28 @@
-var sibsonAirfieldLocation = new google.maps.LatLng(52.55976, -0.394505);
-
 // State
 var isSimulationRunning = false;
 var canopyLocation;
 var canopyAltitude;
-var canopyBearing;
+var canopyHeading;
 var canopyHorizontalSpeed = 10;
 var canopyVerticalSpeed = 5;
 var windSpeed = 5;
-var windBearing = 0;
+var windDirection = 0;
 var openingAltitude = 1000;
 
 // UI objects
 var map;
 var canopyCircle;
-var canopyBearingLine;
+var canopyHeadingLine;
 
 // Options
+var dropzones = {
+	"dz-uk-sibson" : new google.maps.LatLng(52.55976, -0.394505),
+	"dz-ru-puschino" : new google.maps.LatLng(54.790145, 37.642408)
+}
+var initialDropzone = "dz-uk-sibson";
 var updateFrequency = 20.0;
-var bearingLineLength = 25;
-var bearingUpdateSpeed = Math.PI * 0.01;
+var headingLineLength = 25;
+var headingUpdateSpeed = Math.PI * 0.008;
 
 // Helpers
 
@@ -38,32 +41,17 @@ function moveCoords(coords, dx, dy) {
 	return new google.maps.LatLng(newLat, newLng);
 }
 
-// Logic
-
-function updateWindBearing(newValue) {
-	windBearing = newValue;
-	$("#wind-bearing-value").html("Wind bearing: " + Math.round(radToDeg(newValue)) + "°");
-}
-
-function updateWindSpeed(newValue) {
-	windSpeed = newValue;
-	$("#wind-speed-value").html("Wind speed: " + newValue + " m/s");
-}
-
-function updateOpeningAltitude(newValue) {
-	openingAltitude = newValue;
-	$("#opening-altitude-value").html("Opening altitude: " + newValue + " m");
-}
+// UI update logic
 
 function updateCanopyControls() {
-	var bearingLineEnd = moveCoords(canopyLocation, bearingLineLength * Math.sin(canopyBearing), bearingLineLength * Math.cos(canopyBearing));
+	var headingLineEnd = moveCoords(canopyLocation, headingLineLength * Math.sin(canopyHeading), headingLineLength * Math.cos(canopyHeading));
 	canopyCircle.setCenter(canopyLocation);
-	canopyBearingLine.setPath([canopyLocation, bearingLineEnd]);
+	canopyHeadingLine.setPath([canopyLocation, headingLineEnd]);
 	
 	$("#altitude-value").html("Altitude: " + Math.round(canopyAltitude) + " m");
 	$("#horizontal-speed-value").html("Horizontal speed: " + Math.round(canopyHorizontalSpeed) + " m/s");
 	$("#vertical-speed-value").html("Vertical speed: " + Math.round(canopyVerticalSpeed) + " m/s");
-	$("#canopy-bearing-value").html("Canopy bearing: " + Math.round(radToDeg(canopyBearing)) + "°");
+	$("#canopy-heading-value").html("Canopy heading: " + Math.round(radToDeg(canopyHeading)) + "°");
 }
 
 // Event handlers
@@ -71,23 +59,23 @@ function updateCanopyControls() {
 function onKeyDown(e) {
     e = e || window.event;
     if (e.keyCode == '37') { // left arrow
-        canopyBearing -= bearingUpdateSpeed;
+        canopyHeading -= headingUpdateSpeed;
     }
     else if (e.keyCode == '39') { // right arrow
-        canopyBearing += bearingUpdateSpeed;
+        canopyHeading += headingUpdateSpeed;
     }
 	
-	if (canopyBearing < 0) {
-		canopyBearing += Math.PI * 2;
-	} else if (canopyBearing > Math.PI * 2) {
-		canopyBearing -= Math.PI * 2
+	if (canopyHeading < 0) {
+		canopyHeading += Math.PI * 2;
+	} else if (canopyHeading > Math.PI * 2) {
+		canopyHeading -= Math.PI * 2
 	}
 }
 
 function onMapRightClick(event) {
     canopyLocation = event.latLng;
 	canopyAltitude = openingAltitude;
-	canopyBearing = windBearing + Math.PI; // Into the wind
+	canopyHeading = windDirection + Math.PI; // Into the wind
     if (!isSimulationRunning) {
 		initializeCanopyImage();
 		$("#status").show();
@@ -103,24 +91,32 @@ function onTimeTick() {
 	}
 	
 	var speedCoeff = updateFrequency / 1000.0;
-	var dx = canopyHorizontalSpeed * Math.sin(canopyBearing) + windSpeed * Math.sin(windBearing);
-	var dy = canopyHorizontalSpeed * Math.cos(canopyBearing) + windSpeed * Math.cos(windBearing);
+	var dx = canopyHorizontalSpeed * Math.sin(canopyHeading) + windSpeed * Math.sin(windDirection);
+	var dy = canopyHorizontalSpeed * Math.cos(canopyHeading) + windSpeed * Math.cos(windDirection);
 	canopyLocation = moveCoords(canopyLocation, dx * speedCoeff, dy * speedCoeff);	  
 	canopyAltitude -= speedCoeff * canopyVerticalSpeed;
 	
 	updateCanopyControls();
 }
 
-function onWindBearingSliderValueChange(event, ui) {
-	updateWindBearing(degToRad(ui.value));
+function onWindDirectionSliderValueChange(event, ui) {
+	windDirection = degToRad(ui.value);
+	$("#wind-direction-value").html("Wind direction: " + Math.round(ui.value) + "°");
 }
 
 function onWindSpeedSliderValueChange(event, ui) {
-	updateWindSpeed(ui.value);
+	windSpeed = ui.value;
+	$("#wind-speed-value").html("Wind speed: " + ui.value + " m/s");
 }
 
 function onOpeningAltitudeSliderValueChange(event, ui) {
-	updateOpeningAltitude(ui.value);
+	openingAltitude = ui.value;
+	$("#opening-altitude-value").html("Opening altitude: " + ui.value + " m");
+}
+
+function onDzMenuItemSelected(event, ui) {
+	dzId = ui.item.attr("id");
+	map.setCenter(dropzones[dzId]);
 }
 
 // Initialization
@@ -138,68 +134,67 @@ function initializeCanopyImage() {
 	
     canopyCircle = new google.maps.Circle(circleOptions);
 	
-	canopyBearingLine = new google.maps.Polyline({
+	canopyHeadingLine = new google.maps.Polyline({
 		geodesic: false,
 		strokeColor: '#000000',
 		strokeOpacity: 1.0,
 		strokeWeight: 2
 	});
-	canopyBearingLine.setMap(map);
+	canopyHeadingLine.setMap(map);
 }
 
-function initializeMap(location) {
+function initialize() {
 	var mapOptions = {
 		zoom: 16,
 		minZoom: 15,
 		maxZoom: 18,
-		center: location,
+		center: dropzones[initialDropzone],
 		keyboardShortcuts: false,
 		mapTypeId: google.maps.MapTypeId.SATELLITE
 	};
 	
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	google.maps.event.addListener(map, "rightclick", onMapRightClick);
-}
-
-function initializeControls() {
-	var windBearingSliderOptions = {
+	
+	var windDirectionSliderOptions = {
 		min: 0,
 		max: 360,
 		step: 5,
-		value: radToDeg(windBearing),
-		change: onWindBearingSliderValueChange,
-		slide: onWindBearingSliderValueChange
+		change: onWindDirectionSliderValueChange,
+		slide: onWindDirectionSliderValueChange
 	}
-	$("#wind-bearing-slider").slider(windBearingSliderOptions);
-	updateWindBearing(windBearing); // To update UI
+	$("#wind-direction-slider").slider(windDirectionSliderOptions);
+	$("#wind-direction-slider .ui-slider-handle").unbind('keydown');
+	$("#wind-direction-slider").slider("value", radToDeg(windDirection));
 	
 	var windSpeedSliderOptions = {
 		min: 0,
-		max: 8,
+		max: 10,
 		step: 0.1,
-		value: windSpeed,
 		change: onWindSpeedSliderValueChange,
 		slide: onWindSpeedSliderValueChange
 	}
 	$("#wind-speed-slider").slider(windSpeedSliderOptions);
-	updateWindSpeed(windSpeed); // To update UI
+	$("#wind-speed-slider .ui-slider-handle").unbind('keydown');
+	$("#wind-speed-slider").slider("value", windSpeed);
 	
 	var openingAltitudeSliderOptions = {
 		min: 100,
 		max: 3000,
 		step: 50,
-		value: openingAltitude,
 		change: onOpeningAltitudeSliderValueChange,
 		slide: onOpeningAltitudeSliderValueChange
 	}
 	$("#opening-altitude-slider").slider(openingAltitudeSliderOptions);
-	updateOpeningAltitude(openingAltitude); // To update UI
-}
-
-function initialize() {
-	initializeControls();
-	initializeMap(sibsonAirfieldLocation);
-
+	$("#opening-altitude-slider .ui-slider-handle").unbind('keydown');
+	$("#opening-altitude-slider").slider("value", openingAltitude);
+	
+	var dzMenuOptions = {
+		select: onDzMenuItemSelected
+	}
+	$("#dz-selection-menu").menu(dzMenuOptions);
+	
+	
 	document.onkeydown = onKeyDown;
 	window.setInterval(onTimeTick, updateFrequency);
 }
