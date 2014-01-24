@@ -18,8 +18,8 @@ var canopyHeadingLine;
 
 // Options
 var dropzones = {
-	"dz-uk-sibson" : new google.maps.LatLng(52.55976, -0.394505),
-	"dz-ru-puschino" : new google.maps.LatLng(54.790145, 37.642408)
+	"dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
+	"dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547)
 }
 var initialDropzone = "dz-uk-sibson";
 var updateFrequency = 20.0;
@@ -78,10 +78,10 @@ function updateCanopyControls() {
 	canopyHeadingLine.setPath([canopyLocation, headingLineEnd]);
 	steadyPointCircle.setCenter(steadyPointLocation);
 	
-	$("#altitude-value").html("Altitude: " + Math.round(canopyAltitude) + " m");
+	$("#altitude-value").html("Altitude: " + $.number(canopyAltitude, 0) + " m");
 	$("#horizontal-speed-value").html("Horizontal speed: " + $.number(getCanopyHorizontalSpeed(canopyMode), 1) + " m/s");
 	$("#vertical-speed-value").html("Vertical speed: " + $.number(getCanopyVerticalSpeed(canopyMode), 1) + " m/s");
-	$("#canopy-heading-value").html("Canopy heading: " + $.number(radToDeg(canopyHeading), 1) + "°");
+	$("#canopy-heading-value").html("Canopy heading: " + $.number(radToDeg(canopyHeading), 0) + "°");
 }
 
 // Event handlers
@@ -230,6 +230,16 @@ function initialize() {
 	
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	google.maps.event.addListener(map, "rightclick", onMapRightClick);
+	
+	for (var dz in dropzones) {
+		var markerOptions = {
+			icon: "http://maps.google.com/mapfiles/arrow.png",
+			position: dropzones[dz],
+			map: map
+		}
+		
+		new google.maps.Marker(markerOptions);
+	}
 	
 	var windDirectionSliderOptions = {
 		min: 0,
