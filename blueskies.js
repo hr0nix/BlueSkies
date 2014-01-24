@@ -44,6 +44,16 @@ function moveCoords(coords, dx, dy) {
 	return new google.maps.LatLng(newLat, newLng);
 }
 
+function rotateDiv(div, angle) {
+	style = "rotate(" + radToDeg(angle) + "deg)";
+	
+	div.style.webkitTransform = style; 
+    div.style.mozTransform = style; 
+    div.style.msTransform = style; 
+    div.style.oTransform = style; 
+    div.style.transform = style; 
+}
+
 function interpolate(arr, coeff) {
 	if (coeff <= 0) {
 		return arr[0];
@@ -155,6 +165,7 @@ function onTimeTick() {
 
 function onWindDirectionSliderValueChange(event, ui) {
 	windDirection = degToRad(ui.value);
+	rotateDiv($("#wind-arrow").get(0), windDirection);
 	$("#wind-direction-value").html("Wind direction: " + Math.round(ui.value) + "°");
 }
 
