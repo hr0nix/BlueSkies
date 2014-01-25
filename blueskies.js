@@ -170,22 +170,20 @@ function onMapRightClick(event) {
 }
 
 function onTimeTick() {
-	if (!isSimulationRunning || canopyAltitude < 0) {
-		return;
-	}
-	
-	var speedH = getCanopyHorizontalSpeed(canopyMode);
-	var speedV = getCanopyVerticalSpeed(canopyMode);
-	
-	var speedCoeff = updateFrequency / 1000.0;
-	var dx = speedH * Math.sin(canopyHeading) + windSpeed * Math.sin(windDirection);
-	var dy = speedH * Math.cos(canopyHeading) + windSpeed * Math.cos(windDirection);
-	canopyLocation = moveCoords(canopyLocation, dx * speedCoeff, dy * speedCoeff);
-	canopyAltitude -= speedCoeff * speedV;
-	
-	if (showSteadyPoint) {
-		var timeToLanding = canopyAltitude / speedV;
-		steadyPointLocation = moveCoords(canopyLocation, dx * timeToLanding, dy * timeToLanding);
+	if (isSimulationRunning && canopyAltitude > 0) {
+		var speedH = getCanopyHorizontalSpeed(canopyMode);
+		var speedV = getCanopyVerticalSpeed(canopyMode);
+		
+		var speedCoeff = updateFrequency / 1000.0;
+		var dx = speedH * Math.sin(canopyHeading) + windSpeed * Math.sin(windDirection);
+		var dy = speedH * Math.cos(canopyHeading) + windSpeed * Math.cos(windDirection);
+		canopyLocation = moveCoords(canopyLocation, dx * speedCoeff, dy * speedCoeff);
+		canopyAltitude -= speedCoeff * speedV;
+		
+		if (showSteadyPoint) {
+			var timeToLanding = canopyAltitude / speedV;
+			steadyPointLocation = moveCoords(canopyLocation, dx * timeToLanding, dy * timeToLanding);
+		}
 	}
 	
 	updateCanopyControls();
