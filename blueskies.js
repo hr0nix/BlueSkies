@@ -20,6 +20,7 @@ var canopyHeadingLine;
 // Options
 var dropzones = {
 	"dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
+	"dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
 	"dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547)
 }
 var initialDropzone = "dz-uk-sibson";
