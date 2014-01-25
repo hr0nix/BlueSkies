@@ -18,44 +18,53 @@
 		</div>
 		
 		<div id="right-panel">
-			<div id="controls">
-				<ul id="dz-selection-menu">
-					<li><a href="#">Pick a dropzone</a>
-						<ul>
-							<li><a href="#">UK</a>
-								<ul>
-									<li id="dz-uk-sibson"><a href="#">Sibson</a></li>
-									<li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
-								</ul>
-							</li>
-							<li><a href="#">Russia</a>
-								<ul>
-									<li id="dz-ru-puschino"><a href="#">Puschino</a></li>
-								</ul>
-							</li>
-						</ul>
-					</li>					
-				</ul>
-				<div id="wind-arrow"><img src="arrow.png"></img></div>
-				<div id="wind-direction-value"></div>
-				<div id="wind-direction-slider"></div>
-				<div id="wind-speed-value"></div>
-				<div id="wind-speed-slider"></div>
-				<div id="opening-altitude-value"></div>
-				<div id="opening-altitude-slider"></div>
-				<input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox" id="steady-point-checkbox-label">Show steady point</label><br>
-				<input type="checkbox" id="use-metric-system-checkbox"><label for="use-metric-system-checkbox" id="steady-point-checkbox-label">Use metric system</label>
+			<div id="settings">
+				<h3>Settings</h3>
+				<div>
+					<ul id="dz-selection-menu">
+						<li><a href="#">Pick a dropzone</a>
+							<ul>
+								<li><a href="#">UK</a>
+									<ul>
+										<li id="dz-uk-sibson"><a href="#">Sibson</a></li>
+										<li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
+									</ul>
+								</li>
+								<li><a href="#">Russia</a>
+									<ul>
+										<li id="dz-ru-puschino"><a href="#">Puschino</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>					
+					</ul>
+					<div id="wind-arrow"><img src="arrow.png"></img></div>
+					<div id="wind-direction-value"></div>
+					<div id="wind-direction-slider"></div>
+					<div id="wind-speed-value"></div>
+					<div id="wind-speed-slider"></div>
+					<div id="opening-altitude-value"></div>
+					<div id="opening-altitude-slider"></div>
+					<input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox" id="steady-point-checkbox-label">Show steady point</label><br>
+					<input type="checkbox" id="use-metric-system-checkbox"><label for="use-metric-system-checkbox" id="steady-point-checkbox-label">Use metric system</label>
+				</div>
 			</div>
 			<div id="legend">
-				<p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
-				<p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
-				<p>That little red dot is your canopy. The black line shows your current heading. The pink dot shows where you will land with the current setup (if "Show steady point" is enabled).
+				<h3>Legend</h3>
+				<div id="legend-text">
+					<p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
+					<p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
+					<p>That little red dot is your canopy. The black line shows your current heading. The pink dot shows where you will land with the current setup (if "Show steady point" is enabled).
+				</div>
 			</div>
 			<div id="status">
-				<div id="altitude-value"></div>
-				<div id="horizontal-speed-value"></div>
-				<div id="vertical-speed-value"></div>
-				<div id="canopy-heading-value"></div>
+				<h3>Canopy status</h3>
+				<div>
+					<div id="altitude-value">Altitude goes here</div>
+					<div id="horizontal-speed-value">Horizontal speed goes here</div>
+					<div id="vertical-speed-value">Vertical speed goes here</div>
+					<div id="canopy-heading-value">Canopy heading goes here</div>
+				</div>
 			</div>
 		</div>
 	</body>

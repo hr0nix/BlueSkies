@@ -116,7 +116,9 @@ function updateCanopyControls() {
 	canopyCircle.setCenter(canopyLocation);
 	canopyHeadingLine.setPath([canopyLocation, headingLineEnd]);
 	steadyPointCircle.setCenter(steadyPointLocation);
-	
+}
+
+function updateCanopyStatus() {
 	$("#altitude-value").html("Altitude: " + formatAltitude(canopyAltitude, 0));
 	$("#horizontal-speed-value").html("Horizontal speed: " + formatSpeed(getCanopyHorizontalSpeed(canopyMode), 1));
 	$("#vertical-speed-value").html("Vertical speed: " + formatSpeed(getCanopyVerticalSpeed(canopyMode), 1));
@@ -166,8 +168,6 @@ function onMapRightClick(event) {
 		$("#status").show();
 		isSimulationRunning = true;
 	}
-	
-	updateCanopyControls();
 }
 
 function onTimeTick() {
@@ -185,9 +185,11 @@ function onTimeTick() {
 			var timeToLanding = canopyAltitude / speedV;
 			steadyPointLocation = moveCoords(canopyLocation, dx * timeToLanding, dy * timeToLanding);
 		}
+		
+		updateCanopyControls();
 	}
 	
-	updateCanopyControls();
+	updateCanopyStatus();
 }
 
 function onWindDirectionSliderValueChange(event, ui) {
@@ -331,6 +333,11 @@ function initialize() {
 	
 	$("#use-metric-system-checkbox").prop("checked", useMetricSystem);
 	$("#use-metric-system-checkbox").click(onUseMetricSystemCheckboxToggle);
+	
+	$("#settings").accordion({ collapsible: true });
+	$("#legend").accordion({ collapsible: true });
+	$("#status").accordion({ collapsible: true });
+	$("#status").hide();
 	
 	document.onkeydown = onKeyDown;
 	window.setInterval(onTimeTick, updateFrequency);

@@ -17,49 +17,40 @@ html, body, #map-canvas-container, #map-canvas, #right-panel {
 	float: right;
 }
 
-#controls , #status, #legend {
-	border: 2px solid black;
-	margin: 0px 10px 10px 10px;
+#settings , #status, #legend {
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
-#controls , #status {
-	padding-bottom: 20px;
-}
-
-#legend  {
-	padding: 0px 15px 0px 15px;
-}
-
-#status {
-	display: none;
+#settings , #legend {
+	margin-bottom: 10px;
 }
 
 #dz-selection-menu {
-	margin: 20px 20px 10px 20px;
 }
 
-#steady-point-checkbox , #use-metric-system-checkbox {
-	margin: 20px 20px 0px 20px;
-}
-
-#wind-direction-slider, #wind-speed-slider, #opening-altitude-slider {
-	margin: 10px 20px 0px 20px;
+#wind-direction-slider, #wind-speed-slider, #opening-altitude-slider, #wind-arrow {
+	margin-top: 6px;
 }
 
 #wind-arrow {
 	float: right;
-	margin-right: 50px;
+	margin-right: 30px;
 }
 
-#wind-direction-value, #wind-speed-value, #opening-altitude-value {
-	margin: 20px 20px 10px 20px;
+#wind-direction-value, #wind-speed-value, #opening-altitude-value, #steady-point-checkbox , #use-metric-system-checkbox {
+	margin-top: 18px;
 }
 
-#altitude-value, #horizontal-speed-value, #vertical-speed-value, #canopy-heading-value {
-	margin: 20px 20px 0px 20px;
+#horizontal-speed-value, #vertical-speed-value, #canopy-heading-value {
+	margin-top: 18px;
 }
 
 #wind-direction-value, #wind-speed-value, #opening-altitude-value, #altitude-value, #horizontal-speed-value, #vertical-speed-value, #canopy-heading-value, #steady-point-checkbox-label, #use-metric-system-checkbox-label {
 	font-family: Georgia, serif;
 	font-size: large;
+}
+
+#legend-text {
+	font-size: small;
 }
