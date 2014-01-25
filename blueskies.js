@@ -1,5 +1,6 @@
 // State
 var showSteadyPoint = false;
+var useMetricSystem = true;
 var isSimulationRunning = false;
 var canopyLocation;
 var canopyAltitude;
@@ -80,6 +81,33 @@ function getCanopyVerticalSpeed(mode) {
 	return interpolate(verticalSpeeds, mode);
 }
 
+function metersToFeet(meters) {
+	return meters * 3.2808399;
+}
+
+function metersPerSecToMilesPerHour(metersPerSec) {
+	return metersPerSec * 2.23693629;
+}
+
+function formatSpeed(metersPerSec, significantDigits) {
+	significantDigits = significantDigits || 0;
+	return useMetricSystem
+		? $.number(metersPerSec, significantDigits) + " m/s"
+		: $.number(metersPerSecToMilesPerHour(metersPerSec), significantDigits) + " mph";
+}
+
+function formatAltitude(meters, significantDigits) {
+	significantDigits = significantDigits || 0;
+	return useMetricSystem
+		? $.number(meters, significantDigits) + " m"
+		: $.number(metersToFeet(meters), significantDigits) + " ft";
+}
+
+function formatHeading(angle, significantDigits) {
+	significantDigits = significantDigits || 0;
+	return $.number(radToDeg(angle), significantDigits) + "°";
+}
+
 // UI update logic
 
 function updateCanopyControls() {
@@ -88,10 +116,10 @@ function updateCanopyControls() {
 	canopyHeadingLine.setPath([canopyLocation, headingLineEnd]);
 	steadyPointCircle.setCenter(steadyPointLocation);
 	
-	$("#altitude-value").html("Altitude: " + $.number(canopyAltitude, 0) + " m");
-	$("#horizontal-speed-value").html("Horizontal speed: " + $.number(getCanopyHorizontalSpeed(canopyMode), 1) + " m/s");
-	$("#vertical-speed-value").html("Vertical speed: " + $.number(getCanopyVerticalSpeed(canopyMode), 1) + " m/s");
-	$("#canopy-heading-value").html("Canopy heading: " + $.number(radToDeg(canopyHeading), 0) + "°");
+	$("#altitude-value").html("Altitude: " + formatAltitude(canopyAltitude, 0));
+	$("#horizontal-speed-value").html("Horizontal speed: " + formatSpeed(getCanopyHorizontalSpeed(canopyMode), 1));
+	$("#vertical-speed-value").html("Vertical speed: " + formatSpeed(getCanopyVerticalSpeed(canopyMode), 1));
+	$("#canopy-heading-value").html("Canopy heading: " + formatHeading(canopyHeading, 0));
 }
 
 // Event handlers
@@ -166,17 +194,17 @@ function onTimeTick() {
 function onWindDirectionSliderValueChange(event, ui) {
 	windDirection = degToRad(ui.value);
 	rotateDiv($("#wind-arrow").get(0), windDirection);
-	$("#wind-direction-value").html("Wind direction: " + Math.round(ui.value) + "°");
+	$("#wind-direction-value").html("Wind direction: " + formatHeading(windDirection));
 }
 
 function onWindSpeedSliderValueChange(event, ui) {
 	windSpeed = ui.value;
-	$("#wind-speed-value").html("Wind speed: " + ui.value + " m/s");
+	$("#wind-speed-value").html("Wind speed: " + formatSpeed(windSpeed, 1));
 }
 
 function onOpeningAltitudeSliderValueChange(event, ui) {
 	openingAltitude = ui.value;
-	$("#opening-altitude-value").html("Opening altitude: " + ui.value + " m");
+	$("#opening-altitude-value").html("Opening altitude: " + formatAltitude(openingAltitude));
 }
 
 function onDzMenuItemSelected(event, ui) {
@@ -187,6 +215,15 @@ function onDzMenuItemSelected(event, ui) {
 function onShowSteadyPointCheckboxToggle() {
 	showSteadyPoint = !showSteadyPoint;
 	steadyPointCircle.setVisible(showSteadyPoint);
+}
+
+function onUseMetricSystemCheckboxToggle() {
+	useMetricSystem = !useMetricSystem;
+	
+	// Update slider labels
+	$("#wind-direction-slider").slider("value", radToDeg(windDirection));
+	$("#wind-speed-slider").slider("value", windSpeed);
+	$("#opening-altitude-slider").slider("value", openingAltitude);
 }
 
 // Initialization
@@ -265,7 +302,7 @@ function initialize() {
 	
 	var windSpeedSliderOptions = {
 		min: 0,
-		max: 10,
+		max: 13,
 		step: 0.1,
 		change: onWindSpeedSliderValueChange,
 		slide: onWindSpeedSliderValueChange
@@ -292,6 +329,9 @@ function initialize() {
 	
 	$("#steady-point-checkbox").prop("checked", showSteadyPoint);
 	$("#steady-point-checkbox").click(onShowSteadyPointCheckboxToggle);
+	
+	$("#use-metric-system-checkbox").prop("checked", useMetricSystem);
+	$("#use-metric-system-checkbox").click(onUseMetricSystemCheckboxToggle);
 	
 	document.onkeydown = onKeyDown;
 	window.setInterval(onTimeTick, updateFrequency);
