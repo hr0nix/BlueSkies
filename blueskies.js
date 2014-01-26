@@ -210,7 +210,7 @@ function onTimeTick() {
 		
 		if (showSteadyPoint) {
 			var timeToLanding = canopyAltitude / speedV;
-			steadyPointLocation = moveCoords(canopyLocation, dx * timeToLanding, dy * timeToLanding);
+			steadyPointLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, timeToLanding);
 		}
 		
 		updateCanopyControls();
