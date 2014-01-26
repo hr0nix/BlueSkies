@@ -242,6 +242,7 @@ function onOpeningAltitudeSliderValueChange(event, ui) {
 function onDzMenuItemSelected(event, ui) {
 	currentDropzoneId = ui.item.attr("id");
 	map.setCenter(dropzones[currentDropzoneId]);
+	updateLandingPattern();
 }
 
 function onShowSteadyPointCheckboxToggle() {
