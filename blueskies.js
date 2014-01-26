@@ -92,17 +92,19 @@ function getCanopyVerticalSpeed(mode) {
 
 function computeLandingPattern(location) {
 	var controlPointAltitudes = [ 100, 200, 300 ];
-	var maxHorizontalSpeed = getCanopyHorizontalSpeed(1.0);
-	var maxVerticalSpeed = getCanopyVerticalSpeed(1.0);
+	var patternMode = 0.85;
+	var speedH = getCanopyHorizontalSpeed(patternMode);
+	var speedV = getCanopyVerticalSpeed(patternMode);
 	
-	var timeToPoint1 = controlPointAltitudes[0] / maxVerticalSpeed;
-	var point1 = moveInWind(location, windSpeed, windDirection + Math.PI, maxHorizontalSpeed, windDirection, timeToPoint1);
+	var timeToPoint1 = controlPointAltitudes[0] / speedV;
+	var point1 = moveInWind(location, windSpeed, windDirection + Math.PI, speedH, windDirection, timeToPoint1);
 	
-	var timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / maxVerticalSpeed;
-	var point2 = moveInWind(point1, windSpeed, windDirection + Math.PI, maxHorizontalSpeed, windDirection - Math.PI * 0.5, timeToPoint2);
+	var timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / speedV;
+	var headingCorrection = windSpeed >= speedH ? 0 : Math.PI * 0.5 - Math.acos(-windSpeed / speedH);
+	var point2 = moveInWind(point1, windSpeed, windDirection + Math.PI, speedH, windDirection - Math.PI * 0.5 - headingCorrection, timeToPoint2);
 	
-	var timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / maxVerticalSpeed;
-	var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, maxHorizontalSpeed, windDirection - Math.PI, timeToPoint3);
+	var timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV;
+	var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, speedH, windDirection + Math.PI, timeToPoint3);
 	
 	return [point3, point2, point1, location];
 }
