@@ -38,7 +38,11 @@ html, body, #map-canvas-container, #map-canvas, #right-panel {
 	margin-right: 30px;
 }
 
-#wind-direction-value, #wind-speed-value, #opening-altitude-value, #steady-point-checkbox , #use-metric-system-checkbox {
+#wind-direction-value, #wind-speed-value, #opening-altitude-value {
+	margin-top: 18px;
+}
+
+#steady-point-checkbox , #use-metric-system-checkbox, #show-landing-pattern-checkbox {
 	margin-top: 18px;
 }
 
@@ -46,7 +50,7 @@ html, body, #map-canvas-container, #map-canvas, #right-panel {
 	margin-top: 18px;
 }
 
-#wind-direction-value, #wind-speed-value, #opening-altitude-value, #altitude-value, #horizontal-speed-value, #vertical-speed-value, #canopy-heading-value, #steady-point-checkbox-label, #use-metric-system-checkbox-label {
+#wind-direction-value, #wind-speed-value, #opening-altitude-value, #altitude-value, #horizontal-speed-value, #vertical-speed-value, #canopy-heading-value, .checkbox-label {
 	font-family: Georgia, serif;
 	font-size: large;
 }

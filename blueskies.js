@@ -1,6 +1,7 @@
 // State
 var showSteadyPoint = false;
 var useMetricSystem = true;
+var showLandingPattern = false;
 var isSimulationRunning = false;
 var canopyLocation;
 var canopyAltitude;
@@ -16,6 +17,7 @@ var map;
 var canopyCircle;
 var steadyPointCircle;
 var canopyHeadingLine;
+var landingPatternLine;
 
 // Options
 var dropzones = {
@@ -23,7 +25,7 @@ var dropzones = {
 	"dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
 	"dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547)
 }
-var initialDropzone = "dz-uk-sibson";
+var currentDropzoneId = "dz-uk-sibson";
 var updateFrequency = 20.0;
 var headingLineLength = 25;
 var headingUpdateSpeed = Math.PI * 0.008;
@@ -44,6 +46,12 @@ function moveCoords(coords, dx, dy) {
 	var newLat = coords.lat() + radToDeg(dy / earthRadius);
 	var newLng = coords.lng() + radToDeg((dx / earthRadius) / Math.cos(degToRad(coords.lat())));
 	return new google.maps.LatLng(newLat, newLng);
+}
+
+function moveInWind(coords, windSpeed, windDirection, speed, direction, time) {
+	var dx = speed * Math.sin(direction) + windSpeed * Math.sin(windDirection);
+	var dy = speed * Math.cos(direction) + windSpeed * Math.cos(windDirection);
+	return moveCoords(coords, dx * time, dy * time);
 }
 
 function rotateDiv(div, angle) {
@@ -80,6 +88,23 @@ function getCanopyHorizontalSpeed(mode) {
 function getCanopyVerticalSpeed(mode) {
 	verticalSpeeds = [10, 7, 5, 3, 5];
 	return interpolate(verticalSpeeds, mode);
+}
+
+function computeLandingPattern(location) {
+	var controlPointAltitudes = [ 100, 200, 300 ];
+	var maxHorizontalSpeed = getCanopyHorizontalSpeed(1.0);
+	var maxVerticalSpeed = getCanopyVerticalSpeed(1.0);
+	
+	var timeToPoint1 = controlPointAltitudes[0] / maxVerticalSpeed;
+	var point1 = moveInWind(location, windSpeed, windDirection + Math.PI, maxHorizontalSpeed, windDirection, timeToPoint1);
+	
+	var timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / maxVerticalSpeed;
+	var point2 = moveInWind(point1, windSpeed, windDirection + Math.PI, maxHorizontalSpeed, windDirection - Math.PI * 0.5, timeToPoint2);
+	
+	var timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / maxVerticalSpeed;
+	var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, maxHorizontalSpeed, windDirection - Math.PI, timeToPoint3);
+	
+	return [point3, point2, point1, location];
 }
 
 function metersToFeet(meters) {
@@ -123,6 +148,10 @@ function updateCanopyStatus() {
 	$("#horizontal-speed-value").html("Horizontal speed: " + formatSpeed(getCanopyHorizontalSpeed(canopyMode), 1));
 	$("#vertical-speed-value").html("Vertical speed: " + formatSpeed(getCanopyVerticalSpeed(canopyMode), 1));
 	$("#canopy-heading-value").html("Canopy heading: " + formatHeading(canopyHeading, 0));
+}
+
+function updateLandingPattern() {
+	landingPatternLine.setPath(computeLandingPattern(dropzones[currentDropzoneId]));
 }
 
 // Event handlers
@@ -174,12 +203,10 @@ function onTimeTick() {
 	if (isSimulationRunning && canopyAltitude > 0) {
 		var speedH = getCanopyHorizontalSpeed(canopyMode);
 		var speedV = getCanopyVerticalSpeed(canopyMode);
+		var dt = updateFrequency / 1000.0;
 		
-		var speedCoeff = updateFrequency / 1000.0;
-		var dx = speedH * Math.sin(canopyHeading) + windSpeed * Math.sin(windDirection);
-		var dy = speedH * Math.cos(canopyHeading) + windSpeed * Math.cos(windDirection);
-		canopyLocation = moveCoords(canopyLocation, dx * speedCoeff, dy * speedCoeff);
-		canopyAltitude -= speedCoeff * speedV;
+		canopyLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, dt);
+		canopyAltitude -= dt * speedV;
 		
 		if (showSteadyPoint) {
 			var timeToLanding = canopyAltitude / speedV;
@@ -196,11 +223,15 @@ function onWindDirectionSliderValueChange(event, ui) {
 	windDirection = degToRad(ui.value);
 	rotateDiv($("#wind-arrow").get(0), windDirection);
 	$("#wind-direction-value").html("Wind direction: " + formatHeading(windDirection));
+	
+	updateLandingPattern();
 }
 
 function onWindSpeedSliderValueChange(event, ui) {
 	windSpeed = ui.value;
 	$("#wind-speed-value").html("Wind speed: " + formatSpeed(windSpeed, 1));
+	
+	updateLandingPattern();
 }
 
 function onOpeningAltitudeSliderValueChange(event, ui) {
@@ -209,8 +240,8 @@ function onOpeningAltitudeSliderValueChange(event, ui) {
 }
 
 function onDzMenuItemSelected(event, ui) {
-	dzId = ui.item.attr("id");
-	map.setCenter(dropzones[dzId]);
+	currentDropzoneId = ui.item.attr("id");
+	map.setCenter(dropzones[currentDropzoneId]);
 }
 
 function onShowSteadyPointCheckboxToggle() {
@@ -227,13 +258,15 @@ function onUseMetricSystemCheckboxToggle() {
 	$("#opening-altitude-slider").slider("value", openingAltitude);
 }
 
+function onShowLandingPatternCheckboxToggle() {
+	showLandingPattern = !showLandingPattern;
+	landingPatternLine.setVisible(showLandingPattern);
+}
+
 // Initialization
 
 function initializeCanopyImage() {	
 	var canopyCircleOptions = {
-      //strokeColor: '#000000',
-      //strokeOpacity: 1,
-      //strokeWeight: 1,
 	  strokeWeight: 0,
       fillColor: '#FF0000',
       fillOpacity: 1.0,
@@ -253,9 +286,6 @@ function initializeCanopyImage() {
 	canopyHeadingLine.setMap(map);
 	
 	var steadyPointCircleOptions = {
-      //strokeColor: '#000000',
-      //strokeOpacity: 1,
-      //strokeWeight: 1,
 	  strokeWeight: 0,
       fillColor: '#FF00FF',
       fillOpacity: 1.0,
@@ -272,13 +302,21 @@ function initialize() {
 		zoom: 16,
 		minZoom: 15,
 		maxZoom: 18,
-		center: dropzones[initialDropzone],
+		center: dropzones[currentDropzoneId],
 		keyboardShortcuts: false,
 		mapTypeId: google.maps.MapTypeId.SATELLITE
 	};
-	
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-	google.maps.event.addListener(map, "rightclick", onMapRightClick);
+	
+	landingPatternLine = new google.maps.Polyline({
+		geodesic: false,
+		strokeColor: '#00FFFF',
+		strokeOpacity: 1.0,
+		strokeWeight: 2,
+		zIndex: -1,
+		visible: showLandingPattern
+	});
+	landingPatternLine.setMap(map);
 	
 	for (var dz in dropzones) {
 		var markerOptions = {
@@ -334,11 +372,15 @@ function initialize() {
 	$("#use-metric-system-checkbox").prop("checked", useMetricSystem);
 	$("#use-metric-system-checkbox").click(onUseMetricSystemCheckboxToggle);
 	
+	$("#show-landing-pattern-checkbox").prop("checked", showLandingPattern);
+	$("#show-landing-pattern-checkbox").click(onShowLandingPatternCheckboxToggle);
+	
 	$("#settings").accordion({ collapsible: true });
 	$("#legend").accordion({ collapsible: true });
 	$("#status").accordion({ collapsible: true });
 	$("#status").hide();
 	
+	google.maps.event.addListener(map, "rightclick", onMapRightClick);
 	document.onkeydown = onKeyDown;
 	window.setInterval(onTimeTick, updateFrequency);
 }
