@@ -58,3 +58,5 @@ html, body, #map-canvas-container, #map-canvas, #right-panel {
 #legend-text {
 	font-size: small;
 }
+
+.ui-menu { z-index: 100; }
