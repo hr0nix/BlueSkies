@@ -1,4 +1,4 @@
-// State
+﻿// State
 var showSteadyPoint = false;
 var useMetricSystem = true;
 var showLandingPattern = false;
@@ -23,7 +23,9 @@ var landingPatternLine;
 var dropzones = {
 	"dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
 	"dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
-	"dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547)
+	"dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
+	"dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
+	"dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181)
 }
 var currentDropzoneId = "dz-uk-sibson";
 var updateFrequency = 20.0;
