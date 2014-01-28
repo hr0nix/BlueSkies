@@ -19,14 +19,19 @@ var steadyPointCircle;
 var canopyHeadingLine;
 var landingPatternLine;
 
-// Localization
-// The following is not used at the moment: all the localization is done in html
+// Localization for javascript
 var langClass="lang-en";
 var enResources = {
-	"altitude": "Altitude: "
+	"ms": "m/s",
+	"mph": "mph",
+	"m": "m",
+	"ft": "ft"
 };
 var ruResources = {
-	"altitude": "Высота: "
+	"ms": "м/с",
+	"mph": "миль/ч",
+	"m": "м",
+	"ft": "футов"
 };
 var langRes = {
 	"lang-en": enResources,
@@ -140,15 +145,15 @@ function metersPerSecToMilesPerHour(metersPerSec) {
 function formatSpeed(metersPerSec, significantDigits) {
 	significantDigits = significantDigits || 0;
 	return useMetricSystem
-		? $.number(metersPerSec, significantDigits) + " m/s"
-		: $.number(metersPerSecToMilesPerHour(metersPerSec), significantDigits) + " mph";
+		? $.number(metersPerSec, significantDigits) + " " + localize("ms")
+		: $.number(metersPerSecToMilesPerHour(metersPerSec), significantDigits) + " " + localize("mph");
 }
 
 function formatAltitude(meters, significantDigits) {
 	significantDigits = significantDigits || 0;
 	return useMetricSystem
-		? $.number(meters, significantDigits) + " m"
-		: $.number(metersToFeet(meters), significantDigits) + " ft";
+		? $.number(meters, significantDigits) + " " + localize("m")
+		: $.number(metersToFeet(meters), significantDigits) + " " + localize("ft");
 }
 
 function formatHeading(angle, significantDigits) {
@@ -270,6 +275,7 @@ function onSelectLanguage() {
 	var otherClass = langClass == "lang-ru" ? "lang-en" : "lang-ru";
 	$("." + langClass).show();
 	$("." + otherClass).hide();
+	updateSliderLabels();
 }
 
 function onDzMenuItemSelected(event, ui) {
@@ -283,13 +289,16 @@ function onShowSteadyPointCheckboxToggle() {
 	steadyPointCircle.setVisible(showSteadyPoint);
 }
 
-function onUseMetricSystemCheckboxToggle() {
-	useMetricSystem = !useMetricSystem;
-	
-	// Update slider labels
+function updateSliderLabels() {
 	$("#wind-direction-slider").slider("value", radToDeg(windDirection));
 	$("#wind-speed-slider").slider("value", windSpeed);
 	$("#opening-altitude-slider").slider("value", openingAltitude);
+}
+
+function onUseMetricSystemCheckboxToggle() {
+	useMetricSystem = !useMetricSystem;
+	
+	updateSliderLabels();
 }
 
 function onShowLandingPatternCheckboxToggle() {
