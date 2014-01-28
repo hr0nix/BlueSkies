@@ -420,7 +420,7 @@ function initialize() {
 	$("#show-landing-pattern-checkbox").click(onShowLandingPatternCheckboxToggle);
 	
 	$("#settings").accordion({ collapsible: true });
-	$("#legend").accordion({ collapsible: true });
+	$("#legend").accordion({ collapsible: true, heightStyle: "content" });
 	$("#status").accordion({ collapsible: true });
 	$("#status").hide();
 	
