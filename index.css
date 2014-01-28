@@ -1,66 +1,68 @@
 html, body, #map-canvas-container, #map-canvas, #right-panel {
-	height: 100%
+    height: 100%
 }
 
 #map-canvas-container {
-	width: 100%;
-	float: left;
-	margin-right: -400px;
+    width: 100%;
+    float: left;
+    margin-right: -400px;
 }
 
 #map-canvas {
-	margin-right: 400px;
+    margin-right: 400px;
 }
 
 #right-panel {
-	width: 400px;
-	float: right;
+    width: 400px;
+    float: right;
 }
 
 #settings , #status, #legend {
-	margin-left: 10px;
-	margin-right: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 #settings , #legend {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 #dz-selection-menu {
 }
 
 #wind-direction-slider, #wind-speed-slider, #opening-altitude-slider, #wind-arrow {
-	margin-top: 6px;
+    margin-top: 6px;
 }
 
 #wind-arrow {
-	float: right;
-	margin-right: 30px;
+    float: right;
+    margin-right: 30px;
 }
 
 .margin {
-	margin-top: 18px;
+    margin-top: 18px;
 }
 
 #steady-point-checkbox , #use-metric-system-checkbox, #show-landing-pattern-checkbox {
-	margin-top: 18px;
+    margin-top: 18px;
 }
 
 .value-font {
-	font-family: Georgia, serif;
-	font-size: large;
+    font-family: Georgia, serif;
+    font-size: large;
 }
 
 #legend-text {
-	font-size: small;
+    font-size: small;
 }
 
-.ui-menu { z-index: 100; }
+.ui-menu {
+    z-index: 100;
+}
 
 .lang-en {
 
 }
 
 .lang-ru {
-	display: none;
+    display: none;
 }
