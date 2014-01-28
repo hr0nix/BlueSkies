@@ -19,6 +19,24 @@ var steadyPointCircle;
 var canopyHeadingLine;
 var landingPatternLine;
 
+// Localization
+// The following is not used at the moment: all the localization is done in html
+var langClass="lang-en";
+var enResources = {
+	"altitude": "Altitude: "
+};
+var ruResources = {
+	"altitude": "Высота: "
+};
+var langRes = {
+	"lang-en": enResources,
+	"lang-ru": ruResources
+};
+
+function localize(id) {
+	return langRes[langClass][id];
+}
+
 // Options
 var dropzones = {
 	"dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
@@ -148,10 +166,10 @@ function updateCanopyControls() {
 }
 
 function updateCanopyStatus() {
-	$("#altitude-value").html("Altitude: " + formatAltitude(canopyAltitude, 0));
-	$("#horizontal-speed-value").html("Horizontal speed: " + formatSpeed(getCanopyHorizontalSpeed(canopyMode), 1));
-	$("#vertical-speed-value").html("Vertical speed: " + formatSpeed(getCanopyVerticalSpeed(canopyMode), 1));
-	$("#canopy-heading-value").html("Canopy heading: " + formatHeading(canopyHeading, 0));
+	$("#altitude-value").html(formatAltitude(canopyAltitude, 0));
+	$("#horizontal-speed-value").html(formatSpeed(getCanopyHorizontalSpeed(canopyMode), 1));
+	$("#vertical-speed-value").html(formatSpeed(getCanopyVerticalSpeed(canopyMode), 1));
+	$("#canopy-heading-value").html(formatHeading(canopyHeading, 0));
 }
 
 function updateLandingPattern() {
@@ -230,21 +248,28 @@ function onTimeTick() {
 function onWindDirectionSliderValueChange(event, ui) {
 	windDirection = degToRad(ui.value);
 	rotateDiv($("#wind-arrow").get(0), windDirection);
-	$("#wind-direction-value").html("Wind direction: " + formatHeading(windDirection));
+	$("#wind-direction-value").html(formatHeading(windDirection));
 	
 	updateLandingPattern();
 }
 
 function onWindSpeedSliderValueChange(event, ui) {
 	windSpeed = ui.value;
-	$("#wind-speed-value").html("Wind speed: " + formatSpeed(windSpeed, 1));
+	$("#wind-speed-value").html(formatSpeed(windSpeed, 1));
 	
 	updateLandingPattern();
 }
 
 function onOpeningAltitudeSliderValueChange(event, ui) {
 	openingAltitude = ui.value;
-	$("#opening-altitude-value").html("Opening altitude: " + formatAltitude(openingAltitude));
+	$("#opening-altitude-value").html(formatAltitude(openingAltitude));
+}
+
+function onSelectLanguage() {
+	langClass = $(this).attr("for").replace("select-","");
+	var otherClass = langClass == "lang-ru" ? "lang-en" : "lang-ru";
+	$("." + langClass).show();
+	$("." + otherClass).hide();
 }
 
 function onDzMenuItemSelected(event, ui) {
@@ -370,10 +395,11 @@ function initialize() {
 	$("#opening-altitude-slider .ui-slider-handle").unbind('keydown');
 	$("#opening-altitude-slider").slider("value", openingAltitude);
 	
-	var dzMenuOptions = {
-		select: onDzMenuItemSelected
-	}
-	$("#dz-selection-menu").menu(dzMenuOptions);
+	$("#language-menu").buttonset();
+
+	$("#language-menu > label").click(onSelectLanguage);
+
+	$("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
 	
 	$("#steady-point-checkbox").prop("checked", showSteadyPoint);
 	$("#steady-point-checkbox").click(onShowSteadyPointCheckboxToggle);

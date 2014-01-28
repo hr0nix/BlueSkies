@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 	<head>
 		<title>Accuracy landing simulator</title>
@@ -20,55 +20,72 @@
 		
 		<div id="right-panel">
 			<div id="status">
-				<h3>Canopy status</h3>
-				<div>
-					<div id="altitude-value">Altitude goes here</div>
-					<div id="horizontal-speed-value">Horizontal speed goes here</div>
-					<div id="vertical-speed-value">Vertical speed goes here</div>
-					<div id="canopy-heading-value">Canopy heading goes here</div>
+				<h3><span class="lang-en">Canopy status</span><span class="lang-ru">Состояние</span></h3>
+				<div class="value-font">
+					<div><span class="lang-en">Altitude: </span><span class="lang-ru">Высота: </span><span id="altitude-value"></span></div>
+					<div class="margin"><span class="lang-en">Horizontal speed: </span><span class="lang-ru">Горизонталь: </span><span id="horizontal-speed-value"></span></div>
+					<div class="margin"><span class="lang-en">Vertical speed: </span><span class="lang-ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
+					<div class="margin"><span class="lang-en">Canopy heading: </span><span class="lang-ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
 				</div>
 			</div>
 			<div id="settings">
-				<h3>Settings</h3>
+				<h3><span class="lang-en">Settings</span><span class="lang-ru">Настройки</span></h3>
 				<div>
-					<ul id="dz-selection-menu">
-						<li><a href="#">Pick a dropzone</a>
+					<form>
+					<div id="language-menu">
+						<input id="select-lang-en" type="radio" name="language"><label for="select-lang-en">English</label>
+						<input id="select-lang-ru" type="radio" name="language" checked="checked"><label for="select-lang-ru">Русский</label>
+					</div>
+					</form>
+					<div>
+					<ul id="dz-selection-menu" class="value">
+						<li><a href="#"><span class="lang-en">Pick a dropzone</span><span class="lang-ru">Дропзона</span></a>
 							<ul>
-								<li><a href="#">UK</a>
+								<li><a href="#"><span class="lang-en">UK</span><span class="lang-ru">Англия</span></a>
 									<ul>
-										<li id="dz-uk-sibson"><a href="#">Sibson</a></li>
+										<li id="dz-uk-sibson"><a href="#"><span class="lang-en">Sibson</span><span class="lang-ru">Сибсон</span></a></li>
 										<li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
 									</ul>
 								</li>
-								<li><a href="#">Russia</a>
+								<li><a href="#"><span class="lang-en">Russia</span><span class="lang-ru">Россия</span></a>
 									<ul>
-										<li id="dz-ru-puschino"><a href="#">Puschino</a></li>
-										<li id="dz-ru-kolomna"><a href="#">Kolomna</a></li>
-										<li id="dz-ru-vatulino"><a href="#">Vatulino</a></li>
+										<li id="dz-ru-puschino"><a href="#"><span class="lang-en">Puschino</span><span class="lang-ru">Пущино</span></a></li>
+										<li id="dz-ru-kolomna"><a href="#"><span class="lang-en">Kolomna</span><span class="lang-ru">Коломна</span></a></li>
+										<li id="dz-ru-vatulino"><a href="#"><span class="lang-en">Vatulino</span><span class="lang-ru">Ватулино</span></a></li>
 									</ul>
 								</li>
 							</ul>
 						</li>					
 					</ul>
+					</div>
 					<div id="wind-arrow"><img src="Arrow.png"></img></div>
-					<div id="wind-direction-value"></div>
+					<div class="margin value-font"><span class="lang-en">Wind direction: </span><span class="lang-ru">Направление: </span><span id="wind-direction-value"></span></div>
 					<div id="wind-direction-slider"></div>
-					<div id="wind-speed-value"></div>
+					<div class="margin value-font"><span class="lang-en">Wind speed: </span><span class="lang-ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
 					<div id="wind-speed-slider"></div>
-					<div id="opening-altitude-value"></div>
+					<div class="margin value-font"><span class="lang-en">Opening altitude: </span><span class="lang-ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
 					<div id="opening-altitude-slider"></div>
-					<input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox" class="checkbox-label">Show steady point</label><br>
-					<input type="checkbox" id="use-metric-system-checkbox"><label for="use-metric-system-checkbox" class="checkbox-label">Use metric system</label><br>
-					<input type="checkbox" id="show-landing-pattern-checkbox"><label for="show-landing-pattern-checkbox" class="checkbox-label">Show landing pattern</label>
+					<input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox" class="value-font"><span class="lang-en">Show steady point</span><span class="lang-ru">Неподвижная точка</span></label><br>
+					<input type="checkbox" id="use-metric-system-checkbox"><label for="use-metric-system-checkbox" class="value-font"><span class="lang-en">Use metric system</span><span class="lang-ru">Метрическая система</span></label><br>
+					<input type="checkbox" id="show-landing-pattern-checkbox"><label for="show-landing-pattern-checkbox" class="value-font"><span class="lang-en">Show landing pattern</span><span class="lang-ru">Контрольные точки</span></label>
 				</div>
 			</div>
 			<div id="legend">
-				<h3>Legend</h3>
+				<h3><span class="lang-en">Legend</span><span class="lang-ru">Как этим пользоваться?</span></h3>
 				<div id="legend-text">
-					<p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
-					<p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
-					<p>That little red dot is your canopy. The black line shows your current heading. The pink dot shows where you will land with the current setup (if "Show steady point" is enabled).</p>
-					<p>Read more about the tool <a href="about.html">here</a>.</p>
+					<div class="lang-en">
+						<p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
+						<p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
+						<p>That little red dot is your canopy. The black line shows your current heading. The pink dot shows where you will land with the current setup (if "Show steady point" is enabled).</p>
+						<p>Read more about the tool <a href="about.html">here</a>.</p>
+					</div>
+
+					<div class="lang-ru">
+						<p>Нажатием правой кнопки мыши можно начать (заново) снижение под куполом с заданной высоты.</p>
+						<p>Для управления используется стрелки: влево-вправо для управления куполом, вверх-вниз для выбора режима.</p>
+						<p>Маленькя красная точка это ваш купол. Черная линия показывает направление купола. Розовая точка указывает место приземления при отсутствии дальнейшего управления куполом и изменения ветра (в случае, если отмечена опция "Неподвижная точка)</p>
+						<p>Подробнее читайте <a href="about.html">здесь</a>.</p>
+					</div>
 				</div>
 			</div>
 		</div>
