@@ -2,7 +2,7 @@
 var showSteadyPoint = false;
 var useMetricSystem = true;
 var showLandingPattern = false;
-var lhsLandingPattern = true;
+var lhsLandingPattern = false;
 var isSimulationRunning = false;
 var canopyLocation;
 var canopyAltitude;
