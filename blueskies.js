@@ -138,7 +138,7 @@ function computeLandingPattern(location) {
     var point2 = moveInWind(point1, windSpeed, windDirection + Math.PI, speedH, windDirection + rotationFactor * angleIntoWind, timeToPoint2);
     
     var timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV;
-    // In strong windws we always try to look into the wind, back to the wind otherwise
+    // In strong winds we always try to look into the wind, back to the wind otherwise
     angleIntoWind = windSpeed < speedH ? Math.PI : 0;
     var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, speedH, windDirection + angleIntoWind, timeToPoint3);
     
@@ -310,11 +310,6 @@ function onUseMetricSystemCheckboxToggle() {
     useMetricSystem = !useMetricSystem;
     
     updateSliderLabels();
-}
-
-function onShowLandingPatternCheckboxToggle() {
-    showLandingPattern = !showLandingPattern;
-    landingPatternLine.setVisible(showLandingPattern);
 }
 
 function onPatternSelect() {
