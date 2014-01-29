@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <title>Accuracy landing simulator</title>
@@ -67,7 +67,16 @@
                     <div id="opening-altitude-slider"></div>
                     <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox" class="value-font"><span class="lang-en">Show steady point</span><span class="lang-ru">Неподвижная точка</span></label><br>
                     <input type="checkbox" id="use-metric-system-checkbox"><label for="use-metric-system-checkbox" class="value-font"><span class="lang-en">Use metric system</span><span class="lang-ru">Метрическая система</span></label><br>
-                    <input type="checkbox" id="show-landing-pattern-checkbox"><label for="show-landing-pattern-checkbox" class="value-font"><span class="lang-en">Show landing pattern</span><span class="lang-ru">Контрольные точки</span></label>
+                    <div class="margin value-font">
+                        <span class="lang-en">Landing pattern</span><span class="lang-ru">Круг захода</span>
+                        <form>
+                        <div id="pattern-menu">
+                            <input id="pattern-hide" type="radio" name="pattern" checked="checked"><label for="pattern-hide"><span class="lang-en">Hide</span><span class="lang-ru">Нет</span></label>
+                            <input id="pattern-rhs" type="radio" name="pattern"><label for="pattern-rhs"><span class="lang-en">Right</span><span class="lang-ru">Правым</span></label>
+                            <input id="pattern-lhs" type="radio" name="pattern"><label for="pattern-lhs"><span class="lang-en">Left</span><span class="lang-ru">Левым</span></label>
+                        </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div id="legend">

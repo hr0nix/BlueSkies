@@ -1,7 +1,8 @@
-﻿// State
+// State
 var showSteadyPoint = false;
 var useMetricSystem = true;
 var showLandingPattern = false;
+var lhsLandingPattern = true;
 var isSimulationRunning = false;
 var canopyLocation;
 var canopyAltitude;
@@ -33,13 +34,13 @@ var ruResources = {
     "m": "м",
     "ft": "футов"
 };
-var langRes = {
+var langResources = {
     "lang-en": enResources,
     "lang-ru": ruResources
 };
 
 function localize(id) {
-    return langRes[langClass][id];
+    return langResources[langClass][id];
 }
 
 // Options
@@ -115,21 +116,31 @@ function getCanopyVerticalSpeed(mode) {
     return interpolate(verticalSpeeds, mode);
 }
 
+// TODO: implement
+// returns: canopy heading necessary to maintain desiredTrack ground track in given winds (not always possible, of course)
+function createGroundTrack(windSpeed, windDirection, speedH, desiredTrack) {
+
+}
+
 function computeLandingPattern(location) {
     var controlPointAltitudes = [ 100, 200, 300 ];
     var patternMode = 0.85;
     var speedH = getCanopyHorizontalSpeed(patternMode);
     var speedV = getCanopyVerticalSpeed(patternMode);
+    var rotationFactor = lhsLandingPattern ? 1 : -1;
     
     var timeToPoint1 = controlPointAltitudes[0] / speedV;
     var point1 = moveInWind(location, windSpeed, windDirection + Math.PI, speedH, windDirection, timeToPoint1);
     
     var timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / speedV;
-    var headingCorrection = windSpeed >= speedH ? 0 : Math.PI * 0.5 - Math.acos(-windSpeed / speedH);
-    var point2 = moveInWind(point1, windSpeed, windDirection + Math.PI, speedH, windDirection - Math.PI * 0.5 - headingCorrection, timeToPoint2);
+    // In ordinary winds we hold crosswind ground track, in strong winds we move backwards with some arbitrary low angle to the wind
+    var angleIntoWind = windSpeed < speedH ? Math.acos(windSpeed / speedH) : Math.PI / 8;
+    var point2 = moveInWind(point1, windSpeed, windDirection + Math.PI, speedH, windDirection + rotationFactor * angleIntoWind, timeToPoint2);
     
     var timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV;
-    var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, speedH, windDirection + Math.PI, timeToPoint3);
+    // In strong windws we always try to look into the wind, back to the wind otherwise
+    angleIntoWind = windSpeed < speedH ? Math.PI : 0;
+    var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, speedH, windDirection + angleIntoWind, timeToPoint3);
     
     return [point3, point2, point1, location];
 }
@@ -306,6 +317,26 @@ function onShowLandingPatternCheckboxToggle() {
     landingPatternLine.setVisible(showLandingPattern);
 }
 
+function onPatternSelect() {
+    switch( $(this).attr('for') ) {
+        case "pattern-hide":
+            showLandingPattern = false;
+            break;
+
+        case "pattern-rhs":
+            showLandingPattern = true;
+            lhsLandingPattern = false;
+            break;
+
+        case "pattern-lhs":
+            showLandingPattern = true;
+            lhsLandingPattern = true;
+            break;
+    }
+    updateLandingPattern();
+    landingPatternLine.setVisible(showLandingPattern);
+}
+
 // Initialization
 
 function initializeCanopyImage() {  
@@ -405,7 +436,6 @@ function initialize() {
     $("#opening-altitude-slider").slider("value", openingAltitude);
     
     $("#language-menu").buttonset();
-
     $("#language-menu > label").click(onSelectLanguage);
 
     $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
@@ -415,9 +445,9 @@ function initialize() {
     
     $("#use-metric-system-checkbox").prop("checked", useMetricSystem);
     $("#use-metric-system-checkbox").click(onUseMetricSystemCheckboxToggle);
-    
-    $("#show-landing-pattern-checkbox").prop("checked", showLandingPattern);
-    $("#show-landing-pattern-checkbox").click(onShowLandingPatternCheckboxToggle);
+
+    $("#pattern-menu").buttonset();
+    $("#pattern-menu > label").click(onPatternSelect);
     
     $("#settings").accordion({ collapsible: true });
     $("#legend").accordion({ collapsible: true, heightStyle: "content" });
