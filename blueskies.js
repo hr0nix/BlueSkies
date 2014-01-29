@@ -43,6 +43,20 @@ function localize(id) {
     return langResources[langClass][id];
 }
 
+function setLanguage(lang) {
+    langClass = "lang-" + lang;
+    var otherClass = langClass == "lang-ru" ? "lang-en" : "lang-ru";
+    $("." + langClass).show();
+    $("." + otherClass).hide();
+    updateSliderLabels();
+    updateLanguageRadio();
+}
+
+function updateLanguageRadio() {
+    $('#select-' + langClass).prop('checked', true);
+    $("#language-menu").buttonset('refresh');
+}
+
 // Options
 var dropzones = {
     "dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
@@ -172,6 +186,35 @@ function formatHeading(angle, significantDigits) {
     return $.number(radToDeg(angle), significantDigits) + "°";
 }
 
+function setPatternType(type) {
+    switch( type ) {
+        case "pattern-hide":
+            showLandingPattern = false;
+            break;
+
+        case "pattern-rhs":
+            showLandingPattern = true;
+            lhsLandingPattern = false;
+            break;
+
+        case "pattern-lhs":
+            showLandingPattern = true;
+            lhsLandingPattern = true;
+            break;
+    }
+    updateLandingPattern();
+    landingPatternLine.setVisible(showLandingPattern);
+}
+
+function setDz(dz) {
+    if( !dropzones[dz] ) {
+        return;
+    }
+    currentDropzoneId = dz;
+    map.setCenter(dropzones[currentDropzoneId]);
+    updateLandingPattern();
+}
+
 // UI update logic
 
 function updateCanopyControls() {
@@ -190,6 +233,31 @@ function updateCanopyStatus() {
 
 function updateLandingPattern() {
     landingPatternLine.setPath(computeLandingPattern(dropzones[currentDropzoneId]));
+}
+
+// Get query string, got from http://stackoverflow.com/a/979995/193903
+
+function getQueryString() {
+  // This function is anonymous, is executed immediately and 
+  // the return value is assigned to QueryString!
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    	// If first entry with this name
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = pair[1];
+    	// If second entry with this name
+    } else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]], pair[1] ];
+      query_string[pair[0]] = arr;
+    	// If third or later entry with this name
+    } else {
+      query_string[pair[0]].push(pair[1]);
+    }
+  } 
+    return query_string;
 }
 
 // Event handlers
@@ -282,17 +350,11 @@ function onOpeningAltitudeSliderValueChange(event, ui) {
 }
 
 function onSelectLanguage() {
-    langClass = $(this).attr("for").replace("select-","");
-    var otherClass = langClass == "lang-ru" ? "lang-en" : "lang-ru";
-    $("." + langClass).show();
-    $("." + otherClass).hide();
-    updateSliderLabels();
+    setLanguage($(this).attr("for").replace("select-lang-",""));
 }
 
 function onDzMenuItemSelected(event, ui) {
-    currentDropzoneId = ui.item.attr("id");
-    map.setCenter(dropzones[currentDropzoneId]);
-    updateLandingPattern();
+    setDz(ui.item.attr("id"));
 }
 
 function onShowSteadyPointCheckboxToggle() {
@@ -313,23 +375,7 @@ function onUseMetricSystemCheckboxToggle() {
 }
 
 function onPatternSelect() {
-    switch( $(this).attr('for') ) {
-        case "pattern-hide":
-            showLandingPattern = false;
-            break;
-
-        case "pattern-rhs":
-            showLandingPattern = true;
-            lhsLandingPattern = false;
-            break;
-
-        case "pattern-lhs":
-            showLandingPattern = true;
-            lhsLandingPattern = true;
-            break;
-    }
-    updateLandingPattern();
-    landingPatternLine.setVisible(showLandingPattern);
+    setPatternType($(this).attr('for'));
 }
 
 // Initialization
@@ -430,17 +476,19 @@ function initialize() {
     $("#opening-altitude-slider .ui-slider-handle").unbind('keydown');
     $("#opening-altitude-slider").slider("value", openingAltitude);
     
+    $("#select-lang-en").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
     $("#language-menu").buttonset();
     $("#language-menu > label").click(onSelectLanguage);
 
     $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
     
-    $("#steady-point-checkbox").prop("checked", showSteadyPoint);
+    $("#steady-point-checkbox").prop('checked', showSteadyPoint);
     $("#steady-point-checkbox").click(onShowSteadyPointCheckboxToggle);
     
-    $("#use-metric-system-checkbox").prop("checked", useMetricSystem);
+    $("#use-metric-system-checkbox").prop('checked', useMetricSystem);
     $("#use-metric-system-checkbox").click(onUseMetricSystemCheckboxToggle);
 
+    $("#pattern-hide").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-menu").buttonset();
     $("#pattern-menu > label").click(onPatternSelect);
     
@@ -448,7 +496,18 @@ function initialize() {
     $("#legend").accordion({ collapsible: true, heightStyle: "content" });
     $("#status").accordion({ collapsible: true });
     $("#status").hide();
-    
+
+    var queryString = getQueryString();
+    var lang = queryString.lang;
+    var dz = queryString.dz;
+    if( lang ) {
+        setLanguage(lang);
+    }
+
+    if( dz ) {
+        setDz("dz-" + dz);
+    }
+
     google.maps.event.addListener(map, "rightclick", onMapRightClick);
     document.onkeydown = onKeyDown;
     window.setInterval(onTimeTick, updateFrequency);
