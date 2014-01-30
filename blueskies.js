@@ -205,20 +205,6 @@ function reachSet(windSpeed, windDirection, altitude, u) {
     };
 }
  
-function initReachSet(objects, color) {
-    for (var i = 0; i < reachSetSteps; i++) {
-        var circle = {
-            strokeColor: color,
-            strokeOpacity: 0.0,
-            fillColor: color,
-            fillOpacity: 0.1,
-            map: map,
-            zindex: 0
-        };
-        objects.push(new google.maps.Circle(circle));
-    }
-}
-
 function computeReachSet(objects, sourceLocation, altitude, reachability) {
     for (var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++) {
         var u = 1 / (reachSetSteps - 1) * i;
@@ -526,6 +512,22 @@ function initializeCanopyImage() {
     steadyPointCircle = new google.maps.Circle(steadyPointCircleOptions);
 }
 
+function initializeReachSet(objects, color) {
+    for (var i = 0; i < reachSetSteps; i++) {
+        var circleOptions = {
+            strokeColor: color,
+            strokeOpacity: 0.0,
+            fillColor: color,
+            fillOpacity: 0.1,
+            map: map,
+            zindex: 0
+        };
+        var circle = new google.maps.Circle(circleOptions)
+        objects.push(circle);
+        google.maps.event.addListener(circle, "rightclick", onMapRightClick);
+    }
+}
+
 function initialize() {
     var mapOptions = {
         zoom: 16,
@@ -558,8 +560,8 @@ function initialize() {
     }
     
     // We initialize this early so ui events have somithing to update
-    initReachSet(controllabilitySetObjects, '#00FF00');
-    initReachSet(reachabilitySetObjects, '#FF0000');
+    initializeReachSet(controllabilitySetObjects, '#00FF00');
+    initializeReachSet(reachabilitySetObjects, '#FF0000');
     
     var windDirectionSliderOptions = {
         min: 0,
