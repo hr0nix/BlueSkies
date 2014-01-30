@@ -3,6 +3,7 @@
 var horizontalSpeeds = [0, 2.5, 5, 7.5, 10];
 var verticalSpeeds = [10, 7, 5, 3, 5];
 var reachSetSteps = (horizontalSpeeds.length - 1) * 2 + 1; // we need this kind of step to make sure that during interpolations into the above arrays we get the exact hits
+var lastReachSetSteps = 3; // Experiments show that only the faster modes are efficient enough to be on the edge of reachability sets, so we only compute and draw those
 
 // State
 var showSteadyPoint = false;
@@ -172,6 +173,7 @@ function reachSet(windSpeed, windDirection, altitude, u) {
 function initReachSet(objects, color) {
     for( var i = 0; i < reachSetSteps; i++ ) {
         var circle = {
+            strokeColor: color,
             strokeOpacity: 0.0,
             fillColor: color,
             fillOpacity: 0.1,
@@ -183,7 +185,7 @@ function initReachSet(objects, color) {
 }
 
 function computeReachSet(objects, sourceLocation, altitude, reachability) {
-    for( var i = 0; i < reachSetSteps; i++ ) {
+    for( var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++ ) {
         var u = 1 / (reachSetSteps - 1) * i;
         var set = reachSet(windSpeed, windDirection, altitude, u);
         var shiftFactor = reachability ? 1 : -1; // for reachability we shift downwind, for controllability -- upwind
