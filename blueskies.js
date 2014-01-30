@@ -65,7 +65,7 @@ function setLanguage(lang) {
 }
 
 function updateLanguageRadio() {
-    $('#select-' + langClass).prop('checked', true);
+    $("#select-" + langClass).prop('checked', true);
     $("#language-menu").buttonset('refresh');
 }
 
@@ -94,10 +94,10 @@ function radToDeg(rad) {
 }
 
 function normalizeAngle(angle) {
-    while( angle > 2 * Math.PI ) {
+    while (angle > 2 * Math.PI) {
         angle -= 2 * Math.PI;
     }
-    while( angle < 0 ) {
+    while (angle < 0) {
         angle += 2 * Math.PI;
     }
     return angle;
@@ -171,7 +171,7 @@ function reachSet(windSpeed, windDirection, altitude, u) {
 }
  
 function initReachSet(objects, color) {
-    for( var i = 0; i < reachSetSteps; i++ ) {
+    for (var i = 0; i < reachSetSteps; i++) {
         var circle = {
             strokeColor: color,
             strokeOpacity: 0.0,
@@ -185,7 +185,7 @@ function initReachSet(objects, color) {
 }
 
 function computeReachSet(objects, sourceLocation, altitude, reachability) {
-    for( var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++ ) {
+    for (var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++) {
         var u = 1 / (reachSetSteps - 1) * i;
         var set = reachSet(windSpeed, windDirection, altitude, u);
         var shiftFactor = reachability ? 1 : -1; // for reachability we shift downwind, for controllability -- upwind
@@ -196,7 +196,7 @@ function computeReachSet(objects, sourceLocation, altitude, reachability) {
 }
 
 function updateReachSetVisibility(objects, visible) {
-    for( var i = 0; i < objects.length; i++ ) {
+    for (var i = 0; i < objects.length; i++) {
         objects[i].setVisible(visible);
     }
 }
@@ -204,7 +204,7 @@ function updateReachSetVisibility(objects, visible) {
 function updateReachabilitySet() {
     updateReachSetVisibility(reachabilitySetObjects, showReachabilitySet);
 
-    if( showReachabilitySet ) {
+    if (showReachabilitySet) {
         computeReachSet(reachabilitySetObjects, canopyLocation, canopyAltitude, true);
     }
 }
@@ -212,7 +212,7 @@ function updateReachabilitySet() {
 function updateControllabilitySet() {
     updateReachSetVisibility(controllabilitySetObjects, showControllabilitySet);
 
-    if( showControllabilitySet ) {
+    if (showControllabilitySet) {
         var altitude = canopyAltitude > 0 ? canopyAltitude : openingAltitude;
         computeReachSet(controllabilitySetObjects, dropzones[currentDropzoneId], altitude, false);
     }
@@ -265,11 +265,11 @@ function formatAltitude(meters, significantDigits) {
 
 function formatHeading(angle, significantDigits) {
     significantDigits = significantDigits || 0;
-    return $.number(radToDeg(angle), significantDigits) + "°";
+    return $.number(radToDeg(angle), significantDigits) + "&deg;";
 }
 
 function setPatternType(type) {
-    switch( type ) {
+    switch (type) {
         case "pattern-hide":
             showLandingPattern = false;
             break;
@@ -289,7 +289,7 @@ function setPatternType(type) {
 }
 
 function setDz(dz) {
-    if( !dropzones[dz] ) {
+    if (!dropzones[dz]) {
         return;
     }
     currentDropzoneId = dz;
@@ -607,11 +607,11 @@ function initialize() {
     var queryString = getQueryString();
     var lang = queryString.lang;
     var dz = queryString.dz;
-    if( lang ) {
+    if (lang) {
         setLanguage(lang);
     }
 
-    if( dz ) {
+    if (dz) {
         setDz("dz-" + dz);
     }
 
