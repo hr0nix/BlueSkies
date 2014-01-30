@@ -10,7 +10,7 @@ var canopyHeading;
 var canopyMode;
 var steadyPointLocation;
 var windSpeed = 5;
-var windDirection = 0;
+var windDirection = 0; // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
 var openingAltitude = 1000;
 
 // UI objects
@@ -79,6 +79,20 @@ function degToRad(deg) {
 
 function radToDeg(rad) {
     return rad * 180 / Math.PI;
+}
+
+function normalizeAngle(angle) {
+    while( angle > 2 * Math.PI ) {
+        angle -= 2 * Math.PI;
+    }
+    while( angle < 0 ) {
+        angle += 2 * Math.PI;
+    }
+    return angle;
+}
+
+function reportedWindDirection(direction) {
+    return normalizeAngle(direction + Math.PI);
 }
 
 function moveCoords(coords, dx, dy) {
@@ -289,11 +303,7 @@ function onKeyDown(e) {
     }
     
     // Normalize canopy heading
-    if (canopyHeading < 0) {
-        canopyHeading += Math.PI * 2;
-    } else if (canopyHeading > Math.PI * 2) {
-        canopyHeading -= Math.PI * 2
-    }
+    canopyHeading = normalizeAngle(canopyHeading);
 }
 
 function onMapRightClick(event) {
@@ -332,7 +342,7 @@ function onTimeTick() {
 function onWindDirectionSliderValueChange(event, ui) {
     windDirection = degToRad(ui.value);
     rotateDiv($("#wind-arrow").get(0), windDirection);
-    $("#wind-direction-value").html(formatHeading(windDirection));
+    $("#wind-direction-value").html(formatHeading(reportedWindDirection(windDirection)));
     
     updateLandingPattern();
 }
