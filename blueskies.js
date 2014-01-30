@@ -17,8 +17,9 @@ var dropzones = {
 
 // Time
 var updateFrequency = 20.0;
-var headingUpdateSpeed = Math.PI * 0.008;
-var canopyModeUpdateSpeed = 0.05;
+var timeScaleCoeff = 1.0;
+var headingUpdateSpeed = Math.PI * 0.008; // Radians per update
+var canopyModeUpdateSpeed = 0.05; // Mode units per update
 
 ////// State
 
@@ -38,6 +39,7 @@ var windSpeed = 5;
 var windDirection = 0; // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
 var openingAltitude = 1000;
 var currentDropzoneId = "dz-uk-sibson";
+var prevUpdateTime;
 
 ////// UI objects
 
@@ -393,6 +395,7 @@ function onMapRightClick(event) {
     canopyAltitude = openingAltitude;
     canopyHeading = windDirection + Math.PI; // Into the wind
     canopyMode = 0.75;
+    prevUpdateTime = new Date().getTime();
     
     if (!isSimulationRunning) {
         initializeCanopyImage();
@@ -405,7 +408,12 @@ function onTimeTick() {
     if (isSimulationRunning && canopyAltitude > 0) {
         var speedH = getCanopyHorizontalSpeed(canopyMode);
         var speedV = getCanopyVerticalSpeed(canopyMode);
-        var dt = updateFrequency / 1000.0;
+        
+        var currentUpdateTime = new Date().getTime();
+        var dt = timeScaleCoeff * (currentUpdateTime - prevUpdateTime) / 1000.0;
+        prevUpdateTime = currentUpdateTime;
+        
+        dt = Math.min(dt, canopyAltitude / speedV); // We don't want to go below ground
         
         canopyLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, dt);
         canopyAltitude -= dt * speedV;
