@@ -1,6 +1,14 @@
+// Parameters
+// Canopy modes
+var horizontalSpeeds = [0, 2.5, 5, 7.5, 10];
+var verticalSpeeds = [10, 7, 5, 3, 5];
+var reachSetSteps = (horizontalSpeeds.length - 1) * 2 + 1; // we need this kind of step to make sure that during interpolations into the above arrays we get the exact hits
+
 // State
 var showSteadyPoint = false;
 var useMetricSystem = true;
+var showReachabilitySet = false;
+var showControllabilitySet = false;
 var showLandingPattern = false;
 var lhsLandingPattern = false;
 var isSimulationRunning = false;
@@ -19,6 +27,9 @@ var canopyCircle;
 var steadyPointCircle;
 var canopyHeadingLine;
 var landingPatternLine;
+
+var reachabilitySetObjects = [];
+var controllabilitySetObjects = [];
 
 // Localization for javascript
 var langClass="lang-en";
@@ -135,12 +146,10 @@ function interpolate(arr, coeff) {
 }
 
 function getCanopyHorizontalSpeed(mode) {
-    horizontalSpeeds = [0, 2.5, 5, 7.5, 10];
     return interpolate(horizontalSpeeds, mode);
 }
 
 function getCanopyVerticalSpeed(mode) {
-    verticalSpeeds = [10, 7, 5, 3, 5];
     return interpolate(verticalSpeeds, mode);
 }
 
@@ -148,6 +157,50 @@ function getCanopyVerticalSpeed(mode) {
 // returns: canopy heading necessary to maintain desiredTrack ground track in given winds (not always possible, of course)
 function createGroundTrack(windSpeed, windDirection, speedH, desiredTrack) {
 
+}
+
+function reachSet(windSpeed, windDirection, altitude, u) {
+    var speedH = getCanopyHorizontalSpeed(u);
+    var speedV = getCanopyVerticalSpeed(u);
+    var time = altitude / speedV;
+    return {
+        c: [time * windSpeed * Math.sin(windDirection), time * windSpeed * Math.cos(windDirection)],
+        radius: time * speedH
+    };
+}
+ 
+function initReachSet(objects, color) {
+    for( var i = 0; i < reachSetSteps; i++ ) {
+        var circle = {
+            strokeOpacity: 0.0,
+            fillColor: color,
+            fillOpacity: 0.1,
+            map: map,
+            zindex: 0
+        };
+        objects.push(new google.maps.Circle(circle));
+    }
+}
+
+function computeReachSet(objects, sourceLocation, altitude, reachability) {
+    for( var i = 0; i < reachSetSteps; i++ ) {
+        var u = 1 / (reachSetSteps - 1) * i;
+        var set = reachSet(windSpeed, windDirection, altitude, u);
+        var shiftFactor = reachability ? 1 : -1; // for reachability we shift downwind, for controllability -- upwind
+
+        objects[i].setCenter(moveCoords(sourceLocation, shiftFactor * set.c[0], shiftFactor * set.c[1]));
+        objects[i].setRadius(set.radius);
+        objects[i].setVisible(reachability ? showReachabilitySet : showControllabilitySet);
+    }
+}
+
+function updateReachabilitySet() {
+    computeReachSet(reachabilitySetObjects, canopyLocation, canopyAltitude, true);
+}
+
+function updateControllabilitySet() {
+    var altitude = canopyAltitude > 0 ? canopyAltitude : openingAltitude;
+    computeReachSet(controllabilitySetObjects, dropzones[currentDropzoneId], altitude, false);
 }
 
 function computeLandingPattern(location) {
@@ -236,6 +289,9 @@ function updateCanopyControls() {
     canopyCircle.setCenter(canopyLocation);
     canopyHeadingLine.setPath([canopyLocation, headingLineEnd]);
     steadyPointCircle.setCenter(steadyPointLocation);
+
+    updateReachabilitySet();
+    updateControllabilitySet();
 }
 
 function updateCanopyStatus() {
@@ -247,6 +303,8 @@ function updateCanopyStatus() {
 
 function updateLandingPattern() {
     landingPatternLine.setPath(computeLandingPattern(dropzones[currentDropzoneId]));
+
+    updateControllabilitySet();
 }
 
 // Get query string, got from http://stackoverflow.com/a/979995/193903
@@ -357,6 +415,8 @@ function onWindSpeedSliderValueChange(event, ui) {
 function onOpeningAltitudeSliderValueChange(event, ui) {
     openingAltitude = ui.value;
     $("#opening-altitude-value").html(formatAltitude(openingAltitude));
+
+    updateLandingPattern();
 }
 
 function onSelectLanguage() {
@@ -382,6 +442,18 @@ function onUseMetricSystemCheckboxToggle() {
     useMetricSystem = !useMetricSystem;
     
     updateSliderLabels();
+}
+
+function onShowControllabilitySetCheckboxToggle() {
+    showControllabilitySet = !showControllabilitySet;
+    
+    updateControllabilitySet();
+}
+
+function onShowReachabilitySetCheckboxToggle() {
+    showReachabilitySet = !showReachabilitySet;
+    
+    updateReachabilitySet();
 }
 
 function onPatternSelect() {
@@ -425,7 +497,7 @@ function initializeCanopyImage() {
 function initialize() {
     var mapOptions = {
         zoom: 16,
-        minZoom: 15,
+        minZoom: 12,
         maxZoom: 18,
         center: dropzones[currentDropzoneId],
         keyboardShortcuts: false,
@@ -452,6 +524,10 @@ function initialize() {
         
         new google.maps.Marker(markerOptions);
     }
+    
+    // We initialize this early so ui events have somithing to update
+    initReachSet(controllabilitySetObjects, '#00FF00');
+    initReachSet(reachabilitySetObjects, '#FF0000');
     
     var windDirectionSliderOptions = {
         min: 0,
@@ -497,6 +573,12 @@ function initialize() {
     
     $("#use-metric-system-checkbox").prop('checked', useMetricSystem);
     $("#use-metric-system-checkbox").click(onUseMetricSystemCheckboxToggle);
+
+    $("#show-controllability-set-checkbox").prop('checked', showControllabilitySet);
+    $("#show-controllability-set-checkbox").click(onShowControllabilitySetCheckboxToggle);
+
+    $("#show-reachability-set-checkbox").prop('checked', showReachabilitySet);
+    $("#show-reachability-set-checkbox").click(onShowReachabilitySetCheckboxToggle);
 
     $("#pattern-hide").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-menu").buttonset();

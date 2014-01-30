@@ -47,10 +47,6 @@ body {
     margin-top: 18px;
 }
 
-#steady-point-checkbox , #use-metric-system-checkbox, #show-landing-pattern-checkbox {
-    margin-top: 18px;
-}
-
 .value-font {
     font-family: Georgia, serif;
     font-size: large;
