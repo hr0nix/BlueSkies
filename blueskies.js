@@ -190,17 +190,30 @@ function computeReachSet(objects, sourceLocation, altitude, reachability) {
 
         objects[i].setCenter(moveCoords(sourceLocation, shiftFactor * set.c[0], shiftFactor * set.c[1]));
         objects[i].setRadius(set.radius);
-        objects[i].setVisible(reachability ? showReachabilitySet : showControllabilitySet);
+    }
+}
+
+function updateReachSetVisibility(objects, visible) {
+    for( var i = 0; i < objects.length; i++ ) {
+        objects[i].setVisible(visible);
     }
 }
 
 function updateReachabilitySet() {
-    computeReachSet(reachabilitySetObjects, canopyLocation, canopyAltitude, true);
+    updateReachSetVisibility(reachabilitySetObjects, showReachabilitySet);
+
+    if( showReachabilitySet ) {
+        computeReachSet(reachabilitySetObjects, canopyLocation, canopyAltitude, true);
+    }
 }
 
 function updateControllabilitySet() {
-    var altitude = canopyAltitude > 0 ? canopyAltitude : openingAltitude;
-    computeReachSet(controllabilitySetObjects, dropzones[currentDropzoneId], altitude, false);
+    updateReachSetVisibility(controllabilitySetObjects, showControllabilitySet);
+
+    if( showControllabilitySet ) {
+        var altitude = canopyAltitude > 0 ? canopyAltitude : openingAltitude;
+        computeReachSet(controllabilitySetObjects, dropzones[currentDropzoneId], altitude, false);
+    }
 }
 
 function computeLandingPattern(location) {
