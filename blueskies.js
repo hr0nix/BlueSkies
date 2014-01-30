@@ -56,6 +56,9 @@ function localize(id) {
 }
 
 function setLanguage(lang) {
+    if (lang != "ru" && lang != "en") {
+        return;
+    }
     langClass = "lang-" + lang;
     var otherClass = langClass == "lang-ru" ? "lang-en" : "lang-ru";
     $("." + langClass).show();
