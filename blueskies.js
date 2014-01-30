@@ -560,7 +560,7 @@ function initialize() {
     }
     
     // We initialize this early so ui events have somithing to update
-    initializeReachSet(controllabilitySetObjects, '#00FF00');
+    initializeReachSet(controllabilitySetObjects, '#0000FF');
     initializeReachSet(reachabilitySetObjects, '#FF0000');
     
     var windDirectionSliderOptions = {
