@@ -1,11 +1,27 @@
-// Parameters
+////// Parameters
+
 // Canopy modes
 var horizontalSpeeds = [0, 2.5, 5, 7.5, 10];
 var verticalSpeeds = [10, 7, 5, 3, 5];
 var reachSetSteps = (horizontalSpeeds.length - 1) * 2 + 1; // we need this kind of step to make sure that during interpolations into the above arrays we get the exact hits
 var lastReachSetSteps = 3; // Experiments show that only the faster modes are efficient enough to be on the edge of reachability sets, so we only compute and draw those
 
-// State
+// Dropzones
+var dropzones = {
+    "dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
+    "dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
+    "dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
+    "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
+    "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181)
+}
+
+// Time
+var updateFrequency = 20.0;
+var headingUpdateSpeed = Math.PI * 0.008;
+var canopyModeUpdateSpeed = 0.05;
+
+////// State
+
 var showSteadyPoint = false;
 var useMetricSystem = true;
 var showReachabilitySet = false;
@@ -21,8 +37,10 @@ var steadyPointLocation;
 var windSpeed = 5;
 var windDirection = 0; // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
 var openingAltitude = 1000;
+var currentDropzoneId = "dz-uk-sibson";
 
-// UI objects
+////// UI objects
+
 var map;
 var canopyCircle;
 var steadyPointCircle;
@@ -32,7 +50,8 @@ var landingPatternLine;
 var reachabilitySetObjects = [];
 var controllabilitySetObjects = [];
 
-// Localization for javascript
+////// Localization for javascript
+
 var langClass="lang-en";
 var enResources = {
     "ms": "m/s",
@@ -72,21 +91,32 @@ function updateLanguageRadio() {
     $("#language-menu").buttonset('refresh');
 }
 
-// Options
-var dropzones = {
-    "dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
-    "dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
-    "dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
-    "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
-    "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181)
-}
-var currentDropzoneId = "dz-uk-sibson";
-var updateFrequency = 20.0;
-var headingLineLength = 25;
-var headingUpdateSpeed = Math.PI * 0.008;
-var canopyModeUpdateSpeed = 0.05;
+////// Helpers
 
-// Helpers
+// Get query string, from http://stackoverflow.com/a/979995/193903
+function getQueryString() {
+    // This function is anonymous, is executed immediately and 
+    // the return value is assigned to QueryString!
+    var query_string = {};
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        // If first entry with this name
+        if (typeof query_string[pair[0]] === "undefined") {
+            query_string[pair[0]] = pair[1];
+        // If second entry with this name
+        } else if (typeof query_string[pair[0]] === "string") {
+            var arr = [ query_string[pair[0]], pair[1] ];
+            query_string[pair[0]] = arr;
+        // If third or later entry with this name
+        } else {
+            query_string[pair[0]].push(pair[1]);
+        }
+    } 
+    
+    return query_string;
+}
 
 function degToRad(deg) {
     return deg * Math.PI / 180;
@@ -300,9 +330,10 @@ function setDz(dz) {
     updateLandingPattern();
 }
 
-// UI update logic
+////// UI update logic
 
 function updateCanopyControls() {
+	var headingLineLength = 25;
     var headingLineEnd = moveCoords(canopyLocation, headingLineLength * Math.sin(canopyHeading), headingLineLength * Math.cos(canopyHeading));
     canopyCircle.setCenter(canopyLocation);
     canopyHeadingLine.setPath([canopyLocation, headingLineEnd]);
@@ -325,32 +356,7 @@ function updateLandingPattern() {
     updateControllabilitySet();
 }
 
-// Get query string, got from http://stackoverflow.com/a/979995/193903
-
-function getQueryString() {
-  // This function is anonymous, is executed immediately and 
-  // the return value is assigned to QueryString!
-  var query_string = {};
-  var query = window.location.search.substring(1);
-  var vars = query.split("&");
-  for (var i=0;i<vars.length;i++) {
-    var pair = vars[i].split("=");
-    	// If first entry with this name
-    if (typeof query_string[pair[0]] === "undefined") {
-      query_string[pair[0]] = pair[1];
-    	// If second entry with this name
-    } else if (typeof query_string[pair[0]] === "string") {
-      var arr = [ query_string[pair[0]], pair[1] ];
-      query_string[pair[0]] = arr;
-    	// If third or later entry with this name
-    } else {
-      query_string[pair[0]].push(pair[1]);
-    }
-  } 
-    return query_string;
-}
-
-// Event handlers
+////// Event handlers
 
 function onKeyDown(e) {
     e = e || window.event;
@@ -478,7 +484,7 @@ function onPatternSelect() {
     setPatternType($(this).attr('for'));
 }
 
-// Initialization
+////// Initialization
 
 function initializeCanopyImage() {  
     var canopyCircleOptions = {
