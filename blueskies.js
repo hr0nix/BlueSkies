@@ -20,7 +20,7 @@ var dzMarkers = {}; // We populate this array with markers to allow user to modi
 var updateFrequency = 20.0;
 var timeScaleCoeff = 1.0;
 var headingUpdateSpeed = Math.PI / 4; // Radians __per second__
-var canopyModeUpdateSpeed = 0.05; // Mode units __per keydown event
+var canopyModeUpdateSpeed = 0.05; // Mode units __per keydown event__
 var pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
 
 ////// State
