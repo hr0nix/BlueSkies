@@ -46,9 +46,8 @@ var prevUpdateTime;
 ////// UI objects
 
 var map;
-var canopyCircle;
-var steadyPointCircle;
-var canopyHeadingLine;
+var canopyMarker;
+var steadyPointMarker;
 var landingPatternLine;
 
 var reachabilitySetObjects = [];
@@ -238,7 +237,7 @@ function updateControllabilitySet() {
     updateReachSetVisibility(controllabilitySetObjects, showControllabilitySet);
 
     if (showControllabilitySet) {
-        var altitude = canopyAltitude > 0 ? canopyAltitude : openingAltitude;
+        var altitude = canopyAltitude > 1e-8 ? canopyAltitude : openingAltitude;
         computeReachSet(controllabilitySetObjects, getCurrentLandingPoint(), altitude, false);
     }
 }
@@ -264,6 +263,17 @@ function computeLandingPattern(location) {
     var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, speedH, windDirection + angleIntoWind, timeToPoint3);
     
     return [point3, point2, point1, location];
+}
+
+function createCanopyMarkerIcon(canopyHeading) {
+    return {
+        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+        scale: 5,
+        fillColor: '#FF0000',
+        fillOpacity: 1,
+        strokeWeight: 2,
+        rotation: radToDeg(canopyHeading)
+    };
 }
 
 function metersToFeet(meters) {
@@ -325,11 +335,9 @@ function setDz(dz) {
 ////// UI update logic
 
 function updateCanopyControls() {
-	var headingLineLength = 25;
-    var headingLineEnd = moveCoords(canopyLocation, headingLineLength * Math.sin(canopyHeading), headingLineLength * Math.cos(canopyHeading));
-    canopyCircle.setCenter(canopyLocation);
-    canopyHeadingLine.setPath([canopyLocation, headingLineEnd]);
-    steadyPointCircle.setCenter(steadyPointLocation);
+    canopyMarker.setPosition(canopyLocation);
+    canopyMarker.setIcon(createCanopyMarkerIcon(canopyHeading));
+    steadyPointMarker.setPosition(steadyPointLocation);
 
     updateReachabilitySet();
     updateControllabilitySet();
@@ -464,7 +472,7 @@ function onDzMenuItemSelected(event, ui) {
 
 function onShowSteadyPointCheckboxToggle() {
     showSteadyPoint = !showSteadyPoint;
-    steadyPointCircle.setVisible(showSteadyPoint);
+    steadyPointMarker.setVisible(showSteadyPoint);
 }
 
 function updateSliderLabels() {
@@ -498,35 +506,27 @@ function onPatternSelect() {
 ////// Initialization
 
 function initializeCanopyImage() {  
-    var canopyCircleOptions = {
-        strokeWeight: 0,
-        fillColor: '#FF0000',
-        fillOpacity: 1.0,
+    var canopyMarkerOptions = {
         map: map,
-        radius: 6,
+        icon: createCanopyMarkerIcon(canopyHeading),
         zIndex: 1
     };
-    canopyCircle = new google.maps.Circle(canopyCircleOptions);
+    canopyMarker = new google.maps.Marker(canopyMarkerOptions);
     
-    canopyHeadingLine = new google.maps.Polyline({
-        geodesic: false,
-        strokeColor: '#000000',
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
-        zIndex: 2
-    });
-    canopyHeadingLine.setMap(map);
     
-    var steadyPointCircleOptions = {
-        strokeWeight: 0,
-        fillColor: '#FF00FF',
-        fillOpacity: 1.0,
+    var steadyPointMarkerOptions = {
         visible: showSteadyPoint,
         map: map,
-        radius: 6,
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 5,
+            fillColor: '#FF00FF',
+            fillOpacity: 1,
+            strokeWeight: 0
+        },
         zIndex: 0
     };
-    steadyPointCircle = new google.maps.Circle(steadyPointCircleOptions);
+    steadyPointMarker = new google.maps.Marker(steadyPointMarkerOptions);
 }
 
 function initializeReachSet(objects, color) {
