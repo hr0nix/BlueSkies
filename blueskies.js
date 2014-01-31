@@ -102,7 +102,7 @@ function setLanguage(lang) {
     if (lang != "ru" && lang != "en") {
         return;
     }
-    
+
     saveSetting("language", lang);
     langClass = "lang-" + lang;
     var otherClass = langClass == "lang-ru" ? "lang-en" : "lang-ru";
@@ -137,8 +137,8 @@ function getQueryString() {
         } else {
             query_string[pair[0]].push(pair[1]);
         }
-    } 
-    
+    }
+
     return query_string;
 }
 
@@ -179,23 +179,23 @@ function moveInWind(coords, windSpeed, windDirection, speed, direction, time) {
 
 function rotateDiv(div, angle) {
     style = "rotate(" + radToDeg(angle) + "deg)";
-    
-    div.style.webkitTransform = style; 
-    div.style.mozTransform = style; 
-    div.style.msTransform = style; 
-    div.style.oTransform = style; 
-    div.style.transform = style; 
+
+    div.style.webkitTransform = style;
+    div.style.mozTransform = style;
+    div.style.msTransform = style;
+    div.style.oTransform = style;
+    div.style.transform = style;
 }
 
 function interpolate(arr, coeff) {
     if (coeff <= 0) {
         return arr[0];
     }
-    
+
     if (coeff >= 1) {
         return arr[arr.length - 1];
     }
-    
+
     scaledCoeff = coeff * (arr.length - 1);
     index1 = Math.floor(scaledCoeff);
     index2 = Math.ceil(scaledCoeff);
@@ -230,7 +230,7 @@ function reachSet(windSpeed, windDirection, altitude, u) {
         radius: time * speedH
     };
 }
- 
+
 function computeReachSet(objects, sourceLocation, altitude, reachability) {
     for (var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++) {
         var u = 1 / (reachSetSteps - 1) * i;
@@ -271,20 +271,20 @@ function computeLandingPattern(location) {
     var speedH = getCanopyHorizontalSpeed(patternMode);
     var speedV = getCanopyVerticalSpeed(patternMode);
     var rotationFactor = lhsLandingPattern ? 1 : -1;
-    
+
     var timeToPoint1 = controlPointAltitudes[0] / speedV;
     var point1 = moveInWind(location, windSpeed, windDirection + Math.PI, speedH, windDirection, timeToPoint1);
-    
+
     var timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / speedV;
     // In ordinary winds we hold crosswind ground track, in strong winds we move backwards with some arbitrary low angle to the wind
     var angleIntoWind = windSpeed < speedH ? Math.acos(windSpeed / speedH) : Math.PI / 8;
     var point2 = moveInWind(point1, windSpeed, windDirection + Math.PI, speedH, windDirection + rotationFactor * angleIntoWind, timeToPoint2);
-    
+
     var timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV;
     // In strong winds we always try to look into the wind, back to the wind otherwise
     angleIntoWind = windSpeed < speedH ? Math.PI : 0;
     var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, speedH, windDirection + angleIntoWind, timeToPoint3);
-    
+
     return [point3, point2, point1, location];
 }
 
@@ -451,7 +451,7 @@ function onMapRightClick(event) {
     canopyHeading = windDirection + Math.PI; // Into the wind
     canopyMode = 0.75;
     prevUpdateTime = new Date().getTime();
-    
+
     if (!isSimulationRunning) {
         initializeCanopyImage();
         $("#status").show();
@@ -468,34 +468,34 @@ function onTimeTick() {
         var currentUpdateTime = new Date().getTime();
         var dt = (currentUpdateTime - prevUpdateTime) / 1000.0;
         prevUpdateTime = currentUpdateTime;
-    
+
         if (pressedKeys[37]) { // left arrow
             canopyHeading -= headingUpdateSpeed * dt;
         }
         else if (pressedKeys[39]) { // right arrow
             canopyHeading += headingUpdateSpeed * dt;
         }
-        
+
         // Normalize canopy heading
         canopyHeading = normalizeAngle(canopyHeading);
 
         var speedH = getCanopyHorizontalSpeed(canopyMode);
         var speedV = getCanopyVerticalSpeed(canopyMode);
-        
+
         dt *= simulationSpeed; // Only do it here because we don't want the responsiveness to be affected by the simulationSpeed, only the descent. Or do we?
         dt = Math.min(dt, canopyAltitude / speedV); // We don't want to go below ground
-        
+
         canopyLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, dt);
         canopyAltitude -= dt * speedV;
-        
+
         if (showSteadyPoint) {
             var timeToLanding = canopyAltitude / speedV;
             steadyPointLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, timeToLanding);
         }
-        
+
         updateCanopyControls();
     }
-    
+
     updateCanopyStatus();
 }
 
@@ -503,14 +503,14 @@ function onWindDirectionSliderValueChange(event, ui) {
     windDirection = degToRad(ui.value);
     rotateDiv($("#wind-arrow").get(0), windDirection);
     $("#wind-direction-value").html(formatHeading(reportedWindDirection(windDirection)));
-    
+
     updateLandingPattern();
 }
 
 function onWindSpeedSliderValueChange(event, ui) {
     windSpeed = ui.value;
     $("#wind-speed-value").html(formatSpeed(windSpeed, 1));
-    
+
     updateLandingPattern();
 }
 
@@ -553,14 +553,14 @@ function onShowControllabilitySetCheckboxToggle() {
     showControllabilitySet = !showControllabilitySet;
 
     saveSetting("show-controllability-set", showControllabilitySet);
-    
+
     updateControllabilitySet();
 }
 
 function onShowReachabilitySetCheckboxToggle() {
     showReachabilitySet = !showReachabilitySet;
     saveSetting("show-reachability-set", showReachabilitySet);
-    
+
     updateReachabilitySet();
 }
 
@@ -570,14 +570,14 @@ function onPatternSelect() {
 
 ////// Initialization
 
-function initializeCanopyImage() {  
+function initializeCanopyImage() {
     var canopyMarkerOptions = {
         map: map,
         icon: createCanopyMarkerIcon(canopyHeading),
         zIndex: 1
     };
     canopyMarker = new google.maps.Marker(canopyMarkerOptions);
-    
+
     var steadyPointMarkerOptions = {
         visible: showSteadyPoint,
         map: map,
@@ -619,7 +619,7 @@ function initialize() {
         mapTypeId: google.maps.MapTypeId.SATELLITE
     };
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-    
+
     landingPatternLine = new google.maps.Polyline({
         geodesic: false,
         strokeColor: '#00FFFF',
@@ -629,7 +629,7 @@ function initialize() {
         visible: showLandingPattern
     });
     landingPatternLine.setMap(map);
-    
+
     for (var dz in dropzones) {
         var markerOptions = {
             icon: {
@@ -641,15 +641,15 @@ function initialize() {
             draggable: true,
             map: map
         }
-        
+
         dzMarkers[dz] = new google.maps.Marker(markerOptions);
         google.maps.event.addListener(dzMarkers[dz], 'position_changed', onLandingSpotPositionChanged);
     }
-    
+
     // We initialize this early so UI events have something to update
     initializeReachSet(controllabilitySetObjects, '#0000FF');
     initializeReachSet(reachabilitySetObjects, '#FF0000');
-    
+
     var windDirectionSliderOptions = {
         min: 0,
         max: 360,
@@ -660,7 +660,7 @@ function initialize() {
     $("#wind-direction-slider").
         slider(windDirectionSliderOptions).
         slider("value", radToDeg(windDirection));
-    
+
     var windSpeedSliderOptions = {
         min: 0,
         max: 13,
@@ -671,7 +671,7 @@ function initialize() {
     $("#wind-speed-slider").
         slider(windSpeedSliderOptions).
         slider("value", windSpeed);
-    
+
     var openingAltitudeSliderOptions = {
         min: 100,
         max: 3000,
@@ -695,7 +695,7 @@ function initialize() {
         slider("value", simulationSpeed);
 
     $(".ui-slider-handle").unbind('keydown');
-    
+
     $("#select-lang-en").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
     $("#language-menu").buttonset();
     $("#language-menu > input").change(onSelectLanguage);
@@ -706,11 +706,11 @@ function initialize() {
     $("#system-menu > input").change(onSelectSystem);
 
     $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
-    
+
     $("#steady-point-checkbox").
         prop('checked', showSteadyPoint).
         click(onShowSteadyPointCheckboxToggle);
-    
+
     $("#show-controllability-set-checkbox").
         prop('checked', showControllabilitySet).
         click(onShowControllabilitySetCheckboxToggle);
@@ -724,7 +724,7 @@ function initialize() {
     $("#pattern-rhs").prop('checked', showLandingPattern && !lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-menu").buttonset();
     $("#pattern-menu > input").change(onPatternSelect);
-    
+
     $("#settings").accordion({ collapsible: true });
     $("#legend").accordion({ collapsible: true, heightStyle: "content" });
     $("#status").accordion({ collapsible: true }).hide();
