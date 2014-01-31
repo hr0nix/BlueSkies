@@ -24,24 +24,26 @@ var headingUpdateSpeed = Math.PI / 4; // Radians __per second__
 var canopyModeUpdateSpeed = 0.05; // Mode units __per keydown event__
 var pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
 
-////// State
+////// Settings
 
-var showSteadyPoint = false;
-var useMetricSystem = true;
-var showReachabilitySet = false;
-var showControllabilitySet = false;
-var showLandingPattern = false;
-var lhsLandingPattern = false;
+var showSteadyPoint = defaultIfUndefined($.cookie("show-steady-point", parseBoolean), false);
+var useMetricSystem = defaultIfUndefined($.cookie("use-metric-system", parseBoolean), true);
+var showReachabilitySet = defaultIfUndefined($.cookie("show-reachability-set", parseBoolean), false);
+var showControllabilitySet = defaultIfUndefined($.cookie("show-controllability-set", parseBoolean), false);
+var showLandingPattern = defaultIfUndefined($.cookie("show-landing-pattern", parseBoolean), false);
+var lhsLandingPattern = defaultIfUndefined($.cookie("lhs-landing-pattern", parseBoolean), false);
+var windDirection = 0; // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
+var windSpeed = 5;
+var openingAltitude = defaultIfUndefined($.cookie("opening-altitude", Number), 700);
+var currentDropzoneId = defaultIfUndefined($.cookie("current-dropzone-id"), "dz-uk-sibson");
+
+////// State
 var isSimulationRunning = false;
 var canopyLocation;
 var canopyAltitude;
 var canopyHeading;
 var canopyMode;
 var steadyPointLocation;
-var windSpeed = 5;
-var windDirection = 0; // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
-var openingAltitude = 1000;
-var currentDropzoneId = "dz-uk-sibson";
 var prevUpdateTime;
 
 ////// UI objects
@@ -54,9 +56,14 @@ var landingPatternLine;
 var reachabilitySetObjects = [];
 var controllabilitySetObjects = [];
 
+////// JavaScript stuff
+var cookieOptions = {
+    expires: 10
+};
+
 ////// Localization for javascript
 
-var langClass="lang-en";
+var langClass = "lang-en";
 var enResources = {
     "ms": "m/s",
     "mph": "mph",
@@ -84,6 +91,8 @@ function setLanguage(lang) {
     if (lang != "ru" && lang != "en") {
         return;
     }
+    
+    $.cookie("language", lang, cookieOptions);
     langClass = "lang-" + lang;
     var otherClass = langClass == "lang-ru" ? "lang-en" : "lang-ru";
     $("." + langClass).show();
@@ -327,6 +336,8 @@ function setPatternType(type) {
             lhsLandingPattern = true;
             break;
     }
+    $.cookie("show-landing-pattern", showLandingPattern, cookieOptions);
+    $.cookie("lhs-landing-pattern", lhsLandingPattern, cookieOptions);
     updateLandingPattern();
     landingPatternLine.setVisible(showLandingPattern);
 }
@@ -336,8 +347,17 @@ function setDz(dz) {
         return;
     }
     currentDropzoneId = dz;
+    $.cookie("current-dropzone-id", currentDropzoneId, cookieOptions);
     map.setCenter(dropzones[currentDropzoneId]);
     updateLandingPattern();
+}
+
+function defaultIfUndefined(x, def) {
+    return (typeof x === 'undefined') ? def : x;
+}
+
+function parseBoolean(str) {
+    return str == "true";
 }
 
 ////// UI update logic
@@ -486,6 +506,7 @@ function onWindSpeedSliderValueChange(event, ui) {
 function onOpeningAltitudeSliderValueChange(event, ui) {
     openingAltitude = ui.value;
     $("#opening-altitude-value").html(formatAltitude(openingAltitude));
+    $.cookie("opening-altitude", openingAltitude, cookieOptions);
 
     updateLandingPattern();
 }
@@ -501,6 +522,7 @@ function onSelectLanguage() {
 
 function onSelectSystem() {
     useMetricSystem = $(this).attr('for') == "select-metric";
+    $.cookie("use-metric-system", useMetricSystem, cookieOptions);
 
     updateSliderLabels();
 }
@@ -511,17 +533,22 @@ function onDzMenuItemSelected(event, ui) {
 
 function onShowSteadyPointCheckboxToggle() {
     showSteadyPoint = !showSteadyPoint;
+    $.cookie("show-steady-point", showSteadyPoint, cookieOptions);
+
     steadyPointMarker.setVisible(showSteadyPoint);
 }
 
 function onShowControllabilitySetCheckboxToggle() {
     showControllabilitySet = !showControllabilitySet;
+
+    $.cookie("show-controllability-set", showControllabilitySet, cookieOptions);
     
     updateControllabilitySet();
 }
 
 function onShowReachabilitySetCheckboxToggle() {
     showReachabilitySet = !showReachabilitySet;
+    $.cookie("show-reachability-set", showReachabilitySet, cookieOptions);
     
     updateReachabilitySet();
 }
@@ -677,7 +704,9 @@ function initialize() {
     $("#show-reachability-set-checkbox").prop('checked', showReachabilitySet);
     $("#show-reachability-set-checkbox").click(onShowReachabilitySetCheckboxToggle);
 
-    $("#pattern-hide").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
+    $("#pattern-hide").prop('checked', !showLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
+    $("#pattern-lhs").prop('checked', showLandingPattern && lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
+    $("#pattern-rhs").prop('checked', showLandingPattern && !lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-menu").buttonset();
     $("#pattern-menu > label").click(onPatternSelect);
     
@@ -687,7 +716,7 @@ function initialize() {
     $("#status").hide();
 
     var queryString = getQueryString();
-    var lang = queryString.lang;
+    var lang = queryString.lang || defaultIfUndefined($.cookie("language"), "en");
     var dz = queryString.dz;
     if (lang) {
         setLanguage(lang);
