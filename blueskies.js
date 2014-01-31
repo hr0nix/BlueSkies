@@ -549,7 +549,11 @@ function initialize() {
     
     for (var dz in dropzones) {
         var markerOptions = {
-            icon: "http://maps.google.com/mapfiles/arrow.png",
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                strokeColor: 'yellow',
+                scale: 8
+            },
             position: dropzones[dz],
             map: map
         }
