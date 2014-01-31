@@ -14,6 +14,7 @@ var dropzones = {
     "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
     "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181)
 }
+var dzMarkers = {}; // We populate this array with markers to allow user to modify the landing spot.
 
 // Time
 var updateFrequency = 20.0;
@@ -187,6 +188,10 @@ function getCanopyVerticalSpeed(mode) {
     return interpolate(verticalSpeeds, mode);
 }
 
+function getCurrentLandingPoint() {
+    return dzMarkers[currentDropzoneId].getPosition();
+}
+
 // TODO: implement
 // returns: canopy heading necessary to maintain desiredTrack ground track in given winds (not always possible, of course)
 function createGroundTrack(windSpeed, windDirection, speedH, desiredTrack) {
@@ -233,7 +238,7 @@ function updateControllabilitySet() {
 
     if (showControllabilitySet) {
         var altitude = canopyAltitude > 0 ? canopyAltitude : openingAltitude;
-        computeReachSet(controllabilitySetObjects, dropzones[currentDropzoneId], altitude, false);
+        computeReachSet(controllabilitySetObjects, getCurrentLandingPoint(), altitude, false);
     }
 }
 
@@ -337,7 +342,7 @@ function updateCanopyStatus() {
 }
 
 function updateLandingPattern() {
-    landingPatternLine.setPath(computeLandingPattern(dropzones[currentDropzoneId]));
+    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint()));
 
     updateControllabilitySet();
 }
@@ -386,6 +391,10 @@ function onMapRightClick(event) {
         $("#status").show();
         isSimulationRunning = true;
     }
+}
+
+function onMarkerDrag(event) {
+    updateLandingPattern();
 }
 
 function onTimeTick() {
@@ -555,10 +564,12 @@ function initialize() {
                 scale: 8
             },
             position: dropzones[dz],
+            draggable: true,
             map: map
         }
         
-        new google.maps.Marker(markerOptions);
+        dzMarkers[dz] = new google.maps.Marker(markerOptions);
+        google.maps.event.addListener(dzMarkers[dz], "drag", onMarkerDrag);
     }
     
     // We initialize this early so ui events have somithing to update
