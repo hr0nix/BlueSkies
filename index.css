@@ -8,18 +8,18 @@ body {
 }
 
 #map-canvas-container {
-    width: 100%;
-    float: left;
-    margin-right: -400px;
-}
-
-#map-canvas {
     margin-right: 400px;
 }
 
+#map-canvas {
+}
+
 #right-panel {
+    position: absolute;
+    right: 0;
+    top: 0;
     width: 400px;
-    float: right;
+    overflow: auto;
 }
 
 #settings , #status, #legend {
