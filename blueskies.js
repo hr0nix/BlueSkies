@@ -528,18 +528,18 @@ function onSimulationSpeedSliderValueChange(event, ui) {
 }
 
 function onSelectLanguage() {
-    setLanguage($(this).attr('for').replace("select-lang-",""));
+    setLanguage($(this).attr('id').replace("select-lang-",""));
 }
 
 function onSelectSystem() {
-    useMetricSystem = $(this).attr('for') == "select-metric";
+    useMetricSystem = $(this).attr('id') == "select-metric";
     saveSetting("use-metric-system", useMetricSystem);
 
     updateSliderLabels();
 }
 
 function onDzMenuItemSelected(event, ui) {
-    setDz(ui.item.attr("id"));
+    setDz(ui.item.attr('id'));
 }
 
 function onShowSteadyPointCheckboxToggle() {
@@ -565,7 +565,7 @@ function onShowReachabilitySetCheckboxToggle() {
 }
 
 function onPatternSelect() {
-    setPatternType($(this).attr('for'));
+    setPatternType($(this).attr('id'));
 }
 
 ////// Initialization
@@ -697,12 +697,12 @@ function initialize() {
     
     $("#select-lang-en").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
     $("#language-menu").buttonset();
-    $("#language-menu > label").click(onSelectLanguage);
+    $("#language-menu > input").change(onSelectLanguage);
 
     $("#select-metric").prop('checked', useMetricSystem); // We set this before buttonset creation so the buttonset is updated properly
     $("#select-imperial").prop('checked', !useMetricSystem);
     $("#system-menu").buttonset();
-    $("#system-menu > label").click(onSelectSystem);
+    $("#system-menu > input").change(onSelectSystem);
 
     $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
     
@@ -719,7 +719,7 @@ function initialize() {
     $("#pattern-lhs").prop('checked', showLandingPattern && lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-rhs").prop('checked', showLandingPattern && !lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-menu").buttonset();
-    $("#pattern-menu > label").click(onPatternSelect);
+    $("#pattern-menu > input").change(onPatternSelect);
     
     $("#settings").accordion({ collapsible: true });
     $("#legend").accordion({ collapsible: true, heightStyle: "content" });
