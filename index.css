@@ -34,7 +34,7 @@ body {
 #dz-selection-menu {
 }
 
-#wind-direction-slider, #wind-speed-slider, #opening-altitude-slider, #wind-arrow {
+#wind-direction-slider, #wind-speed-slider, #opening-altitude-slider, #simulation-speed-slider, #pattern-menu, #wind-arrow {
     margin-top: 6px;
 }
 
