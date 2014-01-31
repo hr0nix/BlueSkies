@@ -574,7 +574,7 @@ function initializeCanopyImage() {
     var canopyMarkerOptions = {
         map: map,
         icon: createCanopyMarkerIcon(canopyHeading),
-        zIndex: 1
+        zIndex: 4
     };
     canopyMarker = new google.maps.Marker(canopyMarkerOptions);
 
@@ -588,7 +588,7 @@ function initializeCanopyImage() {
             fillOpacity: 1,
             strokeWeight: 0
         },
-        zIndex: 0
+        zIndex: 3
     };
     steadyPointMarker = new google.maps.Marker(steadyPointMarkerOptions);
 }
@@ -601,7 +601,7 @@ function initializeReachSet(objects, color) {
             fillColor: color,
             fillOpacity: 0.1,
             map: map,
-            zindex: 0
+            zIndex: 0
         };
         var circle = new google.maps.Circle(circleOptions)
         objects.push(circle);
@@ -625,7 +625,7 @@ function initialize() {
         strokeColor: '#00FFFF',
         strokeOpacity: 1.0,
         strokeWeight: 2,
-        zIndex: -1,
+        zIndex: 1,
         visible: showLandingPattern
     });
     landingPatternLine.setMap(map);
@@ -639,7 +639,8 @@ function initialize() {
             },
             position: dropzones[dz],
             draggable: true,
-            map: map
+            map: map,
+            zIndex: 2
         }
 
         dzMarkers[dz] = new google.maps.Marker(markerOptions);
