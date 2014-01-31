@@ -97,8 +97,6 @@ function updateLanguageRadio() {
 
 // Get query string, from http://stackoverflow.com/a/979995/193903
 function getQueryString() {
-    // This function is anonymous, is executed immediately and 
-    // the return value is assigned to QueryString!
     var query_string = {};
     var query = window.location.search.substring(1);
     var vars = query.split("&");
