@@ -475,7 +475,13 @@ function onSimulationSpeedSliderValueChange(event, ui) {
 }
 
 function onSelectLanguage() {
-    setLanguage($(this).attr("for").replace("select-lang-",""));
+    setLanguage($(this).attr('for').replace("select-lang-",""));
+}
+
+function onSelectSystem() {
+    useMetricSystem = $(this).attr('for') == "select-metric";
+
+    updateSliderLabels();
 }
 
 function onDzMenuItemSelected(event, ui) {
@@ -491,12 +497,6 @@ function updateSliderLabels() {
     $("#wind-direction-slider").slider("value", radToDeg(windDirection));
     $("#wind-speed-slider").slider("value", windSpeed);
     $("#opening-altitude-slider").slider("value", openingAltitude);
-}
-
-function onUseMetricSystemCheckboxToggle() {
-    useMetricSystem = !useMetricSystem;
-    
-    updateSliderLabels();
 }
 
 function onShowControllabilitySetCheckboxToggle() {
@@ -646,14 +646,16 @@ function initialize() {
     $("#language-menu").buttonset();
     $("#language-menu > label").click(onSelectLanguage);
 
+    $("#select-metric").prop('checked', useMetricSystem); // We set this before buttonset creation so the buttonset is updated properly
+    $("#select-imperial").prop('checked', !useMetricSystem);
+    $("#system-menu").buttonset();
+    $("#system-menu > label").click(onSelectSystem);
+
     $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
     
     $("#steady-point-checkbox").prop('checked', showSteadyPoint);
     $("#steady-point-checkbox").click(onShowSteadyPointCheckboxToggle);
     
-    $("#use-metric-system-checkbox").prop('checked', useMetricSystem);
-    $("#use-metric-system-checkbox").click(onUseMetricSystemCheckboxToggle);
-
     $("#show-controllability-set-checkbox").prop('checked', showControllabilitySet);
     $("#show-controllability-set-checkbox").click(onShowControllabilitySetCheckboxToggle);
 
