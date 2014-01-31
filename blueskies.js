@@ -582,7 +582,7 @@ function initialize() {
         google.maps.event.addListener(dzMarkers[dz], "drag", onMarkerDrag);
     }
     
-    // We initialize this early so ui events have somithing to update
+    // We initialize this early so UI events have something to update
     initializeReachSet(controllabilitySetObjects, '#0000FF');
     initializeReachSet(reachabilitySetObjects, '#FF0000');
     
