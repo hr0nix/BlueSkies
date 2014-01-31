@@ -19,8 +19,9 @@ var dzMarkers = {}; // We populate this array with markers to allow user to modi
 // Time
 var updateFrequency = 20.0;
 var timeScaleCoeff = 1.0;
-var headingUpdateSpeed = Math.PI * 0.008; // Radians per update
-var canopyModeUpdateSpeed = 0.05; // Mode units per update
+var headingUpdateSpeed = Math.PI / 4; // Radians __per second__
+var canopyModeUpdateSpeed = 0.05; // Mode units __per keydown event
+var pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
 
 ////// State
 
@@ -350,33 +351,31 @@ function updateLandingPattern() {
 ////// Event handlers
 
 function onKeyDown(e) {
-    e = e || window.event;
-    if (e.keyCode == '37') { // left arrow
-        canopyHeading -= headingUpdateSpeed;
+    if (37 <= e.which && e.which <= 40) {
+        e.preventDefault(); // Disable page scrolling with arrows
+        pressedKeys[e.which] = true;
     }
-    else if (e.keyCode == '38') { // up arrow
+
+    if (e.which == 38) { // up arrow
         canopyMode += canopyModeUpdateSpeed;
     }
-    else if (e.keyCode == '39') { // right arrow
-        canopyHeading += headingUpdateSpeed;
-    }
-    else if (e.keyCode == '40') { // down arrow
+    else if (e.which == 40) { // down arrow
         canopyMode -= canopyModeUpdateSpeed;
     }
-    
-    if (e.keyCode == '37' || e.keyCode == '38' || e.keyCode == '39' || e.keyCode == '40') {
-        e.preventDefault(); // Disable page scrolling with arrows
-    }
-    
+
     // Truncate canopy mode
     if (canopyMode < 0) {
         canopyMode = 0;
     } else if (canopyMode > 1) {
         canopyMode = 1;
     }
-    
-    // Normalize canopy heading
-    canopyHeading = normalizeAngle(canopyHeading);
+}
+
+function onKeyUp(e) {
+    if (37 <= e.which && e.which <= 40) {
+        e.preventDefault(); // Disable page scrolling with arrows
+        pressedKeys[e.which] = false;
+    }
 }
 
 function onMapRightClick(event) {
@@ -399,13 +398,24 @@ function onMarkerDrag(event) {
 
 function onTimeTick() {
     if (isSimulationRunning && canopyAltitude > 0) {
+        var currentUpdateTime = new Date().getTime();
+        var dt = (currentUpdateTime - prevUpdateTime) / 1000.0;
+        prevUpdateTime = currentUpdateTime;
+    
+        if (pressedKeys[37]) { // left arrow
+            canopyHeading -= headingUpdateSpeed * dt;
+        }
+        else if (pressedKeys[39]) { // right arrow
+            canopyHeading += headingUpdateSpeed * dt;
+        }
+        
+        // Normalize canopy heading
+        canopyHeading = normalizeAngle(canopyHeading);
+
         var speedH = getCanopyHorizontalSpeed(canopyMode);
         var speedV = getCanopyVerticalSpeed(canopyMode);
         
-        var currentUpdateTime = new Date().getTime();
-        var dt = timeScaleCoeff * (currentUpdateTime - prevUpdateTime) / 1000.0;
-        prevUpdateTime = currentUpdateTime;
-        
+        dt *= timeScaleCoeff; // Only do it here because we don't want the responsiveness to be affected by the timeScaleCoeff, only the descent. Or do we?
         dt = Math.min(dt, canopyAltitude / speedV); // We don't want to go below ground
         
         canopyLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, dt);
@@ -648,7 +658,8 @@ function initialize() {
     }
 
     google.maps.event.addListener(map, "rightclick", onMapRightClick);
-    document.onkeydown = onKeyDown;
+    $(document).keydown(onKeyDown);
+    $(document).keyup(onKeyUp);
     window.setInterval(onTimeTick, updateFrequency);
 }
 
