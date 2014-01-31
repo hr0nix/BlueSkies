@@ -711,15 +711,15 @@ function initialize() {
 
     $("#steady-point-checkbox").
         prop('checked', showSteadyPoint).
-        click(onShowSteadyPointCheckboxToggle);
+        change(onShowSteadyPointCheckboxToggle);
 
     $("#show-controllability-set-checkbox").
         prop('checked', showControllabilitySet).
-        click(onShowControllabilitySetCheckboxToggle);
+        change(onShowControllabilitySetCheckboxToggle);
 
     $("#show-reachability-set-checkbox").
         prop('checked', showReachabilitySet).
-        click(onShowReachabilitySetCheckboxToggle);
+        change(onShowReachabilitySetCheckboxToggle);
 
     $("#display-ui-element-buttons").buttonset();
 
