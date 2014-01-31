@@ -392,7 +392,7 @@ function onMapRightClick(event) {
     }
 }
 
-function onMarkerDrag(event) {
+function onLandingSpotPositionChanged() {
     updateLandingPattern();
 }
 
@@ -579,7 +579,7 @@ function initialize() {
         }
         
         dzMarkers[dz] = new google.maps.Marker(markerOptions);
-        google.maps.event.addListener(dzMarkers[dz], "drag", onMarkerDrag);
+        google.maps.event.addListener(dzMarkers[dz], 'position_changed', onLandingSpotPositionChanged);
     }
     
     // We initialize this early so UI events have something to update
