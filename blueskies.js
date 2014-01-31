@@ -358,6 +358,7 @@ function setDz(dz) {
         return;
     }
     currentDropzoneId = dz;
+    $('#selected-dz').html($('#' + currentDropzoneId).children("a").html());
     saveSetting("current-dropzone-id", currentDropzoneId);
     map.setCenter(dropzones[currentDropzoneId]);
     updateLandingPattern();
@@ -734,7 +735,7 @@ function initialize() {
 
     var queryString = getQueryString();
     var lang = queryString.lang || readSetting("language", "en");
-    var dz = queryString.dz;
+    var dz = queryString.dz || currentDropzoneId.replace("dz-", "");
     if (lang) {
         setLanguage(lang);
     }
