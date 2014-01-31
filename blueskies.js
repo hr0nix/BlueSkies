@@ -19,6 +19,7 @@ var dzMarkers = {}; // We populate this array with markers to allow user to modi
 // Time
 var updateFrequency = 20.0;
 var simulationSpeed = 1.0;
+var oldSimulationSpeed = 1.0; // for instant pausing on "p" support
 var headingUpdateSpeed = Math.PI / 4; // Radians __per second__
 var canopyModeUpdateSpeed = 0.05; // Mode units __per keydown event__
 var pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
@@ -357,6 +358,16 @@ function updateCanopyStatus() {
     $("#canopy-heading-value").html(formatHeading(canopyHeading, 0));
 }
 
+function updateSliderLabels() {
+    $("#wind-direction-slider").slider("value", radToDeg(windDirection));
+    $("#wind-speed-slider").slider("value", windSpeed);
+    $("#opening-altitude-slider").slider("value", openingAltitude);
+}
+
+function updateSimulationSpeedSlider() {
+    $("#simulation-speed-slider").slider("value", simulationSpeed);
+}
+
 function updateLandingPattern() {
     landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint()));
 
@@ -371,10 +382,10 @@ function onKeyDown(e) {
         pressedKeys[e.which] = true;
     }
 
-    if (e.which == 38) { // up arrow
+    if (e.which == $.ui.keyCode.UP) {
         canopyMode += canopyModeUpdateSpeed;
     }
-    else if (e.which == 40) { // down arrow
+    else if (e.which == $.ui.keyCode.DOWN) {
         canopyMode -= canopyModeUpdateSpeed;
     }
 
@@ -390,6 +401,16 @@ function onKeyUp(e) {
     if (37 <= e.which && e.which <= 40) {
         e.preventDefault(); // Disable page scrolling with arrows
         pressedKeys[e.which] = false;
+    }
+
+    if (String.fromCharCode(e.which) == "P") {
+        if (simulationSpeed == 0) {
+            simulationSpeed = oldSimulationSpeed;
+        } else {
+            oldSimulationSpeed = simulationSpeed;
+            simulationSpeed = 0;
+        }
+        updateSimulationSpeedSlider();
     }
 }
 
@@ -491,12 +512,6 @@ function onDzMenuItemSelected(event, ui) {
 function onShowSteadyPointCheckboxToggle() {
     showSteadyPoint = !showSteadyPoint;
     steadyPointMarker.setVisible(showSteadyPoint);
-}
-
-function updateSliderLabels() {
-    $("#wind-direction-slider").slider("value", radToDeg(windDirection));
-    $("#wind-speed-slider").slider("value", windSpeed);
-    $("#opening-altitude-slider").slider("value", openingAltitude);
 }
 
 function onShowControllabilitySetCheckboxToggle() {
