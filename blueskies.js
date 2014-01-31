@@ -18,7 +18,7 @@ var dzMarkers = {}; // We populate this array with markers to allow user to modi
 
 // Time
 var updateFrequency = 20.0;
-var timeScaleCoeff = 1.0;
+var simulationSpeed = 1.0;
 var headingUpdateSpeed = Math.PI / 4; // Radians __per second__
 var canopyModeUpdateSpeed = 0.05; // Mode units __per keydown event__
 var pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
@@ -60,13 +60,15 @@ var enResources = {
     "ms": "m/s",
     "mph": "mph",
     "m": "m",
-    "ft": "ft"
+    "ft": "ft",
+    "paused": "(paused)"
 };
 var ruResources = {
     "ms": "м/с",
     "mph": "миль/ч",
     "m": "м",
-    "ft": "футов"
+    "ft": "футов",
+    "paused": "" // too long anyway :)
 };
 var langResources = {
     "lang-en": enResources,
@@ -303,6 +305,11 @@ function formatHeading(angle, significantDigits) {
     return $.number(radToDeg(angle), significantDigits) + "&deg;";
 }
 
+function formatSimulationSpeed(speed, significantDigits) {
+    significantDigits = significantDigits || 1;
+    return $.number(speed, significantDigits) + "x" + (speed == 0 ? " " + localize("paused") : "");
+}
+
 function setPatternType(type) {
     switch (type) {
         case "pattern-hide":
@@ -423,7 +430,7 @@ function onTimeTick() {
         var speedH = getCanopyHorizontalSpeed(canopyMode);
         var speedV = getCanopyVerticalSpeed(canopyMode);
         
-        dt *= timeScaleCoeff; // Only do it here because we don't want the responsiveness to be affected by the timeScaleCoeff, only the descent. Or do we?
+        dt *= simulationSpeed; // Only do it here because we don't want the responsiveness to be affected by the simulationSpeed, only the descent. Or do we?
         dt = Math.min(dt, canopyAltitude / speedV); // We don't want to go below ground
         
         canopyLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, dt);
@@ -460,6 +467,11 @@ function onOpeningAltitudeSliderValueChange(event, ui) {
     $("#opening-altitude-value").html(formatAltitude(openingAltitude));
 
     updateLandingPattern();
+}
+
+function onSimulationSpeedSliderValueChange(event, ui) {
+    simulationSpeed = ui.value;
+    $("#simulation-speed-value").html(formatSimulationSpeed(simulationSpeed));
 }
 
 function onSelectLanguage() {
@@ -618,6 +630,17 @@ function initialize() {
     $("#opening-altitude-slider").slider(openingAltitudeSliderOptions);
     $("#opening-altitude-slider .ui-slider-handle").unbind('keydown');
     $("#opening-altitude-slider").slider("value", openingAltitude);
+
+    var simulationSpeedSliderOptions = {
+        min: 0,
+        max: 5,
+        step: 0.1,
+        change: onSimulationSpeedSliderValueChange,
+        slide: onSimulationSpeedSliderValueChange
+    }
+    $("#simulation-speed-slider").slider(simulationSpeedSliderOptions);
+    $("#simulation-speed-slider .ui-slider-handle").unbind('keydown');
+    $("#simulation-speed-slider").slider("value", simulationSpeed);
     
     $("#select-lang-en").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
     $("#language-menu").buttonset();
