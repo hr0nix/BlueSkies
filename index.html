@@ -32,17 +32,19 @@
             <div id="settings">
                 <h3><span class="lang-en">Settings</span><span class="lang-ru">Настройки</span></h3>
                 <div>
-                    <div id="language-menu">
-                        <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en">English</label>
-                        <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru">Русский</label>
-                    </div>
-                    <div id="system-menu" class="margin">
-                        <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span class="lang-en">Metric</span><span class="lang-ru">СИ</span></label>
-                        <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span class="lang-en">Imperial</span><span class="lang-ru">Английская</span></label>
+                    <div>
+                        <span id="language-menu">
+                            <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en">&nbsp;</label>
+                            <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru">&nbsp;</label>
+                        </span>
+                        <span id="system-menu" class="margin">
+                            <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span class="lang-en">Metric</span><span class="lang-ru">СИ</span></label>
+                            <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span class="lang-en">Imperial</span><span class="lang-ru">Английская</span></label>
+                        </span>
                     </div>
                     <div>
                     <ul id="dz-selection-menu" class="margin">
-                        <li><a href="#"><span class="lang-en">Pick a dropzone</span><span class="lang-ru">Дропзона</span></a>
+                        <li><a href="#"><div id="selected-dz"><span class="lang-en">Pick a dropzone</span><span class="lang-ru">Дропзона</span></div></a>
                             <ul>
                                 <li><a href="#"><span class="lang-en">UK</span><span class="lang-ru">Англия</span></a>
                                     <ul>
@@ -70,9 +72,11 @@
                     <div id="opening-altitude-slider"></div>
                     <div class="margin value-font"><span class="lang-en">Simulation speed: </span><span class="lang-ru">Скорость моделирования: </span><span id="simulation-speed-value"></span></div>
                     <div id="simulation-speed-slider"></div>
-                    <input type="checkbox" id="steady-point-checkbox" class="margin"><label for="steady-point-checkbox" class="value-font"><span class="lang-en">Show steady point</span><span class="lang-ru">Неподвижная точка</span></label><br>
-                    <input type="checkbox" id="show-controllability-set-checkbox" class="margin"><label for="show-controllability-set-checkbox" class="value-font"><span class="lang-en">Show controllability set</span><span class="lang-ru">Множество управляемости</span></label><br>
-                    <input type="checkbox" id="show-reachability-set-checkbox" class="margin"><label for="show-reachability-set-checkbox" class="value-font"><span class="lang-en">Show reachability set</span><span class="lang-ru">Множество достижимости</span></label><br>
+                    <div id="display-ui-element-buttons" class="margin">
+                        <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox" class="value-font"><span class="lang-en">Steady point</span><span class="lang-ru">Неподвижная точка</span></label>
+                        <input type="checkbox" id="show-controllability-set-checkbox"><label for="show-controllability-set-checkbox" class="value-font"><span class="lang-en">Controllability set</span><span class="lang-ru">КВК</span></label>
+                        <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox" class="value-font"><span class="lang-en">Reachability set</span><span class="lang-ru">Конус достижимости</span></label>
+                    </div>
                     <div class="margin value-font">
                         <span class="lang-en">Landing pattern</span><span class="lang-ru">Круг захода</span>
                         <div id="pattern-menu">

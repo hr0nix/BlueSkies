@@ -5,13 +5,11 @@ html, body, #map-canvas-container, #map-canvas, #right-panel {
 body {
     margin: 0;
     padding: 0;
+    font-size: small;
 }
 
 #map-canvas-container {
     margin-right: 400px;
-}
-
-#map-canvas {
 }
 
 #right-panel {
@@ -22,16 +20,25 @@ body {
     overflow: auto;
 }
 
-#settings , #status, #legend {
+#settings, #status, #legend {
     margin-left: 10px;
     margin-right: 10px;
 }
 
-#settings , #legend {
+#settings, #legend {
     margin-bottom: 10px;
 }
 
 #dz-selection-menu {
+    width: 50%;
+}
+
+#language-menu > label[for="select-lang-en"] {
+    background-image: url(GB.png);
+}
+
+#language-menu > label[for="select-lang-ru"] {
+    background-image: url(RU.png);
 }
 
 #wind-direction-slider, #wind-speed-slider, #opening-altitude-slider, #simulation-speed-slider, #pattern-menu, #wind-arrow {
@@ -49,7 +56,6 @@ body {
 
 .value-font {
     font-family: Georgia, serif;
-    font-size: large;
 }
 
 #legend-text {

@@ -720,6 +720,8 @@ function initialize() {
         prop('checked', showReachabilitySet).
         click(onShowReachabilitySetCheckboxToggle);
 
+    $("#display-ui-element-buttons").buttonset();
+
     $("#pattern-hide").prop('checked', !showLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-lhs").prop('checked', showLandingPattern && lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-rhs").prop('checked', showLandingPattern && !lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
