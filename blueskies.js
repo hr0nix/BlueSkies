@@ -578,7 +578,6 @@ function initializeCanopyImage() {
     };
     canopyMarker = new google.maps.Marker(canopyMarkerOptions);
     
-    
     var steadyPointMarkerOptions = {
         visible: showSteadyPoint,
         map: map,
@@ -658,9 +657,9 @@ function initialize() {
         change: onWindDirectionSliderValueChange,
         slide: onWindDirectionSliderValueChange
     }
-    $("#wind-direction-slider").slider(windDirectionSliderOptions);
-    $("#wind-direction-slider .ui-slider-handle").unbind('keydown');
-    $("#wind-direction-slider").slider("value", radToDeg(windDirection));
+    $("#wind-direction-slider").
+        slider(windDirectionSliderOptions).
+        slider("value", radToDeg(windDirection));
     
     var windSpeedSliderOptions = {
         min: 0,
@@ -669,9 +668,9 @@ function initialize() {
         change: onWindSpeedSliderValueChange,
         slide: onWindSpeedSliderValueChange
     }
-    $("#wind-speed-slider").slider(windSpeedSliderOptions);
-    $("#wind-speed-slider .ui-slider-handle").unbind('keydown');
-    $("#wind-speed-slider").slider("value", windSpeed);
+    $("#wind-speed-slider").
+        slider(windSpeedSliderOptions).
+        slider("value", windSpeed);
     
     var openingAltitudeSliderOptions = {
         min: 100,
@@ -680,9 +679,9 @@ function initialize() {
         change: onOpeningAltitudeSliderValueChange,
         slide: onOpeningAltitudeSliderValueChange
     }
-    $("#opening-altitude-slider").slider(openingAltitudeSliderOptions);
-    $("#opening-altitude-slider .ui-slider-handle").unbind('keydown');
-    $("#opening-altitude-slider").slider("value", openingAltitude);
+    $("#opening-altitude-slider").
+        slider(openingAltitudeSliderOptions).
+        slider("value", openingAltitude);
 
     var simulationSpeedSliderOptions = {
         min: 0,
@@ -691,9 +690,11 @@ function initialize() {
         change: onSimulationSpeedSliderValueChange,
         slide: onSimulationSpeedSliderValueChange
     }
-    $("#simulation-speed-slider").slider(simulationSpeedSliderOptions);
-    $("#simulation-speed-slider .ui-slider-handle").unbind('keydown');
-    $("#simulation-speed-slider").slider("value", simulationSpeed);
+    $("#simulation-speed-slider").
+        slider(simulationSpeedSliderOptions).
+        slider("value", simulationSpeed);
+
+    $(".ui-slider-handle").unbind('keydown');
     
     $("#select-lang-en").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
     $("#language-menu").buttonset();
@@ -706,14 +707,17 @@ function initialize() {
 
     $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
     
-    $("#steady-point-checkbox").prop('checked', showSteadyPoint);
-    $("#steady-point-checkbox").click(onShowSteadyPointCheckboxToggle);
+    $("#steady-point-checkbox").
+        prop('checked', showSteadyPoint).
+        click(onShowSteadyPointCheckboxToggle);
     
-    $("#show-controllability-set-checkbox").prop('checked', showControllabilitySet);
-    $("#show-controllability-set-checkbox").click(onShowControllabilitySetCheckboxToggle);
+    $("#show-controllability-set-checkbox").
+        prop('checked', showControllabilitySet).
+        click(onShowControllabilitySetCheckboxToggle);
 
-    $("#show-reachability-set-checkbox").prop('checked', showReachabilitySet);
-    $("#show-reachability-set-checkbox").click(onShowReachabilitySetCheckboxToggle);
+    $("#show-reachability-set-checkbox").
+        prop('checked', showReachabilitySet).
+        click(onShowReachabilitySetCheckboxToggle);
 
     $("#pattern-hide").prop('checked', !showLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-lhs").prop('checked', showLandingPattern && lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
@@ -723,8 +727,7 @@ function initialize() {
     
     $("#settings").accordion({ collapsible: true });
     $("#legend").accordion({ collapsible: true, heightStyle: "content" });
-    $("#status").accordion({ collapsible: true });
-    $("#status").hide();
+    $("#status").accordion({ collapsible: true }).hide();
 
     var queryString = getQueryString();
     var lang = queryString.lang || readSetting("language", "en");
