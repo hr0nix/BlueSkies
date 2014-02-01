@@ -701,6 +701,7 @@ function initialize() {
     $("#select-lang-en").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
     $("#language-menu").buttonset();
     $("#language-menu > input").change(onSelectLanguage);
+    $("#language-menu").find('span.ui-button-text').addClass('no-padding');
 
     $("#select-metric").prop('checked', useMetricSystem); // We set this before buttonset creation so the buttonset is updated properly
     $("#select-imperial").prop('checked', !useMetricSystem);

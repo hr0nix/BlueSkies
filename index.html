@@ -34,8 +34,8 @@
                 <div>
                     <div>
                         <span id="language-menu">
-                            <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en">&nbsp;</label>
-                            <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru">&nbsp;</label>
+                            <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en"><img src="GB.png"></label>
+                            <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru"><img src="RU.png"></label>
                         </span>
                         <span id="system-menu" class="margin">
                             <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span class="lang-en">Metric</span><span class="lang-ru">СИ</span></label>
@@ -43,25 +43,27 @@
                         </span>
                     </div>
                     <div>
-                    <ul id="dz-selection-menu" class="margin">
-                        <li><a href="#"><div id="selected-dz"><span class="lang-en">Pick a dropzone</span><span class="lang-ru">Дропзона</span></div></a>
-                            <ul>
-                                <li><a href="#"><span class="lang-en">UK</span><span class="lang-ru">Англия</span></a>
-                                    <ul>
-                                        <li id="dz-uk-sibson"><a href="#"><span class="lang-en">Sibson</span><span class="lang-ru">Сибсон</span></a></li>
-                                        <li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#"><span class="lang-en">Russia</span><span class="lang-ru">Россия</span></a>
-                                    <ul>
-                                        <li id="dz-ru-puschino"><a href="#"><span class="lang-en">Puschino</span><span class="lang-ru">Пущино</span></a></li>
-                                        <li id="dz-ru-kolomna"><a href="#"><span class="lang-en">Kolomna</span><span class="lang-ru">Коломна</span></a></li>
-                                        <li id="dz-ru-vatulino"><a href="#"><span class="lang-en">Vatulino</span><span class="lang-ru">Ватулино</span></a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                        <span class="lang-en">DZ:</span>
+                        <span class="lang-ru">ДЗ:</span>
+                        <ul id="dz-selection-menu" class="margin">
+                            <li><a href="#"><div id="selected-dz"><span class="lang-en">Pick a dropzone</span><span class="lang-ru">Дропзона</span></div></a>
+                                <ul>
+                                    <li><a href="#"><span class="lang-en">UK</span><span class="lang-ru">Англия</span></a>
+                                        <ul>
+                                            <li id="dz-uk-sibson"><a href="#"><span class="lang-en">Sibson</span><span class="lang-ru">Сибсон</span></a></li>
+                                            <li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#"><span class="lang-en">Russia</span><span class="lang-ru">Россия</span></a>
+                                        <ul>
+                                            <li id="dz-ru-puschino"><a href="#"><span class="lang-en">Puschino</span><span class="lang-ru">Пущино</span></a></li>
+                                            <li id="dz-ru-kolomna"><a href="#"><span class="lang-en">Kolomna</span><span class="lang-ru">Коломна</span></a></li>
+                                            <li id="dz-ru-vatulino"><a href="#"><span class="lang-en">Vatulino</span><span class="lang-ru">Ватулино</span></a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                     <div id="wind-arrow"><img src="Arrow.png"></img></div>
                     <div class="margin value-font"><span class="lang-en">Wind direction: </span><span class="lang-ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
@@ -73,17 +75,17 @@
                     <div class="margin value-font"><span class="lang-en">Simulation speed: </span><span class="lang-ru">Скорость моделирования: </span><span id="simulation-speed-value"></span></div>
                     <div id="simulation-speed-slider"></div>
                     <div id="display-ui-element-buttons" class="margin">
-                        <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox" class="value-font"><span class="lang-en">Steady point</span><span class="lang-ru">Неподвижная точка</span></label>
-                        <input type="checkbox" id="show-controllability-set-checkbox"><label for="show-controllability-set-checkbox" class="value-font"><span class="lang-en">Controllability set</span><span class="lang-ru">КВК</span></label>
-                        <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox" class="value-font"><span class="lang-en">Reachability set</span><span class="lang-ru">Конус достижимости</span></label>
+                        <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox"><img src="steady.png"></label>
+                        <input type="checkbox" id="show-controllability-set-checkbox"><label for="show-controllability-set-checkbox"><img src="control.png"></label>
+                        <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox"><img src="reach.png"></label>
                     </div>
                     <div class="margin value-font">
-                        <span class="lang-en">Landing pattern</span><span class="lang-ru">Круг захода</span>
-                        <div id="pattern-menu">
+                        <span class="lang-en">Landing pattern:</span><span class="lang-ru">Круг захода:</span>&nbsp;
+                        <span id="pattern-menu">
                             <input id="pattern-hide" type="radio" name="pattern" checked="checked"><label for="pattern-hide"><span class="lang-en">Hide</span><span class="lang-ru">Нет</span></label>
                             <input id="pattern-rhs" type="radio" name="pattern"><label for="pattern-rhs"><span class="lang-en">Right</span><span class="lang-ru">Правым</span></label>
                             <input id="pattern-lhs" type="radio" name="pattern"><label for="pattern-lhs"><span class="lang-en">Left</span><span class="lang-ru">Левым</span></label>
-                        </div>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -93,7 +95,7 @@
                     <div class="lang-en">
                         <p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
                         <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
-                        <p>That red arrow is your canopy, it points in the direction of your heading. The pink dot shows where you will land with the current setup (if &quot;Show steady point&quot; is enabled).</p>
+                        <p>That red arrow is your canopy, it points in the direction of your heading. The pink dot shows where you will land with the current setup (if &quot;Accuracy trick&quot; is enabled).</p>
                         <p>You can adjust the desired landing point by dragging the target circle around.</p>
                         <p>Press P to pause/unpause: the time stops, but you still can turn your canopy inplace to discover its range and possibilities.</p>
                         <p>Read more about the tool <a href="about.html">here</a>.</p>
