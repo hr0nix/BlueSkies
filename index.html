@@ -7,10 +7,10 @@
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
         <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script src="jquery.number.js"></script>
-        <script src="jquery.cookie.js"></script>
-        <script src="blueskies.js"></script>
-        <script src="ga.js"></script>
+        <script src="scripts/jquery.number.js"></script>
+        <script src="scripts/jquery.cookie.js"></script>
+        <script src="scripts/blueskies.js"></script>
+        <script src="scripts/ga.js"></script>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="index.css" />
     </head>
@@ -34,8 +34,8 @@
                 <div>
                     <div>
                         <span id="language-menu">
-                            <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en"><img src="GB.png"></label>
-                            <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru"><img src="RU.png"></label>
+                            <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en"><img src="images/GB.png"></label>
+                            <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru"><img src="images/RU.png"></label>
                         </span>
                         <span id="system-menu" class="margin">
                             <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span class="lang-en">Metric</span><span class="lang-ru">СИ</span></label>
@@ -65,7 +65,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div id="wind-arrow"><img src="Arrow.png" height="35"></img></div>
+                    <div id="wind-arrow"><img src="images/Arrow.png" height="35"></img></div>
                     <div class="margin value-font"><span class="lang-en">Wind direction: </span><span class="lang-ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
                     <div id="wind-direction-slider"></div>
                     <div class="margin value-font"><span class="lang-en">Wind speed: </span><span class="lang-ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
@@ -75,9 +75,9 @@
                     <div class="margin value-font"><span class="lang-en">Simulation speed: </span><span class="lang-ru">Скорость моделирования: </span><span id="simulation-speed-value"></span></div>
                     <div id="simulation-speed-slider"></div>
                     <div id="display-ui-element-buttons" class="margin">
-                        <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox"><img src="steady.png"></label>
-                        <input type="checkbox" id="show-controllability-set-checkbox"><label for="show-controllability-set-checkbox"><img src="control.png"></label>
-                        <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox"><img src="reach.png"></label>
+                        <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox"><img src="images/steady.png"></label>
+                        <input type="checkbox" id="show-controllability-set-checkbox"><label for="show-controllability-set-checkbox"><img src="images/control.png"></label>
+                        <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox"><img src="images/reach.png"></label>
                     </div>
                     <div class="margin value-font">
                         <span class="lang-en">Landing pattern:</span><span class="lang-ru">Круг захода:</span>&nbsp;
