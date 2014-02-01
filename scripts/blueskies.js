@@ -236,6 +236,7 @@ function reachSet(windSpeed, windDirection, altitude, u) {
 }
 
 function computeReachSet(objects, sourceLocation, altitude, reachability) {
+    // Note that in the interface we forbid the stall mode. But still, in most cases it doesn't lead to the edge of the reach set
     for (var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++) {
         var u = 1 / (reachSetSteps - 1) * i;
         var set = reachSet(windSpeed, windDirection, altitude, u);
@@ -425,9 +426,10 @@ function onKeyDown(e) {
         canopyMode -= canopyModeUpdateSpeed;
     }
 
-    // Truncate canopy mode
-    if (canopyMode < 0) {
-        canopyMode = 0;
+    // Clip canopy mode
+    var minMode = 0.1; // We don't allow flying in the stall
+    if (canopyMode < minMode) {
+        canopyMode = minMode;
     } else if (canopyMode > 1) {
         canopyMode = 1;
     }
