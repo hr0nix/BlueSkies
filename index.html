@@ -21,16 +21,16 @@
 
         <div id="right-panel">
             <div id="status">
-                <h3><span class="lang-en">Canopy status</span><span class="lang-ru">Состояние</span></h3>
+                <h3><span lang="en">Canopy status</span><span lang="ru">Состояние</span></h3>
                 <div class="value-font">
-                    <div><span class="lang-en">Altitude: </span><span class="lang-ru">Высота: </span><span id="altitude-value"></span></div>
-                    <div class="margin"><span class="lang-en">Horizontal speed: </span><span class="lang-ru">Горизонталь: </span><span id="horizontal-speed-value"></span></div>
-                    <div class="margin"><span class="lang-en">Vertical speed: </span><span class="lang-ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
-                    <div class="margin"><span class="lang-en">Canopy heading: </span><span class="lang-ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
+                    <div><span lang="en">Altitude: </span><span lang="ru">Высота: </span><span id="altitude-value"></span></div>
+                    <div class="margin"><span lang="en">Horizontal speed: </span><span lang="ru">Горизонталь: </span><span id="horizontal-speed-value"></span></div>
+                    <div class="margin"><span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
+                    <div class="margin"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
                 </div>
             </div>
             <div id="settings">
-                <h3><span class="lang-en">Settings</span><span class="lang-ru">Настройки</span></h3>
+                <h3><span lang="en">Settings</span><span lang="ru">Настройки</span></h3>
                 <div>
                     <div>
                         <span id="language-menu">
@@ -38,41 +38,41 @@
                             <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru"><img src="RU.png"></label>
                         </span>
                         <span id="system-menu" class="margin">
-                            <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span class="lang-en">Metric</span><span class="lang-ru">СИ</span></label>
-                            <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span class="lang-en">Imperial</span><span class="lang-ru">Английская</span></label>
+                            <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span lang="en">Metric</span><span lang="ru">СИ</span></label>
+                            <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
                     <div id="wind-arrow"><img src="Arrow.png"></img></div>
                     <div>
-                        <span class="lang-en">DZ:</span>
-                        <span class="lang-ru">ДЗ:</span>
+                        <span lang="en">DZ:</span>
+                        <span lang="ru">ДЗ:</span>
                         <ul id="dz-selection-menu" class="margin">
-                            <li><a href="#"><div id="selected-dz"><span class="lang-en">Pick a dropzone</span><span class="lang-ru">Дропзона</span></div></a>
+                            <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
                                 <ul>
-                                    <li><a href="#"><span class="lang-en">UK</span><span class="lang-ru">Англия</span></a>
+                                    <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
                                         <ul>
-                                            <li id="dz-uk-sibson"><a href="#"><span class="lang-en">Sibson</span><span class="lang-ru">Сибсон</span></a></li>
+                                            <li id="dz-uk-sibson"><a href="#"><span lang="en">Sibson</span><span lang="ru">Сибсон</span></a></li>
                                             <li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="#"><span class="lang-en">Russia</span><span class="lang-ru">Россия</span></a>
+                                    <li><a href="#"><span lang="en">Russia</span><span lang="ru">Россия</span></a>
                                         <ul>
-                                            <li id="dz-ru-puschino"><a href="#"><span class="lang-en">Puschino</span><span class="lang-ru">Пущино</span></a></li>
-                                            <li id="dz-ru-kolomna"><a href="#"><span class="lang-en">Kolomna</span><span class="lang-ru">Коломна</span></a></li>
-                                            <li id="dz-ru-vatulino"><a href="#"><span class="lang-en">Vatulino</span><span class="lang-ru">Ватулино</span></a></li>
+                                            <li id="dz-ru-puschino"><a href="#"><span lang="en">Puschino</span><span lang="ru">Пущино</span></a></li>
+                                            <li id="dz-ru-kolomna"><a href="#"><span lang="en">Kolomna</span><span lang="ru">Коломна</span></a></li>
+                                            <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
                                         </ul>
                                     </li>
                                 </ul>
                             </li>
                         </ul>
                     </div>
-                    <div class="margin value-font"><span class="lang-en">Wind direction: </span><span class="lang-ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
+                    <div class="margin value-font"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
                     <div id="wind-direction-slider"></div>
-                    <div class="margin value-font"><span class="lang-en">Wind speed: </span><span class="lang-ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
+                    <div class="margin value-font"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
                     <div id="wind-speed-slider"></div>
-                    <div class="margin value-font"><span class="lang-en">Opening altitude: </span><span class="lang-ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
+                    <div class="margin value-font"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
                     <div id="opening-altitude-slider"></div>
-                    <div class="margin value-font"><span class="lang-en">Simulation speed: </span><span class="lang-ru">Скорость моделирования: </span><span id="simulation-speed-value"></span></div>
+                    <div class="margin value-font"><span lang="en">Simulation speed: </span><span lang="ru">Скорость моделирования: </span><span id="simulation-speed-value"></span></div>
                     <div id="simulation-speed-slider"></div>
                     <div id="display-ui-element-buttons" class="margin">
                         <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox"><img src="steady.png"></label>
@@ -80,19 +80,19 @@
                         <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox"><img src="reach.png"></label>
                     </div>
                     <div class="margin value-font">
-                        <span class="lang-en">Landing pattern:</span><span class="lang-ru">Круг захода:</span>&nbsp;
+                        <span lang="en">Landing pattern:</span><span lang="ru">Круг захода:</span>&nbsp;
                         <span id="pattern-menu">
-                            <input id="pattern-hide" type="radio" name="pattern" checked="checked"><label for="pattern-hide"><span class="lang-en">Hide</span><span class="lang-ru">Нет</span></label>
-                            <input id="pattern-rhs" type="radio" name="pattern"><label for="pattern-rhs"><span class="lang-en">Right</span><span class="lang-ru">Правым</span></label>
-                            <input id="pattern-lhs" type="radio" name="pattern"><label for="pattern-lhs"><span class="lang-en">Left</span><span class="lang-ru">Левым</span></label>
+                            <input id="pattern-hide" type="radio" name="pattern" checked="checked"><label for="pattern-hide"><span lang="en">Hide</span><span lang="ru">Нет</span></label>
+                            <input id="pattern-rhs" type="radio" name="pattern"><label for="pattern-rhs"><span lang="en">Right</span><span lang="ru">Правым</span></label>
+                            <input id="pattern-lhs" type="radio" name="pattern"><label for="pattern-lhs"><span lang="en">Left</span><span lang="ru">Левым</span></label>
                         </span>
                     </div>
                 </div>
             </div>
             <div id="legend">
-                <h3><span class="lang-en">Legend</span><span class="lang-ru">Как этим пользоваться?</span></h3>
+                <h3><span lang="en">Legend</span><span lang="ru">Как этим пользоваться?</span></h3>
                 <div id="legend-text">
-                    <div class="lang-en">
+                    <div lang="en">
                         <p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
                         <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
                         <p>That red arrow is your canopy, it points in the direction of your heading. The pink dot shows where you will land with the current setup (if &quot;Accuracy trick&quot; is enabled).</p>
@@ -101,7 +101,7 @@
                         <p>Read more about the tool <a href="about.html">here</a>.</p>
                     </div>
 
-                    <div class="lang-ru">
+                    <div lang="ru">
                         <p>Нажатием правой кнопки мыши можно начать (заново) снижение под куполом с заданной высоты.</p>
                         <p>Для управления используется стрелки: влево-вправо для управления куполом, вверх-вниз для выбора режима.</p>
                         <p>Маленькая красная стрелка &mdash; это ваш купол. Стрелка указывает направление купола. Розовая точка обозначает место приземления при отсутствии дальнейшего управления куполом и изменения ветра (в случае, если отмечена опция &laquo;Неподвижная точка&raquo;)</p>

@@ -77,10 +77,9 @@ body {
     padding: 5 !important;
 }
 
-.lang-en {
-
+[lang="en"] {
 }
 
-.lang-ru {
+[lang!="en"] {
     display: none;
 }
