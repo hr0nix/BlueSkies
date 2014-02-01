@@ -74,7 +74,7 @@ function saveSetting(key, value) {
 
 ////// Localization for javascript
 
-var langClass = "lang-en";
+var currentLanguage = "en";
 var enResources = {
     "ms": "m/s",
     "mph": "mph",
@@ -90,30 +90,34 @@ var ruResources = {
     "paused": "" // too long anyway :)
 };
 var langResources = {
-    "lang-en": enResources,
-    "lang-ru": ruResources
+    "en": enResources,
+    "ru": ruResources
 };
 
 function localize(id) {
-    return langResources[langClass][id];
+    return langResources[currentLanguage][id];
 }
 
-function setLanguage(lang) {
-    if (lang != "ru" && lang != "en") {
+function setLanguage(language) {
+    if (!langResources[language]) {
         return;
     }
 
-    saveSetting("language", lang);
-    langClass = "lang-" + lang;
-    var otherClass = langClass == "lang-ru" ? "lang-en" : "lang-ru";
-    $("." + langClass).show();
-    $("." + otherClass).hide();
+    saveSetting("language", language);
+    currentLanguage = language;
+    $("[lang]").each(function () {
+        if ($(this).attr("lang") == language) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
     updateSliderLabels();
     updateLanguageRadio();
 }
 
 function updateLanguageRadio() {
-    $("#select-" + langClass).prop('checked', true);
+    $("#select-lang-" + currentLanguage).prop('checked', true);
     $("#language-menu").buttonset('refresh');
 }
 
@@ -730,7 +734,7 @@ function initialize() {
     $("#pattern-menu").buttonset();
     $("#pattern-menu > input").change(onPatternSelect);
 
-    $("#settings").accordion({ collapsible: true });
+    $("#settings").accordion({ collapsible: true, heightStyle: "content" });
     $("#legend").accordion({ collapsible: true, heightStyle: "content" });
     $("#status").accordion({ collapsible: true }).hide();
 
