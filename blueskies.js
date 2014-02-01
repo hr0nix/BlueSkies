@@ -586,7 +586,7 @@ function initializeReachSet(objects, color) {
             strokeColor: color,
             strokeOpacity: 0.0,
             fillColor: color,
-            fillOpacity: 0.1,
+            fillOpacity: 0.15,
             map: map,
             zIndex: 0
         };
