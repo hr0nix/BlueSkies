@@ -608,6 +608,7 @@ function initialize() {
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     landingPatternLine = new google.maps.Polyline({
+        map: map,
         geodesic: false,
         strokeColor: '#00FFFF',
         strokeOpacity: 1.0,
@@ -615,7 +616,6 @@ function initialize() {
         zIndex: 1,
         visible: showLandingPattern
     });
-    landingPatternLine.setMap(map);
 
     var steadyPointMarkerOptions = {
         visible: false,
