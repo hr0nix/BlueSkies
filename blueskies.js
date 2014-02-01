@@ -25,7 +25,7 @@ var canopyModeUpdateSpeed = 0.05; // Mode units __per keydown event__
 var pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
 
 ////// Settings
-var showSteadyPoint = readSetting("show-steady-point", false);
+var showSteadyPoint = readSetting("show-steady-point", true);
 var useMetricSystem = readSetting("use-metric-system", true);
 var showReachabilitySet = readSetting("show-reachability-set", false);
 var showControllabilitySet = readSetting("show-controllability-set", false);
