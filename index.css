@@ -40,7 +40,12 @@ body {
 
 #wind-arrow {
     float: right;
+    margin-top: 15px;
     margin-right: 30px;
+}
+
+#wind-arrow > img {
+    height: 55px;
 }
 
 .no-padding {
