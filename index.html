@@ -7,12 +7,12 @@
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
         <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        <script src="jquery.number.js"></script>
-        <script src="jquery.cookie.js"></script>
-        <script src="blueskies.js"></script>
-        <script src="ga.js"></script>
+        <script src="scripts/jquery.number.js"></script>
+        <script src="scripts/jquery.cookie.js"></script>
+        <script src="scripts/blueskies.js"></script>
+        <script src="scripts/ga.js"></script>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-        <link rel="stylesheet" type="text/css" href="index.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
     </head>
     <body>
         <div id="map-canvas-container">
@@ -34,15 +34,15 @@
                 <div>
                     <div>
                         <span id="language-menu">
-                            <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en"><img src="GB.png"></label>
-                            <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru"><img src="RU.png"></label>
+                            <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en"><img src="images/GB.png"></label>
+                            <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru"><img src="images/RU.png"></label>
                         </span>
                         <span id="system-menu" class="margin">
                             <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span lang="en">Metric</span><span lang="ru">СИ</span></label>
                             <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
-                    <div id="wind-arrow"><img src="Arrow.png"></img></div>
+                    <div id="wind-arrow"><img src="images/Arrow.png"></div>
                     <div>
                         <span lang="en">DZ:</span>
                         <span lang="ru">ДЗ:</span>
@@ -66,6 +66,7 @@
                             </li>
                         </ul>
                     </div>
+
                     <div class="margin value-font"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
                     <div id="wind-direction-slider"></div>
                     <div class="margin value-font"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
@@ -77,26 +78,26 @@
                     <div id="display-ui-element-buttons" class="margin">
                         <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox">
                             <span lang="en">
-                            <img src="steady.png" title="Accuracy trick: you'll land there">
+                            <img src="images/steady.png" title="Accuracy trick: you'll land there">
                             </span>
                             <span lang="ru">
-                            <img src="steady.png" title="Точка приземления">
+                            <img src="images/steady.png" title="Точка приземления">
                             </span>
                         </label>
                         <input type="checkbox" id="show-controllability-set-checkbox"><label for="show-controllability-set-checkbox">
                             <span lang="en">
-                            <img src="control.png" title="Points you can reach the landing target from (at the current altitude)">
+                            <img src="images/control.png" title="Points you can reach the landing target from (at the current altitude)">
                             </span>
                             <span lang="ru">
-                            <img src="control.png" title="КВК: из каких точек все еще можно попасть в цель (с текущей высоты)">
+                            <img src="images/control.png" title="КВК: из каких точек все еще можно попасть в цель (с текущей высоты)">
                             </span>
                         </label>
                         <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox">
                             <span lang="en">
-                            <img src="reach.png" title="The area on the ground still reachable from the current position">
+                            <img src="images/reach.png" title="The area on the ground still reachable from the current position">
                             </span>
                             <span lang="ru">
-                            <img src="reach.png" title="Точки на земле, в которые еще можно попасть из текущего положения">
+                            <img src="images/reach.png" title="Точки на земле, в которые еще можно попасть из текущего положения">
                             </span>
                         </label>
                     </div>
@@ -117,20 +118,20 @@
                         <p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
                         <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
                         <dl>
-                            <dt><img src="target.png"></dt>
+                            <dt><img src="images/target.png"></dt>
                                 <dd>The landing target. Your goal is to be in this spot at
                                 zero altitude. You can use drag-and-drop to reposition.</dd>
-                            <dt><img src="canopy.png"></dt>
+                            <dt><img src="images/canopy.png"></dt>
                                 <dd>This arrow represents you canopy. Click in any place on the map to start the simulation from that position.</dd>
-                            <dt><img src="steady.png"></dt>
+                            <dt><img src="images/steady.png"></dt>
                                 <dd>Show the projected landing point. Provided the wind conditions don't
                                 change and no input is given to the canopy, it will land on the pink
                                 point.</dd>
-                            <dt><img src="control.png"></dt>
+                            <dt><img src="images/control.png"></dt>
                                 <dd>Show points you can reach the landing target from. If the
                                 canopy is outside this area, the target point is out of reach,
                                 choose an alternate landing area.</dd>
-                            <dt><img src="reach.png"></dt>
+                            <dt><img src="images/reach.png"></dt>
                                 <dd>Show reachable area: you can still reach those points from
                                 the current position and altitude. Points outside this area are no
                                 longer reachable no matter what inputs are given to the canopy.</dd>
@@ -143,20 +144,20 @@
                         <p>Нажатием правой кнопки мыши можно начать (заново) снижение под куполом с заданной высоты.</p>
                         <p>Для управления используется стрелки: влево-вправо для управления куполом, вверх-вниз для выбора режима.</p>
                         <dl>
-                            <dt><img src="target.png"></dt>
+                            <dt><img src="images/target.png"></dt>
                                 <dd>Желаемая точка приземления. Ее положение можно настраивать,
                                 перетаскивая ее по карте.</dd>
-                            <dt><img src="canopy.png"></dt>
+                            <dt><img src="images/canopy.png"></dt>
                                 <dd>Это ваш купол. Нажмите в любом месте карты правой кнопкой мыши: он там появится и начнется снижение!</dd>
-                            <dt><img src="steady.png"></dt>
+                            <dt><img src="images/steady.png"></dt>
                                 <dd>Отображение предполагаемой точки приземления: если условия останутся
                                 прежними и не будет производиться корректировок траектории, купол
                                 приземляется в розовую точку.</dd>
-                            <dt><img src="control.png"></dt>
+                            <dt><img src="images/control.png"></dt>
                                 <dd>Отображение конуса возможностей купола. При заданной силе ветра
                                 и текущей высоте только при нахождении внутри указанной области все еще
                                 возможно приземлиться в выбранной точке площадки.</dd>
-                            <dt><img src="reach.png"></dt>
+                            <dt><img src="images/reach.png"></dt>
                                 <dd>Отображение области на земле, в которую возможно приземлить
                                 купол из его текущего положения. Если ваша цель находится вне этой
                                 области, то <abbr title="Конечно же, вы можете изменить силу или направление ветра, но это возможно только в этой игре">никакими</abbr> корректировками траектории туда попасть уже
