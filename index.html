@@ -77,7 +77,7 @@
                     <div id="display-ui-element-buttons" class="margin">
                         <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox">
                             <span lang="en">
-                            <img src="steady.png" title="Accuracy trick: you'll land here">
+                            <img src="steady.png" title="Accuracy trick: you'll land there">
                             </span>
                             <span lang="ru">
                             <img src="steady.png" title="Точка приземления">
@@ -85,7 +85,7 @@
                         </label>
                         <input type="checkbox" id="show-controllability-set-checkbox"><label for="show-controllability-set-checkbox">
                             <span lang="en">
-                            <img src="control.png" title="Points you can reach the landing spot from (at current altitude)">
+                            <img src="control.png" title="Points you can reach the landing target from (at the current altitude)">
                             </span>
                             <span lang="ru">
                             <img src="control.png" title="КВК: из каких точек все еще можно попасть в цель (с текущей высоты)">
@@ -93,7 +93,7 @@
                         </label>
                         <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox">
                             <span lang="en">
-                            <img src="reach.png" title="Area on the ground still reachable from current position">
+                            <img src="reach.png" title="The area on the ground still reachable from the current position">
                             </span>
                             <span lang="ru">
                             <img src="reach.png" title="Точки на земле, в которые еще можно попасть из текущего положения">
@@ -118,21 +118,21 @@
                         <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
                         <dl>
                             <dt><img src="target.png"></dt>
-                                <dd>Selected landing point. Your target is to be in this spot at
+                                <dd>The landing target. Your goal is to be in this spot at
                                 zero altitude. You can use drag-and-drop to reposition.</dd>
                             <dt><img src="canopy.png"></dt>
-                                <dd>This arrow represents you canopy. Click in any place on a map to start simulation from that position.</dd>
+                                <dd>This arrow represents you canopy. Click in any place on the map to start the simulation from that position.</dd>
                             <dt><img src="steady.png"></dt>
-                                <dd>Show projected landing point. Provided the wind conditions don't
+                                <dd>Show the projected landing point. Provided the wind conditions don't
                                 change and no input is given to the canopy, it will land on the pink
                                 point.</dd>
                             <dt><img src="control.png"></dt>
-                                <dd>Show points you can reach the target landing point from. If the
+                                <dd>Show points you can reach the landing target from. If the
                                 canopy is outside this area, the target point is out of reach,
-                                choose alternate landing area.</dd>
+                                choose an alternate landing area.</dd>
                             <dt><img src="reach.png"></dt>
                                 <dd>Show reachable area: you can still reach those points from
-                                current position and altitude. Points outside this area are no
+                                the current position and altitude. Points outside this area are no
                                 longer reachable no matter which inputs are given to the canopy.</dd>
                         </dl>
                         <p>Press P to pause/unpause: the time stops, but you still can turn your canopy in place to discover its range and possibilities.</p>
