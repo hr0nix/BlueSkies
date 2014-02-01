@@ -67,12 +67,24 @@ body {
 }
 
 #legend-text {
+    padding: 1em;
+}
+
+#legend-text img {
+    vertical-align: center;
+}
+
+#legend-text dl img {
+    float: left;
+    margin-right: 1em;
+}
+
+#legend-text dt {
+    margin-top: 1em;
 }
 
 .ui-menu {
     z-index: 100;
-}
-
 }
 
 [lang="en"] {
