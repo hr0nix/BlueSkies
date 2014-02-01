@@ -602,7 +602,7 @@ function initializeReachSet(objects, color) {
 
 function initialize() {
     var mapOptions = {
-        zoom: 16,
+        zoom: 15,
         minZoom: 12,
         maxZoom: 18,
         center: dropzones[currentDropzoneId],
