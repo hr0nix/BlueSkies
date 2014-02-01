@@ -256,7 +256,7 @@ function updateReachSetVisibility(objects, visible) {
 function updateReachabilitySet() {
     updateReachSetVisibility(reachabilitySetObjects, showReachabilitySet);
 
-    if (showReachabilitySet) {
+    if (showReachabilitySet && isSimulationRunning) {
         computeReachSet(reachabilitySetObjects, canopyLocation, canopyAltitude, true);
     }
 }
