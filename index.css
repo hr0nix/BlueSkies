@@ -17,7 +17,8 @@ body {
     right: 0;
     top: 0;
     width: 31em;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 #settings, #status, #legend {
