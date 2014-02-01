@@ -734,7 +734,7 @@ function initialize() {
     $("#pattern-menu").buttonset();
     $("#pattern-menu > input").change(onPatternSelect);
 
-    $("#settings").accordion({ collapsible: true });
+    $("#settings").accordion({ collapsible: true, heightStyle: "content" });
     $("#legend").accordion({ collapsible: true, heightStyle: "content" });
     $("#status").accordion({ collapsible: true }).hide();
 

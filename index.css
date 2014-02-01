@@ -1,22 +1,22 @@
 html, body, #map-canvas-container, #map-canvas, #right-panel {
     height: 100%;
+    font-size: small;
 }
 
 body {
     margin: 0;
     padding: 0;
-    font-size: small;
 }
 
 #map-canvas-container {
-    margin-right: 400px;
+    margin-right: 31em;
 }
 
 #right-panel {
     position: absolute;
     right: 0;
     top: 0;
-    width: 400px;
+    width: 31em;
     overflow: auto;
 }
 
@@ -66,7 +66,6 @@ body {
 }
 
 #legend-text {
-    font-size: small;
 }
 
 .ui-menu {
