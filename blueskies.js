@@ -622,7 +622,7 @@ function initialize() {
     });
 
     var steadyPointMarkerOptions = {
-        visible: false,
+        visible: showSteadyPoint,
         map: map,
         icon: {
             path: google.maps.SymbolPath.CIRCLE,
