@@ -23,6 +23,7 @@ function startTutor() {
         width: "auto",
         show: "fade",
         hide: "fade",
+        dialogClass: "no-close",
         buttons: [ {
             text: "Skip tutor",
             click: function() {
@@ -30,7 +31,7 @@ function startTutor() {
                 $(this).dialog("close");
             }
         }, {
-            text: "Got it",
+            text: "Got it!",
             click: closeDialog
         }
         ],
@@ -55,6 +56,7 @@ function startTutor() {
         "rightclick": {
             modal: false,
             buttons: [],
+            dialogClass: "",
             position: {
                 of: "#map-canvas-container",
                 my: "top center",
