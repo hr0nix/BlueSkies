@@ -613,6 +613,7 @@ function initialize() {
         zoom: 15,
         minZoom: 12,
         maxZoom: 18,
+        streetViewControl: false,
         center: dropzones[currentDropzoneId],
         keyboardShortcuts: false,
         mapTypeId: google.maps.MapTypeId.SATELLITE
