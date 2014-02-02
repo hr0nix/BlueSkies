@@ -459,7 +459,7 @@ function onMapRightClick(event) {
     canopyLocation = event.latLng;
     canopyAltitude = openingAltitude;
     canopyHeading = windDirection + Math.PI; // Into the wind
-    canopyMode = 0.75;
+    canopyMode = 0.6;
     prevUpdateTime = new Date().getTime();
 
     $("#mode-progressbar").progressbar({value: canopyMode, max: 1}).height(10);
