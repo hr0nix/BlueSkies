@@ -1,12 +1,20 @@
 function startTutor() {
-    var lastShownDialog;
+    var allDialogs; // List of all dialog objects, populated from html automagically
+    var nextDialogIndex = 0;
     var skipTutor = false;
 
     function closeDialog() {
         $(this).dialog("close");
     }
 
+    function nextDialog() {
+        if (!skipTutor && nextDialogIndex < allDialogs.size()) {
+            allDialogs.eq(nextDialogIndex).dialog("open");
+        }
+    }
+
     var commonOptions = {
+        autoOpen: false,
         resizable: false,
         draggable: false,
         minHeight: 0,
@@ -24,8 +32,13 @@ function startTutor() {
             text: "Next",
             click: closeDialog
         }
-        ]
+        ],
+        close: function() {
+            nextDialogIndex++;
+            nextDialog();
+        }
     };
+
     var specificOptions = {
         "language": {
             position: {
@@ -50,12 +63,10 @@ function startTutor() {
     
     var allDialogs = $("#dialogs > div");
 
-    lastShownDialog = allDialogs.first();
-
     allDialogs.each(function(){
-        //var next = $(this).next();
         var options = specificOptions[$(this).attr("id").replace("dialog-","")];
-        //$.extend(options, commonOptions);
         $(this).dialog(options, commonOptions);
     });
+
+    nextDialog();
 }
