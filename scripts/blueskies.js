@@ -458,11 +458,13 @@ function onKeyDown(e) {
         pressedKeys[e.which] = true;
     }
 
-    if (e.which == $.ui.keyCode.UP) {
-        canopyMode += canopyModeUpdateSpeed;
-    }
-    else if (e.which == $.ui.keyCode.DOWN) {
-        canopyMode -= canopyModeUpdateSpeed;
+    if (isSimulationRunning && canopyAltitude > 0) {
+        if (e.which == $.ui.keyCode.UP) {
+            canopyMode += canopyModeUpdateSpeed;
+        }
+        else if (e.which == $.ui.keyCode.DOWN) {
+            canopyMode -= canopyModeUpdateSpeed;
+        }
     }
 
     // Clip canopy mode
