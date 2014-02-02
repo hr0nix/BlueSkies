@@ -16,7 +16,7 @@ var dropzones = {
     "dz-custom" : readSetting("custom-dz-location", null, unpackLatLng)
 }
 var dzMarker;
-var lastCustomDzName;
+var lastCustomDzName = readSetting("custom-dz-name", "");
 
 // Time
 var updateFrequency = 20.0;
@@ -500,9 +500,9 @@ function onMapRightClick(event) {
 }
 
 function onLandingSpotPositionChanged() {
-    // TODO: do it for every dropzone?
     if (currentDropzoneId == "dz-custom") {
         dropzones["dz-custom"] = getCurrentLandingPoint();
+        saveSetting("custom-dz-location", packLatLng(dropzones["dz-custom"]));
     }
 
     updateLandingPattern();
@@ -627,7 +627,9 @@ function onFindNewDz() {
     $("#dz-custom").show();
     dropzones["dz-custom"] = place.geometry.location;
     setDz("dz-custom");
-    saveSetting("custom-dz-location", packLatLng(dropzones["dz-custom"]));
+
+    saveSetting("custom-dz-location", packLatLng(place.geometry.location));
+    saveSetting("custom-dz-name", lastCustomDzName);
 }
 
 ////// Initialization
