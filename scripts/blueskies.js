@@ -548,9 +548,8 @@ function onTimeTick() {
         }
 
         updateCanopyControls();
+        updateCanopyStatus();
     }
-
-    updateCanopyStatus();
 }
 
 function onWindDirectionSliderValueChange(event, ui) {
