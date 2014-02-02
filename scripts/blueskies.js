@@ -498,8 +498,8 @@ function onMapRightClick(event) {
     canopyMode = 0.6;
     prevUpdateTime = new Date().getTime();
 
-    $("#mode-progressbar").progressbar({value: canopyMode, max: 1}).height(10);
-    $("#altitude-progressbar").progressbar({value: canopyAltitude, max: openingAltitude}).height(10);
+    $("#mode-progressbar").progressbar({value: canopyMode, max: 1});
+    $("#altitude-progressbar").progressbar({value: canopyAltitude, max: openingAltitude});
 
     if (!isSimulationRunning) {
         initializeCanopyImage();
@@ -726,6 +726,9 @@ function initialize() {
     // We initialize this early so UI events have something to update
     initializeReachSet(controllabilitySetObjects, '#0000FF');
     initializeReachSet(reachabilitySetObjects, '#FF0000');
+
+    $("#mode-progressbar").progressbar().height(10);
+    $("#altitude-progressbar").progressbar().height(10);
 
     var windDirectionSliderOptions = {
         min: 0,
