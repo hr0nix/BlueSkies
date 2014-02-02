@@ -742,9 +742,10 @@ function initialize() {
     $("#pattern-menu").buttonset();
     $("#pattern-menu > input").change(onPatternSelect);
 
-    $("#settings").accordion({ collapsible: true, heightStyle: "content" });
-    $("#legend").accordion({ collapsible: true, heightStyle: "content" });
-    $("#status").accordion({ collapsible: true }).hide();
+    var accordionOptions = { collapsible: true, heightStyle: "content" };
+    $("#settings").accordion(accordionOptions);
+    $("#legend").accordion(accordionOptions);
+    $("#status").accordion(accordionOptions).hide();
 
     var queryString = getQueryString();
     var lang = queryString.lang || readSetting("language", "en");
