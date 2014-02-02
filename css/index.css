@@ -70,10 +70,6 @@ body {
     padding: 1em;
 }
 
-#legend-text img {
-    vertical-align: center;
-}
-
 #legend-text dl img {
     float: left;
     margin-right: 1em;
@@ -87,9 +83,10 @@ body {
     z-index: 100;
 }
 
-[lang="en"] {
+[lang] {
+    display: none;
 }
 
-[lang!="en"] {
-    display: none;
+[lang="en"] {
+    display: inline;
 }
