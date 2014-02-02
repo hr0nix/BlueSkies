@@ -35,7 +35,7 @@ body {
     display: inline-block;
 }
 
-#wind-direction-slider, #wind-speed-slider, #opening-altitude-slider, #simulation-speed-slider {
+.small-margin {
     margin-top: 6px;
 }
 
