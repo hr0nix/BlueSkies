@@ -63,8 +63,8 @@ function startTutor() {
     var allDialogs = $("#dialogs > div");
 
     allDialogs.each(function(){
-        var options = specificOptions[$(this).attr("id").replace("dialog-","")];
-        $(this).dialog(options, commonOptions);
+        var specific = specificOptions[$(this).attr("id").replace("dialog-","")];
+        $(this).dialog(commonOptions).dialog("option", specific);
     });
 
     nextDialog();
