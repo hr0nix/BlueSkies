@@ -589,6 +589,7 @@ function onSelectSystem() {
     saveSetting("use-metric-system", useMetricSystem);
 
     updateSliderLabels();
+    updateCanopyStatus();
 }
 
 function onDzMenuItemSelected(event, ui) {
