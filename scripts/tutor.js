@@ -17,7 +17,7 @@ function startTutor() {
         resizable: false,
         draggable: false,
         minHeight: 0,
-        modal: false,
+        modal: true,
         width: "auto",
         show: "fade",
         hide: "fade",
