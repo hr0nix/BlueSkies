@@ -12,9 +12,14 @@ var dropzones = {
     "dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
     "dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
     "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
-    "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181)
+    "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181),
+    "dz-other-dubai" : new google.maps.LatLng(25.090282, 55.135681),
+    "dz-other-red-square": new google.maps.LatLng(55.754216, 37.620083),
+    "dz-other-statue-of-liberty": new google.maps.LatLng(40.690531, -74.04575),
+    "dz-custom" : readSetting("custom-dz-location", null, unpackLatLng)
 }
-var dzMarkers = {}; // We populate this array with markers to allow user to modify the landing spot.
+var dzMarker;
+var lastCustomDzName = readSetting("custom-dz-name", "");
 
 // Time
 var updateFrequency = 20.0;
@@ -35,6 +40,9 @@ var windDirection = 0; // We use the azimuth of the wind speed vector here, not 
 var windSpeed = 5;
 var openingAltitude = readSetting("opening-altitude", 700);
 var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
+var defaultMapZoom = 15;
+var minMapZoom = 12;
+var maxMapZoom = 18;
 
 ////// State
 var isSimulationRunning = false;
@@ -55,14 +63,16 @@ var landingPatternLine;
 var reachabilitySetObjects = [];
 var controllabilitySetObjects = [];
 
-////// JavaScript stuff
-function readSetting(key, def) {
+var dzFinderAutocomplete;
+
+////// Persistence code
+function readSetting(key, def, converter) {
     var converters = {
         'string': String,
         'number': Number,
         'boolean': parseBoolean
     };
-    return defaultIfUndefined($.cookie(key, converters[typeof def]), def);
+    return defaultIfUndefined($.cookie(key, converter || converters[typeof def]), def);
 }
 
 function saveSetting(key, value) {
@@ -72,14 +82,29 @@ function saveSetting(key, value) {
     $.cookie(key, value, cookieOptions);
 }
 
+function wipeCookies() {
+    var cookies = document.cookie.split(";");
+    for(var i = 0; i < cookies.length; i++) {
+        var equals = cookies[i].indexOf("=");
+        var name = equals > -1 ? cookies[i].substr(0, equals) : cookies[i];
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+}
+
+function packLatLng(latlng) {
+    return JSON.stringify([latlng.lat(), latlng.lng()]);
+}
+
+function unpackLatLng(string) {
+    var latlng = JSON.parse(string);
+    return new google.maps.LatLng(latlng[0], latlng[1]);
+}
+
 ////// Localization for javascript
 
 var currentLanguage = "en";
 var enResources = {
     "ms": "m/s",
-    "mph": "mph",
-    "m": "m",
-    "ft": "ft",
     "paused": "(paused)"
 };
 var ruResources = {
@@ -87,7 +112,8 @@ var ruResources = {
     "mph": "миль/ч",
     "m": "м",
     "ft": "футов",
-    "paused": "" // too long anyway :)
+    "paused": "", // too long anyway :)
+    "Choose another landing area": "Выберите другую площадку приземления"
 };
 var langResources = {
     "en": enResources,
@@ -95,7 +121,7 @@ var langResources = {
 };
 
 function localize(id) {
-    return langResources[currentLanguage][id];
+    return defaultIfUndefined(langResources[currentLanguage][id], id);
 }
 
 function setLanguage(language) {
@@ -114,6 +140,8 @@ function setLanguage(language) {
     });
     updateSliderLabels();
     updateLanguageRadio();
+
+    $("#dz-finder").attr("placeholder", localize("Choose another landing area"));
 }
 
 function updateLanguageRadio() {
@@ -216,7 +244,7 @@ function getCanopyVerticalSpeed(mode) {
 }
 
 function getCurrentLandingPoint() {
-    return dzMarkers[currentDropzoneId].getPosition();
+    return dzMarker.getPosition();
 }
 
 // TODO: implement
@@ -362,10 +390,18 @@ function setDz(dz) {
     if (!dropzones[dz]) {
         return;
     }
+
+    if (dz == "dz-custom") {
+        $("#dz-finder").val(lastCustomDzName);
+    } else {
+        $("#dz-finder").val("");
+    }
+
     currentDropzoneId = dz;
     $('#selected-dz').html($('#' + currentDropzoneId).children("a").html());
     saveSetting("current-dropzone-id", currentDropzoneId);
     map.setCenter(dropzones[currentDropzoneId]);
+    dzMarker.setPosition(dropzones[currentDropzoneId]);
     updateLandingPattern();
 }
 
@@ -473,6 +509,11 @@ function onMapRightClick(event) {
 }
 
 function onLandingSpotPositionChanged() {
+    if (currentDropzoneId == "dz-custom") {
+        dropzones["dz-custom"] = getCurrentLandingPoint();
+        saveSetting("custom-dz-location", packLatLng(dropzones["dz-custom"]));
+    }
+
     updateLandingPattern();
 }
 
@@ -581,6 +622,25 @@ function onPatternSelect() {
     setPatternType($(this).attr('id'));
 }
 
+function onFindNewDz() {
+    var place = dzFinderAutocomplete.getPlace();
+    if (!place.geometry) {
+        return;
+    }
+
+    lastCustomDzName = $("#dz-finder").val();
+
+    map.setCenter(place.geometry.location);
+    map.setZoom(defaultMapZoom);
+
+    $("#dz-custom").show();
+    dropzones["dz-custom"] = place.geometry.location;
+    setDz("dz-custom");
+
+    saveSetting("custom-dz-location", packLatLng(place.geometry.location));
+    saveSetting("custom-dz-name", lastCustomDzName);
+}
+
 ////// Initialization
 
 function initializeCanopyImage() {
@@ -610,15 +670,20 @@ function initializeReachSet(objects, color) {
 
 function initialize() {
     var mapOptions = {
-        zoom: 15,
-        minZoom: 12,
-        maxZoom: 18,
+        zoom: defaultMapZoom,
+        minZoom: minMapZoom,
+        maxZoom: maxMapZoom,
         streetViewControl: false,
         center: dropzones[currentDropzoneId],
         keyboardShortcuts: false,
         mapTypeId: google.maps.MapTypeId.SATELLITE
     };
-    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
+
+    var dzFinder = $("#dz-finder").get(0);
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
+    dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
+    google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
 
     landingPatternLine = new google.maps.Polyline({
         map: map,
@@ -644,22 +709,20 @@ function initialize() {
     };
     steadyPointMarker = new google.maps.Marker(steadyPointMarkerOptions);
 
-    for (var dz in dropzones) {
-        var markerOptions = {
-            icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                strokeColor: 'yellow',
-                scale: 8
-            },
-            position: dropzones[dz],
-            draggable: true,
-            map: map,
-            zIndex: 2
-        }
-
-        dzMarkers[dz] = new google.maps.Marker(markerOptions);
-        google.maps.event.addListener(dzMarkers[dz], 'position_changed', onLandingSpotPositionChanged);
+    var markerOptions = {
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            strokeColor: 'yellow',
+            scale: 8
+        },
+        position: dropzones[currentDropzoneId],
+        draggable: true,
+        map: map,
+        zIndex: 2
     }
+
+    dzMarker = new google.maps.Marker(markerOptions);
+    google.maps.event.addListener(dzMarker, 'position_changed', onLandingSpotPositionChanged);
 
     // We initialize this early so UI events have something to update
     initializeReachSet(controllabilitySetObjects, '#0000FF');
@@ -722,6 +785,7 @@ function initialize() {
     $("#system-menu > input").change(onSelectSystem);
 
     $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
+    $("#dz-custom").toggle(dropzones["dz-custom"] != null);
 
     $("#steady-point-checkbox").
         prop('checked', showSteadyPoint).

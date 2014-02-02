@@ -4,7 +4,7 @@
         <title>Accuracy landing simulator</title>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
         <meta charset="utf-8">
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
         <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="scripts/jquery.number.js"></script>
@@ -17,6 +17,7 @@
     <body>
         <div id="map-canvas-container">
             <div id="map-canvas"></div>
+            <input id="dz-finder" class="controls" type="text">
         </div>
 
         <div id="right-panel">
@@ -65,6 +66,14 @@
                                             <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
                                         </ul>
                                     </li>
+                                    <li><a href="#"><span lang="en">Other</span><span lang="ru">Другое</span></a>
+                                        <ul>
+                                            <li id="dz-other-dubai"><a href="#"><span lang="en">Skydive Dubai</span><span lang="ru">Дубай</span></a></li>
+                                            <li id="dz-other-red-square"><a href="#"><span lang="en">Red Square</span><span lang="ru">Красная площадь</span></a></li>
+                                            <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
+                                        </ul>
+                                    </li>
+                                    <li id="dz-custom"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
                                 </ul>
                             </li>
                         </ul>
