@@ -41,23 +41,24 @@ function startTutor() {
     };
 
     var specificOptions = {
-        "language": {
-            position: {
-                of: "#right-panel"
-            }
-        },
-        "rightclick": {
-            position: {
-                of: "#map-canvas-container",
-                my: "top center",
-                at: "center top+100"
-            }
+        "welcome": {
+            title: "Welcome"
         },
         "reachset": {
+            title: "dd",
             position: {
                 of: "#display-ui-element-buttons",
                 my: "right center",
                 at: "left center"
+            }
+        },
+        "rightclick": {
+            modal: false,
+            buttons: [],
+            position: {
+                of: "#map-canvas-container",
+                my: "top center",
+                at: "center top+100"
             }
         }
     };
