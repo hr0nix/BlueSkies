@@ -16,6 +16,7 @@ var dropzones = {
     "dz-custom" : null
 }
 var dzMarker;
+var lastCustomDzName;
 
 // Time
 var updateFrequency = 20.0;
@@ -381,6 +382,13 @@ function setDz(dz) {
     if (!dropzones[dz]) {
         return;
     }
+
+    if (dz == "dz-custom") {
+        $("#dz-finder").val(lastCustomDzName);
+    } else {
+        $("#dz-finder").val("");
+    }
+
     currentDropzoneId = dz;
     $('#selected-dz').html($('#' + currentDropzoneId).children("a").html());
     saveSetting("current-dropzone-id", currentDropzoneId);
@@ -605,6 +613,8 @@ function onFindNewDz() {
     if (!place.geometry) {
         return;
     }
+
+    lastCustomDzName = $("#dz-finder").val();
 
     map.setCenter(place.geometry.location);
     map.setZoom(defaultMapZoom);
