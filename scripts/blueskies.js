@@ -14,7 +14,7 @@ var dropzones = {
     "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
     "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181)
 }
-var dzMarkers = {}; // We populate this array with markers to allow user to modify the landing spot.
+var dzMarker;
 
 // Time
 var updateFrequency = 20.0;
@@ -216,7 +216,7 @@ function getCanopyVerticalSpeed(mode) {
 }
 
 function getCurrentLandingPoint() {
-    return dzMarkers[currentDropzoneId].getPosition();
+    return dzMarker.getPosition();
 }
 
 // TODO: implement
@@ -366,6 +366,7 @@ function setDz(dz) {
     $('#selected-dz').html($('#' + currentDropzoneId).children("a").html());
     saveSetting("current-dropzone-id", currentDropzoneId);
     map.setCenter(dropzones[currentDropzoneId]);
+    dzMarker.setPosition(dropzones[currentDropzoneId]);
     updateLandingPattern();
 }
 
@@ -644,22 +645,20 @@ function initialize() {
     };
     steadyPointMarker = new google.maps.Marker(steadyPointMarkerOptions);
 
-    for (var dz in dropzones) {
-        var markerOptions = {
-            icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                strokeColor: 'yellow',
-                scale: 8
-            },
-            position: dropzones[dz],
-            draggable: true,
-            map: map,
-            zIndex: 2
-        }
-
-        dzMarkers[dz] = new google.maps.Marker(markerOptions);
-        google.maps.event.addListener(dzMarkers[dz], 'position_changed', onLandingSpotPositionChanged);
+    var markerOptions = {
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            strokeColor: 'yellow',
+            scale: 8
+        },
+        position: dropzones[currentDropzoneId],
+        draggable: true,
+        map: map,
+        zIndex: 2
     }
+
+    dzMarker = new google.maps.Marker(markerOptions);
+    google.maps.event.addListener(dzMarker, 'position_changed', onLandingSpotPositionChanged);
 
     // We initialize this early so UI events have something to update
     initializeReachSet(controllabilitySetObjects, '#0000FF');
