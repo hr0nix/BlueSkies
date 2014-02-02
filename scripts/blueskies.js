@@ -12,7 +12,8 @@ var dropzones = {
     "dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
     "dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
     "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
-    "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181)
+    "dz-ru-vatulino": new google.maps.LatLng(55.663505, 36.142181),
+    "dz-custom" : null
 }
 var dzMarker;
 
@@ -35,6 +36,9 @@ var windDirection = 0; // We use the azimuth of the wind speed vector here, not 
 var windSpeed = 5;
 var openingAltitude = readSetting("opening-altitude", 700);
 var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
+var defaultMapZoom = 15;
+var minMapZoom = 12;
+var maxMapZoom = 18;
 
 ////// State
 var isSimulationRunning = false;
@@ -54,6 +58,8 @@ var landingPatternLine;
 
 var reachabilitySetObjects = [];
 var controllabilitySetObjects = [];
+
+var dzFinderAutocomplete;
 
 ////// JavaScript stuff
 function readSetting(key, def) {
@@ -80,14 +86,16 @@ var enResources = {
     "mph": "mph",
     "m": "m",
     "ft": "ft",
-    "paused": "(paused)"
+    "paused": "(paused)",
+    "Choose another landing area" : "Choose another landing area"
 };
 var ruResources = {
     "ms": "м/с",
     "mph": "миль/ч",
     "m": "м",
     "ft": "футов",
-    "paused": "" // too long anyway :)
+    "paused": "", // too long anyway :)
+    "Choose another landing area" : "Выберите другую площадку приземления"
 };
 var langResources = {
     "en": enResources,
@@ -114,6 +122,8 @@ function setLanguage(language) {
     });
     updateSliderLabels();
     updateLanguageRadio();
+
+    document.getElementById("dz-finder").setAttribute('placeholder', localize("Choose another landing area"));
 }
 
 function updateLanguageRadio() {
@@ -468,6 +478,11 @@ function onMapRightClick(event) {
 }
 
 function onLandingSpotPositionChanged() {
+    // TODO: do it for every dropzone?
+    if (currentDropzoneId == "dz-custom") {
+        dropzones["dz-custom"] = getCurrentLandingPoint();
+    }
+
     updateLandingPattern();
 }
 
@@ -576,6 +591,20 @@ function onPatternSelect() {
     setPatternType($(this).attr('id'));
 }
 
+function onFindNewDz() {
+    var place = dzFinderAutocomplete.getPlace();
+    if (!place.geometry) {
+        return;
+    }
+
+    map.setCenter(place.geometry.location);
+    map.setZoom(defaultMapZoom);
+
+    $("#dz-custom").show();
+    dropzones["dz-custom"] = place.geometry.location;
+    setDz("dz-custom");
+}
+
 ////// Initialization
 
 function initializeCanopyImage() {
@@ -605,14 +634,19 @@ function initializeReachSet(objects, color) {
 
 function initialize() {
     var mapOptions = {
-        zoom: 15,
-        minZoom: 12,
-        maxZoom: 18,
+        zoom: defaultMapZoom,
+        minZoom: minMapZoom,
+        maxZoom: maxMapZoom,
         center: dropzones[currentDropzoneId],
         keyboardShortcuts: false,
         mapTypeId: google.maps.MapTypeId.SATELLITE
     };
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+    var dzFinder = document.getElementById('dz-finder');
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
+    dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
+    google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
 
     landingPatternLine = new google.maps.Polyline({
         map: map,
@@ -714,6 +748,7 @@ function initialize() {
     $("#system-menu > input").change(onSelectSystem);
 
     $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
+    $("#dz-custom").hide();
 
     $("#steady-point-checkbox").
         prop('checked', showSteadyPoint).

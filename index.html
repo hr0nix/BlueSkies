@@ -4,7 +4,7 @@
         <title>Accuracy landing simulator</title>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
         <meta charset="utf-8">
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
         <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="scripts/jquery.number.js"></script>
@@ -16,6 +16,7 @@
     </head>
     <body>
         <div id="map-canvas-container">
+            <input id="dz-finder" class="controls" type="text">
             <div id="map-canvas"></div>
         </div>
 
@@ -62,6 +63,7 @@
                                             <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
                                         </ul>
                                     </li>
+                                    <li id="dz-custom"><a href="#"><span lang="en">Custom</span><span lang="ru">Другая</span></a></li>
                                 </ul>
                             </li>
                         </ul>
