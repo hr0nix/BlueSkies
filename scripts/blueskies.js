@@ -393,6 +393,9 @@ function updateCanopyStatus() {
     $("#horizontal-speed-value").html(formatSpeed(getCanopyHorizontalSpeed(canopyMode), 1));
     $("#vertical-speed-value").html(formatSpeed(getCanopyVerticalSpeed(canopyMode), 1));
     $("#canopy-heading-value").html(formatHeading(canopyHeading, 0));
+
+    $("#mode-progressbar").progressbar("option", "value", canopyMode);
+    $("#altitude-progressbar").progressbar("option", "value", canopyAltitude);
 }
 
 function updateSliderLabels() {
@@ -458,6 +461,9 @@ function onMapRightClick(event) {
     canopyHeading = windDirection + Math.PI; // Into the wind
     canopyMode = 0.75;
     prevUpdateTime = new Date().getTime();
+
+    $("#mode-progressbar").progressbar({value: canopyMode, max: 1}).height(10);
+    $("#altitude-progressbar").progressbar({value: canopyAltitude, max: openingAltitude}).height(10);
 
     if (!isSimulationRunning) {
         initializeCanopyImage();
