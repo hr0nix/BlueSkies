@@ -9,6 +9,7 @@ function startTutor() {
     function nextDialog() {
         if (nextDialogIndex < allDialogs.size()) {
             allDialogs.eq(nextDialogIndex).dialog("open");
+            nextDialogIndex++;
         } else {
             saveSetting("tutor-finished", true);
         }
@@ -19,7 +20,7 @@ function startTutor() {
         resizable: false,
         draggable: false,
         minHeight: 0,
-        modal: true,
+        modal: false,
         width: "auto",
         show: "fade",
         hide: "fade",
@@ -35,10 +36,7 @@ function startTutor() {
             click: closeDialog
         }
         ],
-        close: function() {
-            nextDialogIndex++;
-            nextDialog();
-        }
+        close: nextDialog
     };
 
     var specificOptions = {
@@ -77,6 +75,9 @@ function startTutor() {
 
     $("#tutor-button").click(function() {
         nextDialogIndex = 0;
-        nextDialog();
+        var visible = allDialogs.filter(":visible").dialog("close");
+        if (visible.size() == 0) {
+            nextDialog();
+        }
     });
 }
