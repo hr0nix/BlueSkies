@@ -13,7 +13,7 @@ var dropzones = {
     "dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
     "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
     "dz-ru-vatulino": new google.maps.LatLng(55.663505, 36.142181),
-    "dz-custom" : null
+    "dz-custom" : readSetting("custom-dz-location", null, unpackLatLng)
 }
 var dzMarker;
 var lastCustomDzName;
@@ -62,14 +62,14 @@ var controllabilitySetObjects = [];
 
 var dzFinderAutocomplete;
 
-////// JavaScript stuff
-function readSetting(key, def) {
+////// Persistence code
+function readSetting(key, def, converter) {
     var converters = {
         'string': String,
         'number': Number,
         'boolean': parseBoolean
     };
-    return defaultIfUndefined($.cookie(key, converters[typeof def]), def);
+    return defaultIfUndefined($.cookie(key, converter || converters[typeof def]), def);
 }
 
 function saveSetting(key, value) {
@@ -88,16 +88,21 @@ function wipeCookies() {
     }
 }
 
+function packLatLng(latlng) {
+    return JSON.stringify([latlng.lat(), latlng.lng()]);
+}
+
+function unpackLatLng(string) {
+    var latlng = JSON.parse(string);
+    return new google.maps.LatLng(latlng[0], latlng[1]);
+}
+
 ////// Localization for javascript
 
 var currentLanguage = "en";
 var enResources = {
     "ms": "m/s",
-    "mph": "mph",
-    "m": "m",
-    "ft": "ft",
-    "paused": "(paused)",
-    "Choose another landing area" : "Choose another landing area"
+    "paused": "(paused)"
 };
 var ruResources = {
     "ms": "м/с",
@@ -105,7 +110,7 @@ var ruResources = {
     "m": "м",
     "ft": "футов",
     "paused": "", // too long anyway :)
-    "Choose another landing area" : "Выберите другую площадку приземления"
+    "Choose another landing area": "Выберите другую площадку приземления"
 };
 var langResources = {
     "en": enResources,
@@ -113,7 +118,7 @@ var langResources = {
 };
 
 function localize(id) {
-    return langResources[currentLanguage][id];
+    return defaultIfUndefined(langResources[currentLanguage][id], id);
 }
 
 function setLanguage(language) {
@@ -622,6 +627,7 @@ function onFindNewDz() {
     $("#dz-custom").show();
     dropzones["dz-custom"] = place.geometry.location;
     setDz("dz-custom");
+    saveSetting("custom-dz-location", packLatLng(dropzones["dz-custom"]));
 }
 
 ////// Initialization
@@ -767,7 +773,7 @@ function initialize() {
     $("#system-menu > input").change(onSelectSystem);
 
     $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
-    $("#dz-custom").hide();
+    $("#dz-custom").toggle(dropzones["dz-custom"] != null);
 
     $("#steady-point-checkbox").
         prop('checked', showSteadyPoint).
