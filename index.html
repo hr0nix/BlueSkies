@@ -10,6 +10,7 @@
         <script src="scripts/jquery.number.js"></script>
         <script src="scripts/jquery.cookie.js"></script>
         <script src="scripts/blueskies.js"></script>
+        <script src="scripts/tutor.js"></script>
         <script src="scripts/ga.js"></script>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="css/index.css" />
@@ -114,6 +115,7 @@
             <div id="legend">
                 <h3><span lang="en">Legend</span><span lang="ru">Как этим пользоваться?</span></h3>
                 <div id="legend-text">
+                    <button id="tutor-button">Start tutor</button>
                     <div lang="en">
                         <p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
                         <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
@@ -167,6 +169,21 @@
                         <p>Подробнее читайте <a href="about.html">здесь</a>.</p>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="dialogs" style="display:none">
+            <div id="dialog-language" title="Language selection">
+                <p>Please select your language</p>
+                <p>Выберете, пожалуйста, язык</p>
+            </div>
+            <div id="dialog-rightclick" title="Rightclick to play">
+                <p lang="en">Rightclick any place on the map to start simulation.</p>
+                <p lang="ru">Правый клик мыши на карте начинает снижение из этой точки.</p>
+            </div>
+            <div id="dialog-reachset" title="Reach sets">
+                <p>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
+            </div>
             </div>
         </div>
     </body>

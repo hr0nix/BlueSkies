@@ -36,6 +36,8 @@ var windSpeed = 5;
 var openingAltitude = readSetting("opening-altitude", 700);
 var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
 
+var showTutor = readSetting("show-tutor", true);
+
 ////// State
 var isSimulationRunning = false;
 var canopyLocation;
@@ -740,6 +742,8 @@ function initialize() {
     $("#legend").accordion({ collapsible: true, heightStyle: "content" });
     $("#status").accordion({ collapsible: true }).hide();
 
+    $("#tutor-button").click(startTutor);
+
     var queryString = getQueryString();
     var lang = queryString.lang || readSetting("language", "en");
     var dz = queryString.dz || currentDropzoneId.replace("dz-", "");
@@ -755,6 +759,10 @@ function initialize() {
     $(document).keydown(onKeyDown);
     $(document).keyup(onKeyUp);
     window.setInterval(onTimeTick, updateFrequency);
+
+    if (showTutor) {
+        startTutor();
+    }
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
