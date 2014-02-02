@@ -13,9 +13,9 @@ var dropzones = {
     "dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
     "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
     "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181),
-    "dz-exotic-dubai" : new google.maps.LatLng(25.090282, 55.135681),
-    "dz-exotic-red-square" : new google.maps.LatLng(55.754216, 37.620083),
-    "dz-exotic-statue-of-liberty" : new google.maps.LatLng(40.690531, -74.04575),
+    "dz-other-dubai" : new google.maps.LatLng(25.090282, 55.135681),
+    "dz-other-red-square": new google.maps.LatLng(55.754216, 37.620083),
+    "dz-other-statue-of-liberty": new google.maps.LatLng(40.690531, -74.04575),
     "dz-custom" : readSetting("custom-dz-location", null, unpackLatLng)
 }
 var dzMarker;
