@@ -87,6 +87,12 @@ body {
     z-index: 100;
 }
 
+.ui-dialog-titlebar {
+    background-color: #FF0000 !important;
+    background-image: none;
+    color: #000;
+}
+
 [lang="en"] {
 }
 

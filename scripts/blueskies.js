@@ -742,8 +742,6 @@ function initialize() {
     $("#legend").accordion({ collapsible: true, heightStyle: "content" });
     $("#status").accordion({ collapsible: true }).hide();
 
-    $("#tutor-button").click(startTutor);
-
     var queryString = getQueryString();
     var lang = queryString.lang || readSetting("language", "en");
     var dz = queryString.dz || currentDropzoneId.replace("dz-", "");

@@ -1,14 +1,13 @@
 function startTutor() {
     var allDialogs; // List of all dialog objects, populated from html automagically
     var nextDialogIndex = 0;
-    var skipTutor = false;
 
     function closeDialog() {
         $(this).dialog("close");
     }
 
     function nextDialog() {
-        if (!skipTutor && nextDialogIndex < allDialogs.size()) {
+        if (nextDialogIndex < allDialogs.size()) {
             allDialogs.eq(nextDialogIndex).dialog("open");
         }
     }
@@ -25,11 +24,11 @@ function startTutor() {
         buttons: [ {
             text: "Skip tutor",
             click: function() {
-                skipTutor = true;
+                nextDialogIndex = allDialogs.size();
                 $(this).dialog("close");
             }
         }, {
-            text: "Next",
+            text: "Got it",
             click: closeDialog
         }
         ],
@@ -69,4 +68,9 @@ function startTutor() {
     });
 
     nextDialog();
+
+    $("#tutor-button").click(function() {
+        nextDialogIndex = 0;
+        nextDialog();
+    });
 }
