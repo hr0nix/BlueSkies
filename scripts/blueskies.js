@@ -101,11 +101,7 @@ function unpackLatLng(string) {
 var currentLanguage = "en";
 var enResources = {
     "ms": "m/s",
-    "mph": "mph",
-    "m": "m",
-    "ft": "ft",
-    "paused": "(paused)",
-    "Choose another landing area" : "Choose another landing area"
+    "paused": "(paused)"
 };
 var ruResources = {
     "ms": "м/с",
@@ -113,7 +109,7 @@ var ruResources = {
     "m": "м",
     "ft": "футов",
     "paused": "", // too long anyway :)
-    "Choose another landing area" : "Выберите другую площадку приземления"
+    "Choose another landing area": "Выберите другую площадку приземления"
 };
 var langResources = {
     "en": enResources,
@@ -121,7 +117,7 @@ var langResources = {
 };
 
 function localize(id) {
-    return langResources[currentLanguage][id];
+    return defaultIfUndefined(langResources[currentLanguage][id], id);
 }
 
 function setLanguage(language) {
