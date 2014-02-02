@@ -1,6 +1,6 @@
 function startTutor() {
     var allDialogs; // List of all dialog objects, populated from html automagically
-    var nextDialogIndex = 0;
+    var nextDialogIndex;
 
     function closeDialog() {
         $(this).dialog("close");
@@ -9,6 +9,8 @@ function startTutor() {
     function nextDialog() {
         if (nextDialogIndex < allDialogs.size()) {
             allDialogs.eq(nextDialogIndex).dialog("open");
+        } else {
+            saveSetting("tutor-finished", true);
         }
     }
 
@@ -67,6 +69,7 @@ function startTutor() {
         $(this).dialog(commonOptions).dialog("option", specific);
     });
 
+    nextDialogIndex = readSetting("tutor-finished", false) ? allDialogs.size() - 1 : 0;
     nextDialog();
 
     $("#tutor-button").click(function() {
