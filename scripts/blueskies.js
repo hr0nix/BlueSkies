@@ -123,7 +123,7 @@ function setLanguage(language) {
     updateSliderLabels();
     updateLanguageRadio();
 
-    document.getElementById("dz-finder").setAttribute('placeholder', localize("Choose another landing area"));
+    $("#dz-finder").attr("placeholder", localize("Choose another landing area"));
 }
 
 function updateLanguageRadio() {
@@ -641,9 +641,9 @@ function initialize() {
         keyboardShortcuts: false,
         mapTypeId: google.maps.MapTypeId.SATELLITE
     };
-    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
 
-    var dzFinder = document.getElementById('dz-finder');
+    var dzFinder = $("#dz-finder").get(0);
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
     dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
     google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
