@@ -86,6 +86,15 @@ body {
     width: 12em;
 }
 
+.ui-dialog-titlebar {
+    background-color: #FF0000 !important;
+    background-image: none;
+    color: #000;
+}
+.no-close .ui-dialog-titlebar-close {
+    display: none;
+}
+
 [lang] {
     display: none;
 }
