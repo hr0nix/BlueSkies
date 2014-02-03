@@ -685,10 +685,10 @@ function initialize() {
     var dzMenu = $("#dz-selection-menu");
     dzMenu.menu({
             select: onDzMenuItemSelected,
-            position: { my: "left top", at: "right top" },
+            position: { my: "left top", at: "left bottom" },
             focus: function(e, ui) {
-                if (ui.item.parent().is(dzMenu)) {
-                    $(this).menu("option", "position", { my: "left top", at: "left bottom" });
+                if (!ui.item.parent().is(dzMenu)) {
+                    $(this).menu("option", "position", { my: "left top", at: "right top" });
                 }
             }
         });
