@@ -774,8 +774,8 @@ function initialize() {
     initializeReachSet(controllabilitySetObjects, '#0000FF');
     initializeReachSet(reachabilitySetObjects, '#FF0000');
 
-    $("#mode-progressbar").progressbar().height(10);
-    $("#altitude-progressbar").progressbar().height(10);
+    $("#mode-progressbar").progressbar();
+    $("#altitude-progressbar").progressbar();
 
     var windDirectionSliderOptions = {
         min: 0,
