@@ -403,8 +403,20 @@ function setDz(dz) {
     $('#selected-dz').html($('#' + currentDropzoneId).children("a").html());
     saveSetting("current-dropzone-id", currentDropzoneId);
     map.setCenter(dropzones[currentDropzoneId]);
+    map.setZoom(defaultMapZoom);
     dzMarker.setPosition(dropzones[currentDropzoneId]);
     updateLandingPattern();
+}
+
+function setCustomDz(name, latlng) {
+    dropzones["dz-custom"] = latlng;
+    setDz("dz-custom");
+    lastCustomDzName = name;
+
+    saveSetting("custom-dz-name", lastCustomDzName);
+    saveSetting("custom-dz-location", packLatLng(latlng));
+
+    $("#dz-custom").show();
 }
 
 function defaultIfUndefined(x, def) {
@@ -632,20 +644,32 @@ function onFindNewDz() {
         return;
     }
 
-    lastCustomDzName = $("#dz-finder").val();
-
-    map.setCenter(place.geometry.location);
-    map.setZoom(defaultMapZoom);
-
-    $("#dz-custom").show();
-    dropzones["dz-custom"] = place.geometry.location;
-    setDz("dz-custom");
-
-    saveSetting("custom-dz-location", packLatLng(place.geometry.location));
-    saveSetting("custom-dz-name", lastCustomDzName);
+    setCustomDz($("#dz-finder").val(), place.geometry.location);
 }
 
 ////// Initialization
+
+function parseParameters() {
+    var queryString = getQueryString();
+
+    var lang = defaultIfUndefined(queryString.lang, readSetting("language", "en"));
+    var dz = defaultIfUndefined(queryString.dz, currentDropzoneId.replace("dz-", ""));
+    var lat = queryString.lat;
+    var lng = queryString.lng;
+
+    if (lang) {
+        setLanguage(lang);
+    }
+
+    if (dz) {
+        setDz("dz-" + dz);
+    }
+
+    if (lat && lng) {
+        var latlng = new google.maps.LatLng(lat, lng);
+        setCustomDz("", latlng);
+    }
+}
 
 function initializeCanopyImage() {
     var canopyMarkerOptions = {
@@ -835,16 +859,8 @@ function initialize() {
     $("#legend").accordion(accordionOptions);
     $("#status").accordion(accordionOptions).hide();
 
-    var queryString = getQueryString();
-    var lang = queryString.lang || readSetting("language", "en");
-    var dz = queryString.dz || currentDropzoneId.replace("dz-", "");
-    if (lang) {
-        setLanguage(lang);
-    }
 
-    if (dz) {
-        setDz("dz-" + dz);
-    }
+    parseParameters();
 
     google.maps.event.addListener(map, "rightclick", onMapRightClick);
     $(document).keydown(onKeyDown);
