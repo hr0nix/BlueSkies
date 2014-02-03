@@ -31,22 +31,24 @@ body {
 }
 
 #dz-selection-menu {
-    width: 50%;
-    display: inline-block;
+    width: 15em;
+    margin-right: 1em;
 }
 
-#wind-direction-slider, #wind-speed-slider, #opening-altitude-slider, #simulation-speed-slider {
+.small-margin {
     margin-top: 6px;
 }
 
 #wind-arrow {
-    float: right;
+    padding: 0;
     margin-top: 15px;
     margin-right: 30px;
 }
 
-#wind-arrow > img {
-    height: 55px;
+#wind-arrow > img#windsock {
+    position:absolute;
+    top: 0;
+    left: 0;
 }
 
 .no-padding {
@@ -70,10 +72,6 @@ body {
     padding: 1em;
 }
 
-#legend-text img {
-    vertical-align: center;
-}
-
 #legend-text dl img {
     float: left;
     margin-right: 1em;
@@ -85,6 +83,7 @@ body {
 
 .ui-menu {
     z-index: 100;
+    width: 12em;
 }
 
 .ui-dialog-titlebar {
@@ -96,9 +95,27 @@ body {
     display: none;
 }
 
-[lang="en"] {
+[lang] {
+    display: none;
 }
 
-[lang!="en"] {
-    display: none;
+[lang="en"] {
+    display: inline;
+}
+
+#dz-finder {
+    margin-top: 16px;
+    padding: 0 11px 0 13px;
+    width: 400px;
+    height: 32px;
+    border: 1px solid transparent;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    outline: none;
+    background-color: #fff;
+    font-size: 15px;
+    font-weight: 300;
+    text-overflow: ellipsis;
 }

@@ -4,7 +4,7 @@
         <title>Accuracy landing simulator</title>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
         <meta charset="utf-8">
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
         <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
         <script src="scripts/jquery.number.js"></script>
@@ -18,6 +18,8 @@
     <body>
         <div id="map-canvas-container">
             <div id="map-canvas"></div>
+            <input id="dz-finder" class="controls" type="text">
+            <div id="wind-arrow"><img src="images/windsock-base.png"><img src="images/windsock.png" id="windsock"></div>
         </div>
 
         <div id="right-panel">
@@ -25,9 +27,12 @@
                 <h3><span lang="en">Canopy status</span><span lang="ru">Состояние</span></h3>
                 <div class="value-font">
                     <div><span lang="en">Altitude: </span><span lang="ru">Высота: </span><span id="altitude-value"></span></div>
+                    <div class="small-margin" id="altitude-progressbar"></div>
+                    <div class="margin"><span lang="en">Brake application: </span><span lang="ru">Режим купола: </span></div>
+                    <div class="small-margin" id="mode-progressbar"></div>
                     <div class="margin"><span lang="en">Horizontal speed: </span><span lang="ru">Горизонталь: </span><span id="horizontal-speed-value"></span></div>
-                    <div class="margin"><span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
-                    <div class="margin"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
+                    <div class="small-margin"><span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
+                    <div class="margin" style="display:none"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
                 </div>
             </div>
             <div id="settings">
@@ -43,10 +48,7 @@
                             <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
-                    <div id="wind-arrow"><img src="images/Arrow.png"></div>
                     <div>
-                        <span lang="en">DZ:</span>
-                        <span lang="ru">ДЗ:</span>
                         <ul id="dz-selection-menu" class="margin">
                             <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
                                 <ul>
@@ -63,19 +65,27 @@
                                             <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
                                         </ul>
                                     </li>
+                                    <li><a href="#"><span lang="en">Other</span><span lang="ru">Другое</span></a>
+                                        <ul>
+                                            <li id="dz-other-dubai"><a href="#"><span lang="en">Skydive Dubai</span><span lang="ru">Дубай</span></a></li>
+                                            <li id="dz-other-red-square"><a href="#"><span lang="en">Red Square</span><span lang="ru">Красная площадь</span></a></li>
+                                            <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
+                                        </ul>
+                                    </li>
+                                    <li id="dz-custom"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
                                 </ul>
                             </li>
                         </ul>
                     </div>
 
                     <div class="margin value-font"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
-                    <div id="wind-direction-slider"></div>
+                    <div id="wind-direction-slider" class="small-margin"></div>
                     <div class="margin value-font"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
-                    <div id="wind-speed-slider"></div>
+                    <div id="wind-speed-slider" class="small-margin"></div>
                     <div class="margin value-font"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
-                    <div id="opening-altitude-slider"></div>
+                    <div id="opening-altitude-slider" class="small-margin"></div>
                     <div class="margin value-font"><span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span><span id="simulation-speed-value"></span></div>
-                    <div id="simulation-speed-slider"></div>
+                    <div id="simulation-speed-slider" class="small-margin"></div>
                     <div id="display-ui-element-buttons" class="margin">
                         <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox">
                             <span lang="en">
