@@ -683,9 +683,13 @@ function initialize() {
     map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
 
     var dzMenu = $("#dz-selection-menu");
+    var firstLevelPosition = { my: "left top", at: "left bottom" };
     dzMenu.menu({
             select: onDzMenuItemSelected,
-            position: { my: "left top", at: "left bottom" },
+            position: firstLevelPosition,
+            blur: function() {
+                $(this).menu("option", "position", firstLevelPosition);
+            },
             focus: function(e, ui) {
                 if (!ui.item.parent().is(dzMenu)) {
                     $(this).menu("option", "position", { my: "left top", at: "right top" });
