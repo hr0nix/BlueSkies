@@ -516,6 +516,7 @@ function onMapRightClick(event) {
 
     $("#mode-progressbar").progressbar({value: canopyMode, max: 1});
     $("#altitude-progressbar").progressbar({value: canopyAltitude, max: openingAltitude});
+    $("#dialog-rightclick").dialog("close");
 
     if (!isSimulationRunning) {
         initializeCanopyImage();
