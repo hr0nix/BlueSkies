@@ -682,7 +682,19 @@ function initialize() {
     };
     map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
 
+    var dzMenu = $("#dz-selection-menu");
+    dzMenu.menu({
+            select: onDzMenuItemSelected,
+            position: { my: "left top", at: "right top" },
+            focus: function(e, ui) {
+                if (ui.item.parent().is(dzMenu)) {
+                    $(this).menu("option", "position", { my: "left top", at: "left bottom" });
+                }
+            }
+        });
+
     var dzFinder = $("#dz-finder").get(0);
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzMenu.get(0));
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
     dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
     google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
@@ -789,7 +801,6 @@ function initialize() {
     $("#system-menu").buttonset();
     $("#system-menu > input").change(onSelectSystem);
 
-    $("#dz-selection-menu").menu({ select: onDzMenuItemSelected });
     $("#dz-custom").toggle(dropzones["dz-custom"] != null);
 
     $("#steady-point-checkbox").

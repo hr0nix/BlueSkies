@@ -31,8 +31,8 @@ body {
 }
 
 #dz-selection-menu {
-    width: 50%;
-    display: inline-block;
+    width: 15em;
+    margin-right: 1em;
 }
 
 .small-margin {
@@ -81,6 +81,7 @@ body {
 
 .ui-menu {
     z-index: 100;
+    width: 12em;
 }
 
 [lang] {
