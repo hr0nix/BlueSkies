@@ -330,7 +330,7 @@ function createCanopyMarkerIcon(canopyHeading) {
         fillColor: '#FF0000',
         fillOpacity: 1,
         strokeWeight: 2,
-        rotation: radToDeg(canopyHeading)
+        rotation: radToDeg(canopyHeading) - defaultIfUndefined(map.getHeading(), 0)
     };
 }
 
