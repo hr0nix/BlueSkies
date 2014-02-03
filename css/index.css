@@ -40,13 +40,15 @@ body {
 }
 
 #wind-arrow {
-    float: right;
+    padding: 0;
     margin-top: 15px;
     margin-right: 30px;
 }
 
-#wind-arrow > img {
-    height: 55px;
+#wind-arrow > img#windsock {
+    position:absolute;
+    top: 0;
+    left: 0;
 }
 
 .no-padding {

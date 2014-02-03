@@ -556,7 +556,7 @@ function onTimeTick() {
 
 function onWindDirectionSliderValueChange(event, ui) {
     windDirection = degToRad(ui.value);
-    rotateDiv($("#wind-arrow").get(0), windDirection);
+    rotateDiv($("#windsock").get(0), windDirection);
     $("#wind-direction-value").html(formatHeading(reportedWindDirection(windDirection)));
 
     updateLandingPattern();
@@ -696,6 +696,7 @@ function initialize() {
     var dzFinder = $("#dz-finder").get(0);
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzMenu.get(0));
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#wind-arrow").get(0));
     dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
     google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
 
