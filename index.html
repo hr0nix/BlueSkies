@@ -125,7 +125,7 @@
             <div id="legend">
                 <h3><span lang="en">Legend</span><span lang="ru">Как этим пользоваться?</span></h3>
                 <div id="legend-text">
-                    <button id="tutor-button" style="display:none">Start tutor</button>
+                    <button id="tutor-button">Restart tutor</button>
                     <div lang="en">
                         <p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
                         <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
@@ -184,18 +184,32 @@
 
         <div id="dialogs" style="display:none">
             <!-- Here we simply define all the dialogs we need in the order we need them to be displayed -->
-<!--            <div id="dialog-welcome">
+            <div id="dialog-welcome">
                 <div lang="en">
                     <p>Welcome to this simple canopy landing simulator!</p>
                     <p>Use arrows.</p>
                 </div>
                 <div lang="ru">
                     <p>Добро пожаловать!</p>
+                    <p>Этот симулятор позволяет оценить влияние ветра на купол бла-бла-бла.</p>
                 </div>
             </div>
+            <div id="dialog-dz-selection">
+                <p>Выберите площадку приземления из заранее подготовленного списка, либо воспользейтесь строкой поиска, чтобы найти место с помощью Google Maps.</p>
+            </div>
+            <div id="dialog-target">
+                <p>Это точка приземления. Используйте мышь, чтобы перемещать ее по карте.</p>
+            </div>
+            <div id="dialog-wind">
+                <p>Здесь вы можете задать ветер</p>
+            </div>
             <div id="dialog-reachset">
-                <p>Reachset</p>
-            </div>-->
+                <p>Эти кнопки помогут вам исследовать возможности купола при выбранных условиях, например, оценить какие места точки на земле
+                достижимы из текущего положения или из каких точек есть возможность попасть в финальную.</p>
+            </div>
+            <div id="dialog-restart">
+                <p>Вы можете вернуться к тутору (или как его) позже, нажав эту кнопку.</p>
+            </div>
             <div id="dialog-rightclick">
                 <p lang="en">Rightclick any place on the map to start simulation.</p>
                 <p lang="ru">Правый клик мыши на карте начинает снижение из этой точки.</p>

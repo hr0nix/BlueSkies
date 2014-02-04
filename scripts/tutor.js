@@ -20,7 +20,7 @@ function startTutor() {
         resizable: false,
         draggable: false,
         minHeight: 0,
-        modal: false,
+        modal: true,
         width: "auto",
         show: "fade",
         hide: "fade",
@@ -28,7 +28,7 @@ function startTutor() {
         buttons: [ {
             text: "Skip tutor",
             click: function() {
-                nextDialogIndex = allDialogs.size();
+                nextDialogIndex = allDialogs.size() - 1;
                 $(this).dialog("close");
             }
         }, {
@@ -43,10 +43,37 @@ function startTutor() {
         "welcome": {
             title: "Welcome"
         },
+        "dz-selection": {
+            position: {
+                of: "#dz-finder",
+                my: "center top",
+                at: "center bottom"
+            }
+        },
+        "target": {
+            position: {
+                of: "#map-canvas-container",
+                my: "left top",
+                at: "center+10 center+10"
+            }
+        },
+        "wind": {
+            position: {
+                of: "#wind-direction-slider",
+                my: "right center",
+                at: "left center"
+            }
+        },
         "reachset": {
-            title: "dd",
             position: {
                 of: "#display-ui-element-buttons",
+                my: "right center",
+                at: "left center"
+            }
+        },
+        "restart": {
+            position: {
+                of: "#tutor-button",
                 my: "right center",
                 at: "left center"
             }
