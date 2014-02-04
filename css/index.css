@@ -92,6 +92,10 @@ body {
     color: #000;
 }
 
+.ui-dialog {
+    max-width: 30em;
+}
+
 .no-close .ui-dialog-titlebar-close {
     display: none;
 }
