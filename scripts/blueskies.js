@@ -44,8 +44,6 @@ var defaultMapZoom = 15;
 var minMapZoom = 12;
 var maxMapZoom = 18;
 
-var showTutor = readSetting("show-tutor", true);
-
 ////// State
 var isSimulationRunning = false;
 var canopyLocation;
@@ -857,7 +855,6 @@ function initialize() {
     $("#legend").accordion(accordionOptions);
     $("#status").accordion(accordionOptions).hide();
 
-
     parseParameters();
 
     google.maps.event.addListener(map, "rightclick", onMapRightClick);
@@ -865,9 +862,7 @@ function initialize() {
     $(document).keyup(onKeyUp);
     window.setInterval(onTimeTick, updateFrequency);
 
-    if (showTutor) {
-        startTutor();
-    }
+    startTutor();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
