@@ -210,7 +210,7 @@ function moveInWind(coords, windSpeed, windDirection, speed, direction, time) {
 }
 
 function rotateDiv(div, angle) {
-    style = "rotate(" + radToDeg(angle) + "deg)";
+    var style = "rotate(" + radToDeg(angle) + "deg)";
 
     div.style.webkitTransform = style;
     div.style.mozTransform = style;
