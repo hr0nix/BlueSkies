@@ -43,6 +43,7 @@ var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
 var defaultMapZoom = 15;
 var minMapZoom = 12;
 var maxMapZoom = 18;
+var altitudeSliderMax = 500;
 
 var showTutor = readSetting("show-tutor", true);
 
@@ -443,6 +444,7 @@ function updateCanopyStatus() {
 
     $("#mode-progressbar").progressbar("option", "value", canopyMode);
     $("#altitude-progressbar").progressbar("option", "value", canopyAltitude);
+    tuneRuler("#altitude-progressbar", "#altitude-ruler");
 }
 
 function updateSliderLabels() {
@@ -512,7 +514,7 @@ function onMapRightClick(event) {
     prevUpdateTime = new Date().getTime();
 
     $("#mode-progressbar").progressbar({value: canopyMode, max: 1});
-    $("#altitude-progressbar").progressbar({value: canopyAltitude, max: openingAltitude});
+    $("#altitude-progressbar").progressbar({value: canopyAltitude, max: Math.max(openingAltitude, altitudeSliderMax)});
     $("#dialog-rightclick").dialog("close");
 
     if (!isSimulationRunning) {
@@ -692,6 +694,18 @@ function initializeReachSet(objects, color) {
         objects.push(circle);
         google.maps.event.addListener(circle, "rightclick", onMapRightClick);
     }
+}
+
+function tuneRuler(id, ruler) {
+    var width = $(id).width();
+    var max = $(id).progressbar("option", "max");
+    var prevOffset = 0;
+    $(ruler).children("li").each(function() {
+        var value = Number($(this).text());
+        var offset = value * width / max;
+        $(this).css("padding-left", offset - prevOffset);
+        prevOffset = offset;
+    });
 }
 
 function initialize() {
