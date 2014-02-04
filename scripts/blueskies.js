@@ -133,13 +133,10 @@ function setLanguage(language) {
 
     saveSetting("language", language);
     currentLanguage = language;
-    $("[lang]").each(function () {
-        if ($(this).attr("lang") == language) {
-            $(this).show();
-        } else {
-            $(this).hide();
-        }
-    });
+    for (var lang in langResources) {
+        $(":lang(" + lang + ")").toggle(lang == currentLanguage);
+    }
+
     updateSliderLabels();
     updateLanguageRadio();
 

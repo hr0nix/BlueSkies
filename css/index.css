@@ -100,12 +100,8 @@ body {
     height: 10px;
 }
 
-[lang] {
+:lang(ru) {
     display: none;
-}
-
-[lang="en"] {
-    display: inline;
 }
 
 #dz-finder {
