@@ -4,6 +4,8 @@
         <title>Accuracy landing simulator</title>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
         <meta charset="utf-8">
+        <meta name="description" content="A simple canopy landing simulator in various wind conditions">
+        <link rel="image_src" href="images/control.png"/>
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
         <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -20,6 +22,33 @@
             <div id="map-canvas"></div>
             <input id="dz-finder" class="controls" type="text">
             <div id="wind-arrow"><img src="images/windsock-base.png"><img src="images/windsock.png" id="windsock"></div>
+            <ul id="dz-selection-menu" class="margin">
+                <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
+                    <ul>
+                        <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
+                            <ul>
+                                <li id="dz-uk-sibson"><a href="#"><span lang="en">Sibson</span><span lang="ru">Сибсон</span></a></li>
+                                <li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><span lang="en">Russia</span><span lang="ru">Россия</span></a>
+                            <ul>
+                                <li id="dz-ru-puschino"><a href="#"><span lang="en">Puschino</span><span lang="ru">Пущино</span></a></li>
+                                <li id="dz-ru-kolomna"><a href="#"><span lang="en">Kolomna</span><span lang="ru">Коломна</span></a></li>
+                                <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><span lang="en">Other</span><span lang="ru">Другое</span></a>
+                            <ul>
+                                <li id="dz-other-dubai"><a href="#"><span lang="en">Skydive Dubai</span><span lang="ru">Дубай</span></a></li>
+                                <li id="dz-other-red-square"><a href="#"><span lang="en">Red Square</span><span lang="ru">Красная площадь</span></a></li>
+                                <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
+                            </ul>
+                        </li>
+                        <li id="dz-custom"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
 
         <div id="right-panel">
@@ -27,16 +56,19 @@
                 <h3><span lang="en">Canopy status</span><span lang="ru">Состояние</span></h3>
                 <div class="value-font">
                     <div><span lang="en">Altitude: </span><span lang="ru">Высота: </span><span id="altitude-value"></span></div>
-                    <div class="small-margin" id="altitude-progressbar"></div>
-                    <div class="margin"><span lang="en">Brake application: </span><span lang="ru">Режим купола: </span></div>
+                    <div>
+                        <div class="small-margin" id="altitude-progressbar"> </div>
+                        <ul id="altitude-ruler" class="ruler"><li>100</li><li>200</li><li>300</li></ul>
+                    </div>
+                    <div class="small-margin"><span lang="en">Brake application: </span><span lang="ru">Режим купола: </span></div>
                     <div class="small-margin" id="mode-progressbar"></div>
                     <div class="margin"><span lang="en">Horizontal speed: </span><span lang="ru">Горизонталь: </span><span id="horizontal-speed-value"></span></div>
                     <div class="small-margin"><span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
                     <div class="margin" style="display:none"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
                 </div>
             </div>
-            <div id="settings">
-                <h3><span lang="en">Settings</span><span lang="ru">Настройки</span></h3>
+            <div>
+                <h3><span lang="en">Display options</span><span lang="ru">Отображение</span></h3>
                 <div>
                     <div>
                         <span id="language-menu">
@@ -48,42 +80,7 @@
                             <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
-                    <div>
-                        <ul id="dz-selection-menu" class="margin">
-                            <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
-                                <ul>
-                                    <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
-                                        <ul>
-                                            <li id="dz-uk-sibson"><a href="#"><span lang="en">Sibson</span><span lang="ru">Сибсон</span></a></li>
-                                            <li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#"><span lang="en">Russia</span><span lang="ru">Россия</span></a>
-                                        <ul>
-                                            <li id="dz-ru-puschino"><a href="#"><span lang="en">Puschino</span><span lang="ru">Пущино</span></a></li>
-                                            <li id="dz-ru-kolomna"><a href="#"><span lang="en">Kolomna</span><span lang="ru">Коломна</span></a></li>
-                                            <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#"><span lang="en">Other</span><span lang="ru">Другое</span></a>
-                                        <ul>
-                                            <li id="dz-other-dubai"><a href="#"><span lang="en">Skydive Dubai</span><span lang="ru">Дубай</span></a></li>
-                                            <li id="dz-other-red-square"><a href="#"><span lang="en">Red Square</span><span lang="ru">Красная площадь</span></a></li>
-                                            <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li id="dz-custom"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
 
-                    <div class="margin value-font"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
-                    <div id="wind-direction-slider" class="small-margin"></div>
-                    <div class="margin value-font"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
-                    <div id="wind-speed-slider" class="small-margin"></div>
-                    <div class="margin value-font"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
-                    <div id="opening-altitude-slider" class="small-margin"></div>
                     <div class="margin value-font"><span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span><span id="simulation-speed-value"></span></div>
                     <div id="simulation-speed-slider" class="small-margin"></div>
                     <div id="display-ui-element-buttons" class="margin">
@@ -112,6 +109,22 @@
                             </span>
                         </label>
                     </div>
+                </div>
+            </div>
+            <div>
+                <h3><span lang="en">Wind conditions</span><span lang="ru">Ветер</span></h3>
+                <div>
+                    <div class="value-font"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
+                    <div id="wind-direction-slider" class="small-margin"></div>
+                    <div class="margin value-font"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
+                    <div id="wind-speed-slider" class="small-margin"></div>
+                </div>
+            </div>
+            <div>
+                <h3><span lang="en">Pattern settings</span><span lang="ru">Коробочка</span></h3>
+                <div>
+                    <div class="value-font"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
+                    <div id="opening-altitude-slider" class="small-margin"></div>
                     <div class="margin value-font">
                         <span lang="en">Landing pattern:</span><span lang="ru">Круг захода:</span>&nbsp;
                         <span id="pattern-menu">
@@ -122,65 +135,75 @@
                     </div>
                 </div>
             </div>
-            <div id="legend">
-                <h3><span lang="en">Legend</span><span lang="ru">Как этим пользоваться?</span></h3>
-                <div id="legend-text">
-                    <button id="tutor-button">Restart tutor</button>
-                    <div lang="en">
-                        <p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
-                        <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
-                        <dl>
-                            <dt><img src="images/target.png"></dt>
-                                <dd>The landing target. Your goal is to be in this spot at
-                                zero altitude. You can use drag-and-drop to reposition.</dd>
-                            <dt><img src="images/canopy.png"></dt>
-                                <dd>This arrow represents your canopy. Click in any place on the map to start the simulation from that position.</dd>
-                            <dt><img src="images/steady.png"></dt>
-                                <dd>Show the projected landing point. Provided the wind conditions don't
-                                change and no input is given to the canopy, it will land on the pink
-                                point.</dd>
-                            <dt><img src="images/control.png"></dt>
-                                <dd>Show points you can reach the landing target from. If the
-                                canopy is outside this area, the target point is out of reach,
-                                choose an alternate landing area.</dd>
-                            <dt><img src="images/reach.png"></dt>
-                                <dd>Show reachable area: you can still reach those points from
-                                the current position and altitude. Points outside this area are no
-                                longer reachable no matter what inputs are given to the canopy.</dd>
-                        </dl>
-                        <p>Press P to pause/unpause: the time stops, but you still can turn your canopy in place to discover its range and possibilities.</p>
-                        <p>Read more about the tool <a href="about.html">here</a>.</p>
-                    </div>
-
-                    <div lang="ru">
-                        <p>Нажатием правой кнопки мыши можно начать (заново) снижение под куполом с заданной высоты.</p>
-                        <p>Для управления используется стрелки: влево-вправо для управления куполом, вверх-вниз для выбора режима.</p>
-                        <dl>
-                            <dt><img src="images/target.png"></dt>
-                                <dd>Желаемая точка приземления. Ее положение можно настраивать,
-                                перетаскивая ее по карте.</dd>
-                            <dt><img src="images/canopy.png"></dt>
-                                <dd>Это ваш купол. Нажмите в любом месте карты правой кнопкой мыши: он там появится и начнется снижение!</dd>
-                            <dt><img src="images/steady.png"></dt>
-                                <dd>Отображение предполагаемой точки приземления: если условия останутся
-                                прежними и не будет производиться корректировок траектории, купол
-                                приземляется в розовую точку.</dd>
-                            <dt><img src="images/control.png"></dt>
-                                <dd>Отображение конуса возможностей купола. При заданной силе ветра
-                                и текущей высоте только при нахождении внутри указанной области все еще
-                                возможно приземлиться в выбранной точке площадки.</dd>
-                            <dt><img src="images/reach.png"></dt>
-                                <dd>Отображение области на земле, в которую возможно приземлить
-                                купол из его текущего положения. Если ваша цель находится вне этой
-                                области, то <abbr title="Конечно же, вы можете изменить силу или направление ветра, но это возможно только в этой игре">никакими</abbr> корректировками траектории туда попасть уже
-                                невозможно.</dd>
-                        </dl>
-                        <p>Нажатием P можно приостановить или продолжить симуляцию: время останавливается, но купол можно повернуть для исследования достижимых точек на карте.</p>
-                        <p>Подробнее читайте <a href="about.html">здесь</a>.</p>
-                    </div>
+            <div>
+                <h3><span lang="en">About</span><span lang="ru">Информация</span></h3>
+                <div id="about-text">
+                    <button id="tutor-button">Start tutor</button>
+                    <button id="legend-button"><span lang="en">Show Legend</span><span lang="ru">Легенда</span></button>
+                    <button id="about-button"><span lang="en">More about</span><span lang="ru">О проекте (English)</span></button>
+                    <div><a href="http://github.com/hr0nix/BlueSkies"><img src="images/GitHub-Mark-32px.png"><span lang="en">Check out on
+                    github</span><span lang="ru">Страница проекта на github</span></a></div>
                 </div>
             </div>
         </div>
+
+        <div style="display:none">
+            <div id="about-dialog">
+            </div>
+            <div id="legend-dialog">
+                <div lang="en">
+                    <p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
+                    <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
+                    <dl>
+                        <dt><img src="images/target.png"></dt>
+                            <dd>The landing target. Your goal is to be in this spot at
+                            zero altitude. You can use drag-and-drop to reposition.</dd>
+                        <dt><img src="images/canopy.png"></dt>
+                            <dd>This arrow represents your canopy. Rightclick any place on the map to start the simulation from that position.</dd>
+                        <dt><img src="images/steady.png"></dt>
+                            <dd>Show the projected landing point. Provided the wind conditions don't
+                            change and no input is given to the canopy, it will land on the pink
+                            point.</dd>
+                        <dt><img src="images/control.png"></dt>
+                            <dd>Show points you can reach the landing target from. If the
+                            canopy is outside this area, the target point is out of reach,
+                            choose an alternate landing area.</dd>
+                        <dt><img src="images/reach.png"></dt>
+                            <dd>Show reachable area: you can still reach those points from
+                            the current position and altitude. Points outside this area are no
+                            longer reachable no matter what inputs are given to the canopy.</dd>
+                    </dl>
+                    <p>Press P to pause/unpause: the time stops, but you still can turn your canopy in place to discover its range and possibilities.</p>
+                </div>
+                <div lang="ru">
+                    <p>Нажатием правой кнопки мыши можно начать (заново) снижение под куполом с заданной высоты.</p>
+                    <p>Для управления используется стрелки: влево-вправо для управления куполом, вверх-вниз для выбора режима.</p>
+                    <dl>
+                        <dt><img src="images/target.png"></dt>
+                            <dd>Желаемая точка приземления. Ее положение можно настраивать,
+                            перетаскивая ее по карте.</dd>
+                        <dt><img src="images/canopy.png"></dt>
+                            <dd>Это ваш купол. Нажмите в любом месте карты правой кнопкой мыши: он там появится и начнется снижение!</dd>
+                        <dt><img src="images/steady.png"></dt>
+                            <dd>Отображение предполагаемой точки приземления: если условия останутся
+                            прежними и не будет производиться корректировок траектории, купол
+                            приземляется в розовую точку.</dd>
+                        <dt><img src="images/control.png"></dt>
+                            <dd>Отображение конуса возможностей купола. При заданной силе ветра
+                            и текущей высоте только при нахождении внутри указанной области все еще
+                            возможно приземлиться в выбранной точке площадки.</dd>
+                        <dt><img src="images/reach.png"></dt>
+                            <dd>Отображение области на земле, в которую возможно приземлить
+                            купол из его текущего положения. Если ваша цель находится вне этой
+                            области, то <abbr title="Конечно же, вы можете изменить силу или направление ветра, но это возможно только в этой игре">никакими</abbr> корректировками траектории туда попасть уже
+                            невозможно.</dd>
+                    </dl>
+                    <p>Нажатием P можно приостановить или продолжить симуляцию: время останавливается, но купол можно повернуть для исследования достижимых точек на карте.</p>
+                    <p>Подробнее читайте <a href="about.html">здесь</a>.</p>
+                </div>
+            </div>
+        </div>
+
 
         <div id="tutor-dialogs" style="display:none">
             <!-- Here we simply define all the dialogs we need in the order we need them to be displayed -->

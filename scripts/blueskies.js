@@ -43,6 +43,7 @@ var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
 var defaultMapZoom = 15;
 var minMapZoom = 12;
 var maxMapZoom = 18;
+var altitudeSliderMax = 500;
 
 ////// State
 var isSimulationRunning = false;
@@ -113,7 +114,8 @@ var ruResources = {
     "m": "м",
     "ft": "футов",
     "paused": "", // too long anyway :)
-    "Choose another landing area": "Выберите другую площадку приземления"
+    "Choose another landing area": "Выберите другую площадку приземления",
+    "Legend": "Легенда"
 };
 var langResources = {
     "en": enResources,
@@ -207,7 +209,7 @@ function moveInWind(coords, windSpeed, windDirection, speed, direction, time) {
 }
 
 function rotateDiv(div, angle) {
-    style = "rotate(" + radToDeg(angle) + "deg)";
+    var style = "rotate(" + radToDeg(angle) + "deg)";
 
     div.style.webkitTransform = style;
     div.style.mozTransform = style;
@@ -441,6 +443,7 @@ function updateCanopyStatus() {
 
     $("#mode-progressbar").progressbar("option", "value", canopyMode);
     $("#altitude-progressbar").progressbar("option", "value", canopyAltitude);
+    tuneRuler("#altitude-progressbar", "#altitude-ruler");
 }
 
 function updateSliderLabels() {
@@ -510,7 +513,7 @@ function onMapRightClick(event) {
     prevUpdateTime = new Date().getTime();
 
     $("#mode-progressbar").progressbar({value: canopyMode, max: 1});
-    $("#altitude-progressbar").progressbar({value: canopyAltitude, max: openingAltitude});
+    $("#altitude-progressbar").progressbar({value: canopyAltitude, max: Math.max(openingAltitude, altitudeSliderMax)});
     $("#dialog-rightclick").dialog("close");
 
     if (!isSimulationRunning) {
@@ -692,6 +695,58 @@ function initializeReachSet(objects, color) {
     }
 }
 
+function tuneRuler(id, ruler) {
+    var width = $(id).width();
+    var max = $(id).progressbar("option", "max");
+    var prevOffset = 0;
+    $(ruler).children("li").each(function() {
+        var value = Number($(this).text());
+        var offset = value * width / max;
+        $(this).css("padding-left", offset - prevOffset);
+        prevOffset = offset;
+    });
+}
+
+function showLegendDialog(id) {
+    var options = {
+        title: localize("Legend"), // Only localized on startup, oops. The same happens to tutor anyway.
+        autoOpen: true,
+        resizable: true,
+        draggable: true,
+        minHeight: 0,
+        modal: false,
+        width: "35em",
+        show: "fade",
+        hide: "fade",
+        position: {
+            of: "#map-canvas-container",
+            my: "left bottom",
+            at: "left+50 bottom-50"
+        }
+    };
+    $(id).dialog(options);
+}
+
+function showAboutDialog(id) {
+    if ($("#about-dialog").children().size() == 0) {
+        $('<iframe>', {src: "about.html"}).appendTo("#about-dialog");
+    }
+    var options = {
+        title: localize("About"), // Only localized on startup, oops. The same happens to tutor anyway.
+        resizable: true,
+        draggable: true,
+        modal: false,
+        width: "50%",
+        height: $(window).height() * 0.7,
+        show: "fade",
+        hide: "fade",
+        position: {
+            of: "#map-canvas-container"
+        }
+    };
+    $(id).dialog(options);
+}
+
 function initialize() {
     var mapOptions = {
         zoom: defaultMapZoom,
@@ -851,9 +906,8 @@ function initialize() {
     $("#pattern-menu > input").change(onPatternSelect);
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
-    $("#settings").accordion(accordionOptions);
-    $("#legend").accordion(accordionOptions);
-    $("#status").accordion(accordionOptions).hide();
+    $("#right-panel > div").accordion(accordionOptions);
+    $("#status").hide();
 
     parseParameters();
 
@@ -863,6 +917,14 @@ function initialize() {
     window.setInterval(onTimeTick, updateFrequency);
 
     startTutor("#tutor-dialogs");
+
+    // Place this after the tutor, because we can decide to select language there.
+    $("#legend-button").click(function() { 
+        showLegendDialog("#legend-dialog");
+    });
+    $("#about-button").click(function() {
+        showAboutDialog("#about-dialog");
+    });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
