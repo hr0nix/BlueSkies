@@ -41,13 +41,16 @@ function startTutor(id) {
 
     var specificOptions = {
         "welcome": {
-            title: "Welcome"
+            title: "Welcome",
+            position: {
+                of: "#map-canvas-container"
+            }
         },
         "dz-selection": {
             position: {
                 of: "#dz-finder",
                 my: "center top",
-                at: "center bottom"
+                at: "center bottom+10"
             }
         },
         "target": {
