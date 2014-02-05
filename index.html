@@ -4,6 +4,8 @@
         <title>Accuracy landing simulator</title>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
         <meta charset="utf-8">
+        <meta name="description" content="A simple canopy landing simulator in various wind conditions">
+        <link rel="image_src" href="images/control.png"/>
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
         <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -16,6 +18,9 @@
         <link rel="stylesheet" type="text/css" href="css/index.css" />
     </head>
     <body>
+        <div id="fb-root"></div>
+        <script src="scripts/fb.js"></script>   
+
         <div id="map-canvas-container">
             <div id="map-canvas"></div>
             <input id="dz-finder" class="controls" type="text">
@@ -130,6 +135,9 @@
                 <div id="about-text">
                     <button id="tutor-button" style="display:none">Start tutor</button>
                     <button id="legend-button"><span lang="en">Show Legend</span><span lang="ru">Показать легенду</span></button>
+                    <div><a href="http://github.com/hr0nix/BlueSkies"><img src="images\GitHub-Mark-32px.png"><span lang="en">Check out on
+                    github</span><span lang="ru">Страница проекта на github</span></a></div>
+                    <div class="fb-share-button" data-href="http://hr0nix.github.io/BlueSkies" data-width="100" data-height="30" style="height: 30px" data-type="button"></div>
                 </div>
             </div>
         </div>

@@ -97,6 +97,10 @@ body {
     padding: 1em;
 }
 
+#about-text div {
+    margin-top: 10px;
+}
+
 #legend-dialog dl img {
     float: left;
     margin-right: 1em;
