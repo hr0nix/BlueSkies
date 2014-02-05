@@ -24,7 +24,7 @@ function startTutor() {
         width: "auto",
         show: "fade",
         hide: "fade",
-        dialogClass: "no-close",
+        dialogClass: "no-close,highlight-title",
         buttons: [ {
             text: "Skip tutor",
             click: function() {
@@ -81,7 +81,7 @@ function startTutor() {
         "rightclick": {
             modal: false,
             buttons: [],
-            dialogClass: "",
+            dialogClass: "highlight-title",
             position: {
                 of: "#map-canvas-container",
                 my: "top center",

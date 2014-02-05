@@ -86,7 +86,7 @@ body {
     width: 12em;
 }
 
-.ui-dialog-titlebar {
+.highlight-title .ui-dialog-titlebar {
     background-color: #FF0000 !important;
     background-image: none;
     color: #000;
