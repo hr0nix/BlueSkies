@@ -85,7 +85,7 @@ function startTutor() {
             position: {
                 of: "#map-canvas-container",
                 my: "top center",
-                at: "center top+100"
+                at: "center top+150"
             }
         }
     };
