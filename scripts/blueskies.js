@@ -709,10 +709,10 @@ function tuneRuler(id, ruler) {
     });
 }
 
-function initLegendDialog(id) {
+function showLegendDialog(id) {
     var options = {
         title: localize("Legend"), // Only localized on startup, oops. The same happens to tutor anyway.
-        autoOpen: false,
+        autoOpen: true,
         resizable: true,
         draggable: true,
         minHeight: 0,
@@ -729,15 +729,17 @@ function initLegendDialog(id) {
     $(id).dialog(options);
 }
 
-function initAboutDialog(id) {
+function showAboutDialog(id) {
+    if ($("#about-dialog").children().size() == 0) {
+        $('<iframe>', {src: "about.html"}).appendTo("#about-dialog");
+    }
     var options = {
         title: localize("About"), // Only localized on startup, oops. The same happens to tutor anyway.
-        autoOpen: false,
         resizable: true,
         draggable: true,
         modal: false,
         width: "50%",
-        height: $(document).height() * 0.7,
+        height: $(window).height() * 0.7,
         show: "fade",
         hide: "fade",
         position: {
@@ -921,10 +923,12 @@ function initialize() {
     }
 
     // Place this after the tutor, because we can decide to select language there.
-    initLegendDialog("#legend-dialog");
-    $("#legend-button").click(function() { $("#legend-dialog").dialog("open"); });
-    initAboutDialog("#about-dialog");
-    $("#about-button").click(function() { $("#about-dialog").dialog("open"); });
+    $("#legend-button").click(function() { 
+        showLegendDialog("#legend-dialog");
+    });
+    $("#about-button").click(function() {
+        showAboutDialog("#about-dialog");
+    });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
