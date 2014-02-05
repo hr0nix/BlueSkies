@@ -116,7 +116,8 @@ var ruResources = {
     "m": "м",
     "ft": "футов",
     "paused": "", // too long anyway :)
-    "Choose another landing area": "Выберите другую площадку приземления"
+    "Choose another landing area": "Выберите другую площадку приземления",
+    "Legend": "Легенда"
 };
 var langResources = {
     "en": enResources,
@@ -708,6 +709,46 @@ function tuneRuler(id, ruler) {
     });
 }
 
+function showLegendDialog(id) {
+    var options = {
+        title: localize("Legend"), // Only localized on startup, oops. The same happens to tutor anyway.
+        autoOpen: true,
+        resizable: true,
+        draggable: true,
+        minHeight: 0,
+        modal: false,
+        width: "35em",
+        show: "fade",
+        hide: "fade",
+        position: {
+            of: "#map-canvas-container",
+            my: "left bottom",
+            at: "left+50 bottom-50"
+        }
+    };
+    $(id).dialog(options);
+}
+
+function showAboutDialog(id) {
+    if ($("#about-dialog").children().size() == 0) {
+        $('<iframe>', {src: "about.html"}).appendTo("#about-dialog");
+    }
+    var options = {
+        title: localize("About"), // Only localized on startup, oops. The same happens to tutor anyway.
+        resizable: true,
+        draggable: true,
+        modal: false,
+        width: "50%",
+        height: $(window).height() * 0.7,
+        show: "fade",
+        hide: "fade",
+        position: {
+            of: "#map-canvas-container"
+        }
+    };
+    $(id).dialog(options);
+}
+
 function initialize() {
     var mapOptions = {
         zoom: defaultMapZoom,
@@ -867,10 +908,8 @@ function initialize() {
     $("#pattern-menu > input").change(onPatternSelect);
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
-    $("#settings").accordion(accordionOptions);
-    $("#legend").accordion(accordionOptions);
-    $("#status").accordion(accordionOptions).hide();
-
+    $("#right-panel > div").accordion(accordionOptions);
+    $("#status").hide();
 
     parseParameters();
 
@@ -882,6 +921,14 @@ function initialize() {
     if (showTutor) {
         startTutor();
     }
+
+    // Place this after the tutor, because we can decide to select language there.
+    $("#legend-button").click(function() { 
+        showLegendDialog("#legend-dialog");
+    });
+    $("#about-button").click(function() {
+        showAboutDialog("#about-dialog");
+    });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
