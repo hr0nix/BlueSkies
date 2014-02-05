@@ -41,7 +41,6 @@ function startTutor(id) {
 
     var specificOptions = {
         "welcome": {
-            title: "Welcome",
             position: {
                 of: "#map-canvas-container"
             }
@@ -62,7 +61,7 @@ function startTutor(id) {
         },
         "wind": {
             position: {
-                of: "#wind-direction-slider",
+                of: $("#wind-direction-slider").parent().parent(),
                 my: "right center",
                 at: "left center"
             }
@@ -77,8 +76,8 @@ function startTutor(id) {
         "restart": {
             position: {
                 of: "#tutor-button",
-                my: "right center",
-                at: "left center"
+                my: "right top",
+                at: "left bottom"
             }
         },
         "rightclick": {
