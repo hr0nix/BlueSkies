@@ -1,4 +1,4 @@
-function startTutor() {
+function startTutor(id) {
     var allDialogs; // List of all dialog objects, populated from html automagically
     var nextDialogIndex;
 
@@ -90,7 +90,7 @@ function startTutor() {
         }
     };
     
-    var allDialogs = $("#dialogs > div");
+    var allDialogs = $(id).children("div");
 
     allDialogs.each(function(){
         var specific = specificOptions[$(this).attr("id").replace("dialog-","")];

@@ -862,7 +862,7 @@ function initialize() {
     $(document).keyup(onKeyUp);
     window.setInterval(onTimeTick, updateFrequency);
 
-    startTutor();
+    startTutor("#tutor-dialogs");
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
