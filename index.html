@@ -130,61 +130,62 @@
                 <div id="about-text">
                     <button id="tutor-button" style="display:none">Start tutor</button>
                     <button id="legend-button"><span lang="en">Show Legend</span><span lang="ru">Показать легенду</span></button>
-                    <div id="legend-dialog">
-                        <div lang="en">
-                            <p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
-                            <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
-                            <dl>
-                                <dt><img src="images/target.png"></dt>
-                                    <dd>The landing target. Your goal is to be in this spot at
-                                    zero altitude. You can use drag-and-drop to reposition.</dd>
-                                <dt><img src="images/canopy.png"></dt>
-                                    <dd>This arrow represents your canopy. Click in any place on the map to start the simulation from that position.</dd>
-                                <dt><img src="images/steady.png"></dt>
-                                    <dd>Show the projected landing point. Provided the wind conditions don't
-                                    change and no input is given to the canopy, it will land on the pink
-                                    point.</dd>
-                                <dt><img src="images/control.png"></dt>
-                                    <dd>Show points you can reach the landing target from. If the
-                                    canopy is outside this area, the target point is out of reach,
-                                    choose an alternate landing area.</dd>
-                                <dt><img src="images/reach.png"></dt>
-                                    <dd>Show reachable area: you can still reach those points from
-                                    the current position and altitude. Points outside this area are no
-                                    longer reachable no matter what inputs are given to the canopy.</dd>
-                            </dl>
-                            <p>Press P to pause/unpause: the time stops, but you still can turn your canopy in place to discover its range and possibilities.</p>
-                            <p>Read more about the tool <a href="about.html">here</a>.</p>
-                        </div>
-
-                        <div lang="ru">
-                            <p>Нажатием правой кнопки мыши можно начать (заново) снижение под куполом с заданной высоты.</p>
-                            <p>Для управления используется стрелки: влево-вправо для управления куполом, вверх-вниз для выбора режима.</p>
-                            <dl>
-                                <dt><img src="images/target.png"></dt>
-                                    <dd>Желаемая точка приземления. Ее положение можно настраивать,
-                                    перетаскивая ее по карте.</dd>
-                                <dt><img src="images/canopy.png"></dt>
-                                    <dd>Это ваш купол. Нажмите в любом месте карты правой кнопкой мыши: он там появится и начнется снижение!</dd>
-                                <dt><img src="images/steady.png"></dt>
-                                    <dd>Отображение предполагаемой точки приземления: если условия останутся
-                                    прежними и не будет производиться корректировок траектории, купол
-                                    приземляется в розовую точку.</dd>
-                                <dt><img src="images/control.png"></dt>
-                                    <dd>Отображение конуса возможностей купола. При заданной силе ветра
-                                    и текущей высоте только при нахождении внутри указанной области все еще
-                                    возможно приземлиться в выбранной точке площадки.</dd>
-                                <dt><img src="images/reach.png"></dt>
-                                    <dd>Отображение области на земле, в которую возможно приземлить
-                                    купол из его текущего положения. Если ваша цель находится вне этой
-                                    области, то <abbr title="Конечно же, вы можете изменить силу или направление ветра, но это возможно только в этой игре">никакими</abbr> корректировками траектории туда попасть уже
-                                    невозможно.</dd>
-                            </dl>
-                            <p>Нажатием P можно приостановить или продолжить симуляцию: время останавливается, но купол можно повернуть для исследования достижимых точек на карте.</p>
-                            <p>Подробнее читайте <a href="about.html">здесь</a>.</p>
-                        </div>
-                    </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="legend-dialog">
+            <div lang="en">
+                <p>Right-click on the map to (re)start the simulation from the corresponding location.</p>
+                <p>Use left and right arrows to steer, up and down arrows to control the speed of the canopy.</p>
+                <dl>
+                    <dt><img src="images/target.png"></dt>
+                        <dd>The landing target. Your goal is to be in this spot at
+                        zero altitude. You can use drag-and-drop to reposition.</dd>
+                    <dt><img src="images/canopy.png"></dt>
+                        <dd>This arrow represents your canopy. Click in any place on the map to start the simulation from that position.</dd>
+                    <dt><img src="images/steady.png"></dt>
+                        <dd>Show the projected landing point. Provided the wind conditions don't
+                        change and no input is given to the canopy, it will land on the pink
+                        point.</dd>
+                    <dt><img src="images/control.png"></dt>
+                        <dd>Show points you can reach the landing target from. If the
+                        canopy is outside this area, the target point is out of reach,
+                        choose an alternate landing area.</dd>
+                    <dt><img src="images/reach.png"></dt>
+                        <dd>Show reachable area: you can still reach those points from
+                        the current position and altitude. Points outside this area are no
+                        longer reachable no matter what inputs are given to the canopy.</dd>
+                </dl>
+                <p>Press P to pause/unpause: the time stops, but you still can turn your canopy in place to discover its range and possibilities.</p>
+                <p>Read more about the tool <a href="about.html">here</a>.</p>
+            </div>
+
+            <div lang="ru">
+                <p>Нажатием правой кнопки мыши можно начать (заново) снижение под куполом с заданной высоты.</p>
+                <p>Для управления используется стрелки: влево-вправо для управления куполом, вверх-вниз для выбора режима.</p>
+                <dl>
+                    <dt><img src="images/target.png"></dt>
+                        <dd>Желаемая точка приземления. Ее положение можно настраивать,
+                        перетаскивая ее по карте.</dd>
+                    <dt><img src="images/canopy.png"></dt>
+                        <dd>Это ваш купол. Нажмите в любом месте карты правой кнопкой мыши: он там появится и начнется снижение!</dd>
+                    <dt><img src="images/steady.png"></dt>
+                        <dd>Отображение предполагаемой точки приземления: если условия останутся
+                        прежними и не будет производиться корректировок траектории, купол
+                        приземляется в розовую точку.</dd>
+                    <dt><img src="images/control.png"></dt>
+                        <dd>Отображение конуса возможностей купола. При заданной силе ветра
+                        и текущей высоте только при нахождении внутри указанной области все еще
+                        возможно приземлиться в выбранной точке площадки.</dd>
+                    <dt><img src="images/reach.png"></dt>
+                        <dd>Отображение области на земле, в которую возможно приземлить
+                        купол из его текущего положения. Если ваша цель находится вне этой
+                        области, то <abbr title="Конечно же, вы можете изменить силу или направление ветра, но это возможно только в этой игре">никакими</abbr> корректировками траектории туда попасть уже
+                        невозможно.</dd>
+                </dl>
+                <p>Нажатием P можно приостановить или продолжить симуляцию: время останавливается, но купол можно повернуть для исследования достижимых точек на карте.</p>
+                <p>Подробнее читайте <a href="about.html">здесь</a>.</p>
             </div>
         </div>
 
