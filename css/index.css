@@ -128,17 +128,17 @@ body {
     width: 12em;
 }
 
-.highlight-title .ui-dialog-titlebar {
+.tutor .ui-dialog-titlebar {
     background-color: #FF0000 !important;
     background-image: none;
     color: #000;
 }
 
-.ui-dialog {
+.tutor.ui-dialog {
     max-width: 30em;
 }
 
-.no-close .ui-dialog-titlebar-close {
+.tutor .ui-dialog-titlebar {
     display: none;
 }
 
