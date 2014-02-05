@@ -20,19 +20,19 @@ function startTutor(id) {
         resizable: false,
         draggable: false,
         minHeight: 0,
-        modal: true,
+        modal: false,
         width: "auto",
         show: "fade",
         hide: "fade",
         dialogClass: "tutor",
         buttons: [ {
-            text: "Skip tutor",
+            text: localize("Skip tutor"),
             click: function() {
                 nextDialogIndex = allDialogs.size() - 1;
                 $(this).dialog("close");
             }
         }, {
-            text: "Got it!",
+            text: localize("Got it!"),
             click: closeDialog
         }
         ],

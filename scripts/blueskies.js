@@ -115,7 +115,9 @@ var ruResources = {
     "ft": "футов",
     "paused": "", // too long anyway :)
     "Choose another landing area": "Выберите другую площадку приземления",
-    "Legend": "Легенда"
+    "Legend": "Легенда",
+    "Got it!": "Дальше",
+    "Skip tutor": "Пропустить введение"
 };
 var langResources = {
     "en": enResources,
