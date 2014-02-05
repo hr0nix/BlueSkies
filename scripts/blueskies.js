@@ -729,6 +729,24 @@ function initLegendDialog(id) {
     $(id).dialog(options);
 }
 
+function initAboutDialog(id) {
+    var options = {
+        title: localize("About"), // Only localized on startup, oops. The same happens to tutor anyway.
+        autoOpen: false,
+        resizable: true,
+        draggable: true,
+        modal: false,
+        width: "50%",
+        height: $(document).height() * 0.7,
+        show: "fade",
+        hide: "fade",
+        position: {
+            of: "#map-canvas-container"
+        }
+    };
+    $(id).dialog(options);
+}
+
 function initialize() {
     var mapOptions = {
         zoom: defaultMapZoom,
@@ -906,6 +924,8 @@ function initialize() {
     // Place this after the tutor, because we can decide to select language there.
     initLegendDialog("#legend-dialog");
     $("#legend-button").click(function() { $("#legend-dialog").dialog("open"); });
+    initAboutDialog("#about-dialog");
+    $("#about-button").click(function() { $("#about-dialog").dialog("open"); });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

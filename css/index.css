@@ -101,6 +101,18 @@ body {
     margin-top: 10px;
 }
 
+#about-dialog {
+    overflow: hidden;
+}
+
+#about-dialog iframe {
+    margin: 0;
+    padding: 0;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
 #legend-dialog dl img {
     float: left;
     margin-right: 1em;
