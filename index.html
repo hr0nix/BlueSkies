@@ -22,6 +22,33 @@
             <div id="map-canvas"></div>
             <input id="dz-finder" class="controls" type="text">
             <div id="wind-arrow"><img src="images/windsock-base.png"><img src="images/windsock.png" id="windsock"></div>
+            <ul id="dz-selection-menu" class="margin">
+                <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
+                    <ul>
+                        <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
+                            <ul>
+                                <li id="dz-uk-sibson"><a href="#"><span lang="en">Sibson</span><span lang="ru">Сибсон</span></a></li>
+                                <li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><span lang="en">Russia</span><span lang="ru">Россия</span></a>
+                            <ul>
+                                <li id="dz-ru-puschino"><a href="#"><span lang="en">Puschino</span><span lang="ru">Пущино</span></a></li>
+                                <li id="dz-ru-kolomna"><a href="#"><span lang="en">Kolomna</span><span lang="ru">Коломна</span></a></li>
+                                <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><span lang="en">Other</span><span lang="ru">Другое</span></a>
+                            <ul>
+                                <li id="dz-other-dubai"><a href="#"><span lang="en">Skydive Dubai</span><span lang="ru">Дубай</span></a></li>
+                                <li id="dz-other-red-square"><a href="#"><span lang="en">Red Square</span><span lang="ru">Красная площадь</span></a></li>
+                                <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
+                            </ul>
+                        </li>
+                        <li id="dz-custom"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
 
         <div id="right-panel">
@@ -40,8 +67,8 @@
                     <div class="margin" style="display:none"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
                 </div>
             </div>
-            <div id="settings">
-                <h3><span lang="en">Settings</span><span lang="ru">Настройки</span></h3>
+            <div>
+                <h3><span lang="en">Display options</span><span lang="ru">Отображение</span></h3>
                 <div>
                     <div>
                         <span id="language-menu">
@@ -53,42 +80,7 @@
                             <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
-                    <div>
-                        <ul id="dz-selection-menu" class="margin">
-                            <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
-                                <ul>
-                                    <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
-                                        <ul>
-                                            <li id="dz-uk-sibson"><a href="#"><span lang="en">Sibson</span><span lang="ru">Сибсон</span></a></li>
-                                            <li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#"><span lang="en">Russia</span><span lang="ru">Россия</span></a>
-                                        <ul>
-                                            <li id="dz-ru-puschino"><a href="#"><span lang="en">Puschino</span><span lang="ru">Пущино</span></a></li>
-                                            <li id="dz-ru-kolomna"><a href="#"><span lang="en">Kolomna</span><span lang="ru">Коломна</span></a></li>
-                                            <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#"><span lang="en">Other</span><span lang="ru">Другое</span></a>
-                                        <ul>
-                                            <li id="dz-other-dubai"><a href="#"><span lang="en">Skydive Dubai</span><span lang="ru">Дубай</span></a></li>
-                                            <li id="dz-other-red-square"><a href="#"><span lang="en">Red Square</span><span lang="ru">Красная площадь</span></a></li>
-                                            <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li id="dz-custom"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
 
-                    <div class="margin value-font"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
-                    <div id="wind-direction-slider" class="small-margin"></div>
-                    <div class="margin value-font"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
-                    <div id="wind-speed-slider" class="small-margin"></div>
-                    <div class="margin value-font"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
-                    <div id="opening-altitude-slider" class="small-margin"></div>
                     <div class="margin value-font"><span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span><span id="simulation-speed-value"></span></div>
                     <div id="simulation-speed-slider" class="small-margin"></div>
                     <div id="display-ui-element-buttons" class="margin">
@@ -117,6 +109,22 @@
                             </span>
                         </label>
                     </div>
+                </div>
+            </div>
+            <div>
+                <h3><span lang="en">Wind conditions</span><span lang="ru">Ветер</span></h3>
+                <div>
+                    <div class="value-font"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
+                    <div id="wind-direction-slider" class="small-margin"></div>
+                    <div class="margin value-font"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
+                    <div id="wind-speed-slider" class="small-margin"></div>
+                </div>
+            </div>
+            <div>
+                <h3><span lang="en">Pattern settings</span><span lang="ru">Коробочка</span></h3>
+                <div>
+                    <div class="value-font"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
+                    <div id="opening-altitude-slider" class="small-margin"></div>
                     <div class="margin value-font">
                         <span lang="en">Landing pattern:</span><span lang="ru">Круг захода:</span>&nbsp;
                         <span id="pattern-menu">
@@ -127,7 +135,7 @@
                     </div>
                 </div>
             </div>
-            <div id="about">
+            <div>
                 <h3><span lang="en">About</span><span lang="ru">Информация</span></h3>
                 <div id="about-text">
                     <button id="tutor-button" style="display:none">Start tutor</button>

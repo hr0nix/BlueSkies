@@ -906,9 +906,8 @@ function initialize() {
     $("#pattern-menu > input").change(onPatternSelect);
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
-    $("#settings").accordion(accordionOptions);
-    $("#about").accordion(accordionOptions);
-    $("#status").accordion(accordionOptions).hide();
+    $("#right-panel > div").accordion(accordionOptions);
+    $("#status").hide();
 
     parseParameters();
 

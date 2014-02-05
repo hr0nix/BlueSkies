@@ -21,12 +21,9 @@ body {
     overflow-y: auto;
 }
 
-#settings, #status, #about {
+#right-panel > div {
     margin-left: 5px;
     margin-right: 5px;
-}
-
-#settings, #about {
     margin-bottom: 10px;
 }
 
