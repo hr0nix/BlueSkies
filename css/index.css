@@ -21,12 +21,12 @@ body {
     overflow-y: auto;
 }
 
-#settings, #status, #legend {
+#settings, #status, #about {
     margin-left: 5px;
     margin-right: 5px;
 }
 
-#settings, #legend {
+#settings, #about {
     margin-bottom: 10px;
 }
 
@@ -93,16 +93,18 @@ body {
     font-family: Georgia, serif;
 }
 
-#legend-text {
+#about-text {
     padding: 1em;
 }
 
-#legend-text dl img {
+#legend-dialog dl img {
     float: left;
     margin-right: 1em;
+    margin-bottom: 1em;
 }
 
-#legend-text dt {
+#legend-dialog dt {
+    clear: both;
     margin-top: 1em;
 }
 

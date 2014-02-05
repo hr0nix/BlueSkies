@@ -116,7 +116,8 @@ var ruResources = {
     "m": "м",
     "ft": "футов",
     "paused": "", // too long anyway :)
-    "Choose another landing area": "Выберите другую площадку приземления"
+    "Choose another landing area": "Выберите другую площадку приземления",
+    "Legend": "Легенда"
 };
 var langResources = {
     "en": enResources,
@@ -708,6 +709,26 @@ function tuneRuler(id, ruler) {
     });
 }
 
+function initLegendDialog(id) {
+    var options = {
+        title: localize("Legend"), // Only localized on startup, oops. The same happens to tutor anyway.
+        autoOpen: false,
+        resizable: true,
+        draggable: true,
+        minHeight: 0,
+        modal: false,
+        width: "35em",
+        show: "fade",
+        hide: "fade",
+        position: {
+            of: "#map-canvas-container",
+            my: "left bottom",
+            at: "left+50 bottom-50"
+        }
+    };
+    $(id).dialog(options);
+}
+
 function initialize() {
     var mapOptions = {
         zoom: defaultMapZoom,
@@ -868,9 +889,8 @@ function initialize() {
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
     $("#settings").accordion(accordionOptions);
-    $("#legend").accordion(accordionOptions);
+    $("#about").accordion(accordionOptions);
     $("#status").accordion(accordionOptions).hide();
-
 
     parseParameters();
 
@@ -882,6 +902,10 @@ function initialize() {
     if (showTutor) {
         startTutor();
     }
+
+    // Place this after the tutor, because we can decide to select language there.
+    initLegendDialog("#legend-dialog");
+    $("#legend-button").click(function() { $("#legend-dialog").dialog("open"); });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
