@@ -41,6 +41,7 @@ function startTutor(id) {
 
     var specificOptions = {
         "welcome": {
+            modal: true,
             position: {
                 of: "#map-canvas-container"
             }
@@ -69,6 +70,13 @@ function startTutor(id) {
         "reachset": {
             position: {
                 of: "#display-ui-element-buttons",
+                my: "right center",
+                at: "left center"
+            }
+        },
+        "pattern": {
+            position: {
+                of: $("#opening-altitude-slider").parent().parent(),
                 my: "right center",
                 at: "left center"
             }
