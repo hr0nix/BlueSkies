@@ -129,17 +129,11 @@ body {
 }
 
 .tutor .ui-dialog-titlebar {
-    background-color: #FF0000 !important;
-    background-image: none;
-    color: #000;
+    display: none;
 }
 
 .tutor.ui-dialog {
     max-width: 30em;
-}
-
-.tutor .ui-dialog-titlebar {
-    display: none;
 }
 
 #status .ui-progressbar {
