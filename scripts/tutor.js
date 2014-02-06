@@ -88,6 +88,9 @@ function startTutor(id) {
                 of: "#tutor-button",
                 my: "right top",
                 at: "left bottom"
+            },
+            open: function() {
+                location.href = "#tutor-button";
             }
         },
         "rightclick": {
