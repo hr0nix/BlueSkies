@@ -26,14 +26,14 @@ function startTutor(id) {
         hide: "fade",
         dialogClass: "tutor",
         buttons: [ {
+            text: localize("Got it!"),
+            click: closeDialog
+        }, {
             text: localize("Skip tutor"),
             click: function() {
                 nextDialogIndex = allDialogs.size() - 1;
                 $(this).dialog("close");
             }
-        }, {
-            text: localize("Got it!"),
-            click: closeDialog
         }
         ],
         close: nextDialog
