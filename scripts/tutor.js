@@ -102,7 +102,7 @@ function startTutor(id) {
     var allDialogs = $(id).children("div");
 
     allDialogs.each(function(){
-        var specific = specificOptions[$(this).attr("id").replace("dialog-","")];
+        var specific = specificOptions[$(this).attr("id").replace("tutor-","")];
         $(this).dialog(commonOptions).dialog("option", specific);
     });
 
