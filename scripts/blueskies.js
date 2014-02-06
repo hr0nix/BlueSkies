@@ -36,8 +36,9 @@ var showReachabilitySet = readSetting("show-reachability-set", false);
 var showControllabilitySet = readSetting("show-controllability-set", false);
 var showLandingPattern = readSetting("show-landing-pattern", false);
 var lhsLandingPattern = readSetting("lhs-landing-pattern", false);
-var windDirection = 0; // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
-var windSpeed = 5;
+// We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
+var windDirection = Math.random() * Math.PI * 2; 
+var windSpeed = 5 + Math.random() * 2 - 1;
 var openingAltitude = readSetting("opening-altitude", 700);
 var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
 var defaultMapZoom = 15;
