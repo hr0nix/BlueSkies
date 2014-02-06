@@ -138,9 +138,9 @@
             <div>
                 <h3><span lang="en">About</span><span lang="ru">Информация</span></h3>
                 <div id="about-text">
-                    <button id="tutor-button" style="display:none">Start tutor</button>
-                    <button id="legend-button"><span lang="en">Show Legend</span><span lang="ru">Легенда</span></button>
-                    <button id="about-button"><span lang="en">More about</span><span lang="ru">О проекте (English)</span></button>
+                    <div><button id="legend-button"><span lang="en">Show Legend</span><span lang="ru">Легенда</span></button></div>
+                    <div><button id="about-button"><span lang="en">More about</span><span lang="ru">О проекте (English)</span></button></div>
+                    <div><button id="tutor-button"><span lang="en">Restart tutor</span><span lang="ru">Введение</span></button></div>
                     <div><a href="http://github.com/hr0nix/BlueSkies"><img src="images/GitHub-Mark-32px.png"><span lang="en">Check out on
                     github</span><span lang="ru">Страница проекта на github</span></a></div>
                 </div>
@@ -175,7 +175,6 @@
                     </dl>
                     <p>Press P to pause/unpause: the time stops, but you still can turn your canopy in place to discover its range and possibilities.</p>
                 </div>
-
                 <div lang="ru">
                     <p>Нажатием правой кнопки мыши можно начать (заново) снижение под куполом с заданной высоты.</p>
                     <p>Для управления используется стрелки: влево-вправо для управления куполом, вверх-вниз для выбора режима.</p>
@@ -203,24 +202,92 @@
                     <p>Подробнее читайте <a href="about.html">здесь</a>.</p>
                 </div>
             </div>
+        </div>
 
-            <div id="dialogs">
-                <!-- Here we simply define all the dialogs we need in the order we need them to be displayed -->
-    <!--            <div id="dialog-welcome">
-                    <div lang="en">
-                        <p>Welcome to this simple canopy landing simulator!</p>
-                        <p>Use arrows.</p>
-                    </div>
-                    <div lang="ru">
-                        <p>Добро пожаловать!</p>
-                    </div>
+
+        <div id="tutor-dialogs" style="display:none">
+            <!-- Here we simply define all the dialogs we need in the order we need them to be displayed -->
+            <div id="tutor-welcome">
+                <div lang="en">
+                    <p>Welcome to this simple canopy landing simulator!</p>
+                    <p>This simulator is designed to provide insights into canopy control in various wind conditions and to show how to reach the
+                    landing area from a difficult spot.</p>
+                    <p>Tutorial will review the basic information necessary to use the simulator.
                 </div>
-                <div id="dialog-reachset">
-                    <p>Reachset</p>
-                </div>-->
-                <div id="dialog-rightclick">
-                    <p lang="en">Rightclick any place on the map to start simulation.</p>
-                    <p lang="ru">Правый клик мыши на карте начинает снижение из этой точки.</p>
+                <div lang="ru">
+                    <p>Добро пожаловать!</p>
+                    <p>Это простой симулятор управления куполом парашюта, предназначенный для изучения поведения парашюта в различных различных условиях.</p>
+                    <p>В пошаговом введении расскажем основную информацию, необходимую для использования сумулятора.</p>
+                </div>
+            </div>
+            <div id="tutor-dz-selection">
+                <div lang="en">
+                    <p>Please choose a landing area from the list or use the search bar to locate it on Google Maps.</p>
+                    <p>For example, you can try &quot;Sphinx, Giza, Egypt&quot; or your favorite dropzone.</p>
+                </div>
+                <div lang="ru">
+                    <p>Выберите площадку приземления из заранее подготовленного списка, либо воспользейтесь строкой поиска, чтобы найти место с помощью Google Maps.</p>
+                </div>
+            </div>
+            <div id="tutor-target">
+                <div lang="en">
+                    <p>The landing target. You can use drag-and-drop to reposition it.</p>
+                    <p>You can try it now.</p>
+                </div>
+                <div lang="ru">
+                    <p>Это точка приземления. Используйте мышь, чтобы перемещать ее по карте.</p>
+                    <p>Попробуйте!</p>
+                </div>
+            </div>
+            <div id="tutor-wind">
+                <div lang="en">
+                    <p>You can set the wind conditions here.</p>
+                </div>
+                <div lang="ru">
+                    <p>Здесь вы можете задать силу и напрвление ветра.</p>
+                </div>
+            </div>
+            <div id="tutor-reachset">
+                <div lang="en">
+                    <p>Using these buttons you can explore the range of the canopy in given conditions. For example, see the area on the ground that
+                    is still reachable from the current position and altitude or check the points you can reach the landing target from.
+                </div>
+                <div lang="ru">
+                    <p>Эти кнопки помогут вам исследовать возможности купола при выбранных условиях, например, оценить какие места точки на земле
+                достижимы из текущего положения или из каких точек есть возможность попасть в финальную.</p>
+                    <p>Не забудье поеэкспериментировать! Это основное достоинство данного симулятора.</p>
+                </div>
+            </div>
+            <div id="tutor-pattern">
+                <div lang="en">
+                    <p>Use this area to configure the landing pattern.</p>
+                    <p>Choose the opening altitude: you start the descent there.</p>
+                    <p>You can also display the suggested landing pattern for into-the-wind landing in given conditions.</p>
+                </div>
+                <div lang="ru">
+                    <p>Здесь находятся настройки захода на приземление.</p>
+                    <p>Есть возможность настроить &laquo;высоту раскрытия&raquo;: с этой высоты начинается снижение под куполом в симуляторе.
+                    <p>Можно настроить отображение коробочки для захода правым либо левым кругом.</p>
+                </div>
+            </div>
+            <div id="tutor-restart">
+                <div lang="en">
+                    <p>To read this tutor again, press &quot;Restart tutor&quot;.</p>
+                </div>
+                <div lang="ru">
+                    <p>Вы можете вернуться к этой пошаговой инструкции позже, нажав кнопку &laquo;Введение&raquo;.</p>
+                </div>
+            </div>
+            <div id="tutor-rightclick">
+                <div lang="en">
+                    <p>Rightclick any place on the map to start simulation.</p>
+                    <p>Use arrows to control the canopy.</p>
+                    <p>Left-Right to steer, up-down to use brakes.</p>
+                </div>
+                <div lang="ru">
+                    <p>Правый клик мыши на карте начинает снижение из этой точки.</p>
+                    <p>Для управления используйте стрелки на кливиатуре.</p>
+                    <p>Влево-право для поворотов, вверх-вниз для управления режимом.</p>
                 </div>
             </div>
         </div>

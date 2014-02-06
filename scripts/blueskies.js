@@ -45,8 +45,6 @@ var minMapZoom = 12;
 var maxMapZoom = 18;
 var altitudeSliderMax = 500;
 
-var showTutor = readSetting("show-tutor", true);
-
 ////// State
 var isSimulationRunning = false;
 var canopyLocation;
@@ -117,7 +115,9 @@ var ruResources = {
     "ft": "футов",
     "paused": "", // too long anyway :)
     "Choose another landing area": "Выберите другую площадку приземления",
-    "Legend": "Легенда"
+    "Legend": "Легенда",
+    "Got it!": "Дальше",
+    "Skip tutor": "Пропустить введение"
 };
 var langResources = {
     "en": enResources,
@@ -516,7 +516,7 @@ function onMapRightClick(event) {
 
     $("#mode-progressbar").progressbar({value: canopyMode, max: 1});
     $("#altitude-progressbar").progressbar({value: canopyAltitude, max: Math.max(openingAltitude, altitudeSliderMax)});
-    $("#dialog-rightclick").dialog("close");
+    $("#tutor-rightclick").dialog("close");
 
     if (!isSimulationRunning) {
         initializeCanopyImage();
@@ -918,9 +918,7 @@ function initialize() {
     $(document).keyup(onKeyUp);
     window.setInterval(onTimeTick, updateFrequency);
 
-    if (showTutor) {
-        startTutor();
-    }
+    startTutor("#tutor-dialogs");
 
     // Place this after the tutor, because we can decide to select language there.
     $("#legend-button").click(function() { 
