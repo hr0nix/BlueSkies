@@ -5,8 +5,43 @@
         <meta charset="utf-8">
         <script src="scripts/ga.js"></script>
         <style>
-            #contents {
+            div {
                 padding: 20px;
+            }
+
+            #warning-label {
+                border: 3px solid black;
+                width: 45em;
+                padding: 0px;
+                margin: 0px;
+            }
+            
+            #warning-label > div:first-child {
+                border-bottom: 3px solid black;
+                background-color: #E87600;
+                color: black;
+                font-family: sans-serif;
+                font-weight: bold;
+                font-variant: small-caps;
+                font-size: 5em;
+            }
+            
+            #warning-label p {
+                padding: 0.3em 2em 0.3em;
+                font-size: larger;
+            }
+            
+            #warning-label img {
+                vertical-align: middle;
+                margin-right: 0.2em;
+            }
+            
+            #warning-label > hr {
+                border: 0;
+                width: 80%;
+                color: orange;
+                background-color: #E87600;
+                height: 3px;
             }
         </style>
     </head>
@@ -46,6 +81,16 @@
                 is available on <a href="https://github.com/hr0nix/BlueSkies">github</a>, and we are more than willing to accept pull requests.
             </p>
             <p>Blue skies!</p>
+        </div>
+        <div id="warning-label">
+            <div><img src="images/warning.png">Warning!</div>
+            <p>Skydiving is a dangerous activity which can result in a serious injury or death.</p>
+            <p>This simulation is not designed to replace proper instruction or to be used as means to make decisions in a real situation.</p>
+            <p>Please, be careful and consult with your instructor about this simulation and depths to which it can be used.</p>
+            <hr>
+            <p>Парашютный спорт &mdash; опасное занятие, которе может привести к травмам или гибели.</p>
+            <p>Данный симулятор не предназначен для замены качественного инструктажа и наземной подготовки, а так же для расчета захода в реальной ситуации.</p>
+            <p>Обратитесь к инструктору за информацией о том, какие выводы возможно сделать из использования этого симулятора.</p>
         </div>
     </body>
 </html>
