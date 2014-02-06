@@ -38,6 +38,8 @@ var showLandingPattern = readSetting("show-landing-pattern", false);
 var lhsLandingPattern = readSetting("lhs-landing-pattern", false);
 var windDirection = 0; // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
 var windSpeed = 5;
+var intoTheWindLanding = true;
+var landingDirection = 0;
 var openingAltitude = readSetting("opening-altitude", 700);
 var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
 var defaultMapZoom = 15;
@@ -597,6 +599,13 @@ function onSimulationSpeedSliderValueChange(event, ui) {
     $("#simulation-speed-value").html(formatSimulationSpeed(simulationSpeed));
 }
 
+function onLandingDirectionSliderValueChange(event, ui) {
+    landingDirection = degToRad(ui.value);
+    $("#landing-direction-value").html(formatHeading(landingDirection));
+
+    updateLandingPattern();
+}
+
 function onSelectLanguage() {
     setLanguage($(this).attr('id').replace("select-lang-",""));
 }
@@ -861,6 +870,17 @@ function initialize() {
     $("#opening-altitude-slider").
         slider(openingAltitudeSliderOptions).
         slider("value", openingAltitude);
+
+    var landingDirectionSliderOptions = {
+        min: 0,
+        max: 360,
+        step: 5,
+        change: onLandingDirectionSliderValueChange,
+        slide: onLandingDirectionSliderValueChange
+    }
+    $("#landing-direction-slider").
+        slider(landingDirectionSliderOptions).
+        slider("value", radToDeg(landingDirection));
 
     var simulationSpeedSliderOptions = {
         min: 0,
