@@ -8,10 +8,12 @@ function startTutor(id) {
 
     function nextDialog() {
         if (nextDialogIndex < allDialogs.size()) {
+            if (nextDialogIndex == allDialogs.size() - 1) {
+                saveSetting("tutor-finished", true);
+            }
+
             allDialogs.eq(nextDialogIndex).dialog("open");
             nextDialogIndex++;
-        } else {
-            saveSetting("tutor-finished", true);
         }
     }
 
