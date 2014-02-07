@@ -98,7 +98,7 @@ function startTutor(id) {
             }
         }
     };
-    
+
     var allDialogs = $(id).children("div");
 
     allDialogs.each(function(){

@@ -302,7 +302,7 @@ function updateControllabilitySet() {
 }
 
 function computeLandingPattern(location) {
-    var controlPointAltitudes = [ 100, 200, 300 ];
+    var controlPointAltitudes = [100, 200, 300];
     var patternMode = 0.85;
     var speedH = getCanopyHorizontalSpeed(patternMode);
     var speedV = getCanopyVerticalSpeed(patternMode);
@@ -941,7 +941,7 @@ function initialize() {
     startTutor("#tutor-dialogs");
 
     // Place this after the tutor, because we can decide to select language there.
-    $("#legend-button").click(function() { 
+    $("#legend-button").click(function() {
         showLegendDialog("#legend-dialog");
     });
     $("#about-button").click(function() {
