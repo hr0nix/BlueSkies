@@ -328,17 +328,28 @@ function computeLandingPattern(location) {
     var rotationFactor = lhsLandingPattern ? 1 : -1;
 
     var timeToPoint1 = controlPointAltitudes[0] / speedV;
-    var point1 = moveInWind(location, windSpeed, windDirection + Math.PI, speedH, windDirection, timeToPoint1);
-
     var timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / speedV;
-    // In ordinary winds we hold crosswind ground track, in strong winds we move backwards with some arbitrary low angle to the wind
-    var angleIntoWind = windSpeed < speedH ? Math.acos(windSpeed / speedH) : Math.PI / 8;
-    var point2 = moveInWind(point1, windSpeed, windDirection + Math.PI, speedH, windDirection + rotationFactor * angleIntoWind, timeToPoint2);
-
     var timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV;
-    // In strong winds we always try to look into the wind, back to the wind otherwise
-    angleIntoWind = windSpeed < speedH ? Math.PI : 0;
-    var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, speedH, windDirection + angleIntoWind, timeToPoint3);
+
+    var heading;
+
+    // For now, strong winds imply into-the wind landing no matter what landing direction is given. This needs further thought.
+    heading = windSpeed < speedH ?
+        createGroundTrack(windSpeed, windDirection, speedH, landingDirection):
+        Math.PI + windDirection; // Into the wind
+
+    var point1 = moveInWind(location, windSpeed, windDirection, speedH, heading, -timeToPoint1); // Note that we specify the wind speed and canopy heading as though we're flying the pattern. But we give negative time, so we get the point where we need to start to arrive where we need.
+
+    heading = windSpeed < speedH ?
+        createGroundTrack(windSpeed, windDirection, speedH, landingDirection + rotationFactor * Math.PI / 2): // In ordinary winds we hold crosswind ground track
+        Math.PI + windDirection + rotationFactor * Math.PI / 8; // in strong winds we move backwards with some arbitrary low angle to the wind
+
+    var point2 = moveInWind(point1, windSpeed, windDirection, speedH, heading, -timeToPoint2);
+
+    heading = windSpeed < speedH ?
+        createGroundTrack(windSpeed, windDirection, speedH, landingDirection + Math.PI):
+        Math.PI + windDirection; // Into the wind
+    var point3 = moveInWind(point2, windSpeed, windDirection, speedH, heading, -timeToPoint3);
 
     return [point3, point2, point1, location];
 }
