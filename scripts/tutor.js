@@ -111,8 +111,14 @@ function startTutor(id) {
         $(this).dialog(commonOptions).dialog("option", specific);
     });
 
-    nextDialogIndex = readSetting("tutor-finished", false) ? allDialogs.size() - 1 : 0;
+    var finished = readSetting("tutor-finished", false);
+    nextDialogIndex = finished ? allDialogs.size() - 1 : 0;
     nextDialog();
+    if (finished) {
+        setTimeout(function() {
+            $("#tutor-rightclick").dialog("close");
+        }, 3000);
+    }
 
     $("#tutor-button").click(function() {
         nextDialogIndex = 0;
