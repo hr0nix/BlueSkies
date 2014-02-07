@@ -250,10 +250,29 @@ function getCurrentLandingPoint() {
     return dzMarker.getPosition();
 }
 
-// TODO: implement
 // returns: canopy heading necessary to maintain desiredTrack ground track in given winds (not always possible, of course)
+// Simple vector addition: wind + canopySpeed = groundTrack
+//
+//                              .>desiredTrack
+//                            .
+//                          .*
+//                    beta. /
+//                      .  /
+//                    .   /H      Sine theorem:
+//                  .    /d
+//                .     /e        windSpeed       speedH
+//              .      /e         ---------  =  -----------
+//            .       /p          sin beta       sin alpha
+//          .        /s
+//        .         /               gamma = alpha + beta -- gamma is the external angle.
+//      . alpha    /gamma
+// ----*----------*--------------------->windDirection
+//     |windSpeed |
 function createGroundTrack(windSpeed, windDirection, speedH, desiredTrack) {
-
+    var alpha = windDirection - desiredTrack;
+    var beta = Math.asin(windSpeed * Math.sin(alpha) / speedH);
+    var gamma = alpha + beta;
+    return windDirection - gamma; // == desiredTrack + beta, but the code appears more straightforward that way.
 }
 
 function reachSet(windSpeed, windDirection, altitude, u) {
