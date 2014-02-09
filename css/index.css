@@ -19,6 +19,7 @@ body {
     width: 28em;
     overflow-x: hidden;
     overflow-y: auto;
+    background-color: #99999f;
 }
 
 #right-panel > div {
@@ -28,7 +29,7 @@ body {
 }
 
 #right-panel > div > div {
-    padding: 1em;
+    padding: 13px 1em 15px;
 }
 
 #dz-selection-menu {
@@ -38,6 +39,10 @@ body {
 
 .small-margin {
     margin-top: 6px;
+}
+
+.margin {
+    margin-top: 15px;
 }
 
 #wind-arrow {
@@ -85,10 +90,6 @@ body {
 .no-padding {
     padding-bottom: 1px !important;
     padding-top: 2px !important;
-}
-
-.margin {
-    margin-top: 18px;
 }
 
 #system-menu {
