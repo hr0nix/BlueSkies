@@ -610,14 +610,14 @@ function onTimeTick() {
 
 function onWindDirectionSliderValueChange(event, ui) {
     windDirection = degToRad(ui.value);
-    rotateDiv($("#windsock").get(0), windDirection);
+    rotateDiv($("#wind-arrow > :last-child").get(0), windDirection);
     $("#wind-direction-value").html(formatHeading(reportedWindDirection(windDirection)));
 
     if (intoTheWindLanding) {
         updateLandingDirectionSlider();
+    } else {
+        updateLandingPattern(); // Only update in else because updateLandingDirectionSlider() updates it.
     }
-
-    updateLandingPattern();
 }
 
 function onWindSpeedSliderValueChange(event, ui) {
@@ -644,14 +644,17 @@ function onIntoTheWindCheckboxToggle() {
     intoTheWindLanding = $(this).prop('checked');
     if (intoTheWindLanding) {
         $("#landing-direction-slider").slideUp();
+        $("#landing-direction-arrow").fadeOut();
         updateLandingDirectionSlider();
     } else {
         $("#landing-direction-slider").slideDown();
+        $("#landing-direction-arrow").fadeIn();
     }
 }
 
 function onLandingDirectionSliderValueChange(event, ui) {
     landingDirection = degToRad(ui.value);
+    rotateDiv($("#landing-direction-arrow > :last-child").get(0), landingDirection);
     $("#landing-direction-value").html(formatHeading(landingDirection));
 
     updateLandingPattern();
@@ -840,6 +843,7 @@ function initialize() {
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzMenu.get(0));
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#wind-arrow").get(0));
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#landing-direction-arrow").get(0));
     dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
     google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
 

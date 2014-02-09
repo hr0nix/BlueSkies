@@ -36,16 +36,21 @@ body {
     margin-top: 6px;
 }
 
-#wind-arrow {
+.arrow-indicator {
+    position: absolute;
     padding: 0;
     margin-top: 15px;
     margin-right: 30px;
 }
 
-#wind-arrow > img#windsock {
-    position:absolute;
+.arrow-indicator > img:last-child {
+    position: absolute;
     top: 0;
     left: 0;
+}
+
+#landing-direction-arrow {
+    display: none;
 }
 
 .ruler, .ruler li {
