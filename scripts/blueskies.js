@@ -287,7 +287,9 @@ function updateReachabilitySet() {
     updateReachSetVisibility(reachabilitySetObjects, showReachabilitySet);
 
     if (showReachabilitySet && isSimulationRunning) {
-        computeReachSet(reachabilitySetObjects, canopyLocation, canopyAltitude, true);
+        var altitude = canopyAltitude < 400 ? canopyAltitude : canopyAltitude - 300;
+
+        computeReachSet(reachabilitySetObjects, canopyLocation, altitude, true);
     }
 }
 
