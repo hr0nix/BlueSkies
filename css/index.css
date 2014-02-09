@@ -9,14 +9,14 @@ body {
 }
 
 #map-canvas-container {
-    margin-right: 31em;
+    margin-right: 28em;
 }
 
 #right-panel {
     position: absolute;
     right: 0;
     top: 0;
-    width: 31em;
+    width: 28em;
     overflow-x: hidden;
     overflow-y: auto;
 }
@@ -24,7 +24,11 @@ body {
 #right-panel > div {
     margin-left: 5px;
     margin-right: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+}
+
+#right-panel > div > div {
+    padding: 1em;
 }
 
 #dz-selection-menu {
@@ -88,14 +92,6 @@ body {
 
 .value-font {
     font-family: Georgia, serif;
-}
-
-#about-text {
-    padding: 1em;
-}
-
-#about-text div {
-    margin-top: 10px;
 }
 
 #about-dialog {
