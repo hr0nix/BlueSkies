@@ -52,6 +52,11 @@ body {
     left: 0;
 }
 
+#about-text a[href="#"] {
+    border-bottom: 1px dashed #000;
+    text-decoration: none;
+}
+
 .ruler, .ruler li {
     margin: 0;
     padding: 0;
