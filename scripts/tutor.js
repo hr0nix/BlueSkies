@@ -65,22 +65,22 @@ function startTutor(id) {
         "wind": {
             position: {
                 of: $("#wind-direction-slider").parent().parent(),
-                my: "right center",
-                at: "left center"
+                my: "right top",
+                at: "left top"
             }
         },
         "reachset": {
             position: {
                 of: "#display-ui-element-buttons",
-                my: "right center",
-                at: "left center"
+                my: "right top",
+                at: "left bottom"
             }
         },
         "pattern": {
             position: {
                 of: $("#opening-altitude-slider").parent().parent(),
-                my: "right center",
-                at: "left center"
+                my: "right top",
+                at: "left top"
             }
         },
         "restart": {
