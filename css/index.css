@@ -64,11 +64,11 @@ body {
 }
 
 #about-text a[href="#"] {
-    border-bottom: 1px dashed #000;
+    border-bottom: 1px dotted #000;
     text-decoration: none;
 }
 
-#about-text > p:first-of-type {
+#about-text p:first-of-type {
     margin-top: 0;
 }
 

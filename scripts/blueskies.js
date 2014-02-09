@@ -922,10 +922,10 @@ function initialize() {
     startTutor("#tutor-dialogs");
 
     // Place this after the tutor, because we can decide to select language there.
-    $("#legend-button").click(function() { 
+    $(".legend-button").click(function() { 
         showLegendDialog("#legend-dialog");
     });
-    $("#about-button").click(function() {
+    $(".about-button").click(function() {
         showAboutDialog("#about-dialog");
     });
 }

@@ -85,7 +85,7 @@ function startTutor(id) {
         },
         "restart": {
             position: {
-                of: "#tutor-button",
+                of: ".tutor-button:visible",
                 my: "right top",
                 at: "left bottom"
             },
@@ -120,7 +120,7 @@ function startTutor(id) {
         }, 3000);
     }
 
-    $("#tutor-button").click(function() {
+    $(".tutor-button").click(function() {
         nextDialogIndex = 0;
         var visible = allDialogs.filter(":visible").dialog("close");
         if (visible.size() == 0) {
