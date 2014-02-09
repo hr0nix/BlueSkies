@@ -35,14 +35,20 @@ body {
 #dz-selection-menu {
     width: 15em;
     margin-right: 1em;
+    margin-top: 16px;
 }
 
-.small-margin {
-    margin-top: 6px;
-}
-
-.margin {
+.element-label {
     margin-top: 15px;
+    font-family: Georgia, serif;
+}
+
+.element-label:first-child {
+    margin-top: 0px;
+}
+
+.element-label + div {
+    margin-top: 6px;
 }
 
 #wind-arrow {
@@ -60,6 +66,10 @@ body {
 #about-text a[href="#"] {
     border-bottom: 1px dashed #000;
     text-decoration: none;
+}
+
+#about-text > p:first-of-type {
+    margin-top: 0;
 }
 
 .ruler, .ruler li {
@@ -94,10 +104,6 @@ body {
 
 #system-menu {
     margin-left: 10px;
-}
-
-.value-font {
-    font-family: Georgia, serif;
 }
 
 #about-dialog {
