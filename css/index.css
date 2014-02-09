@@ -90,6 +90,10 @@ body {
     font-family: Georgia, serif;
 }
 
+.float-right {
+    float: right;
+}
+
 #about-text {
     padding: 1em;
 }
