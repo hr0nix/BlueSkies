@@ -496,6 +496,13 @@ function updateLandingPattern() {
     updateControllabilitySet();
 }
 
+function updateLandingDirectionSlider() {
+    if (intoTheWindLanding) {
+        landingDirection = normalizeAngle(windDirection + Math.PI);
+    }
+    $("#landing-direction-slider").slider("value", radToDeg(landingDirection));
+}
+
 ////// Event handlers
 
 function onKeyDown(e) {
@@ -606,6 +613,10 @@ function onWindDirectionSliderValueChange(event, ui) {
     rotateDiv($("#windsock").get(0), windDirection);
     $("#wind-direction-value").html(formatHeading(reportedWindDirection(windDirection)));
 
+    if (intoTheWindLanding) {
+        updateLandingDirectionSlider();
+    }
+
     updateLandingPattern();
 }
 
@@ -627,6 +638,16 @@ function onOpeningAltitudeSliderValueChange(event, ui) {
 function onSimulationSpeedSliderValueChange(event, ui) {
     simulationSpeed = ui.value;
     $("#simulation-speed-value").html(formatSimulationSpeed(simulationSpeed));
+}
+
+function onIntoTheWindCheckboxToggle() {
+    intoTheWindLanding = $(this).prop('checked');
+    if (intoTheWindLanding) {
+        $("#landing-direction-slider").slideUp();
+        updateLandingDirectionSlider();
+    } else {
+        $("#landing-direction-slider").slideDown();
+    }
 }
 
 function onLandingDirectionSliderValueChange(event, ui) {
@@ -868,6 +889,18 @@ function initialize() {
     $("#mode-progressbar").progressbar();
     $("#altitude-progressbar").progressbar();
 
+    var landingDirectionSliderOptions = {
+        min: 0,
+        max: 360,
+        step: 5,
+        change: onLandingDirectionSliderValueChange,
+        slide: onLandingDirectionSliderValueChange
+    }
+    $("#landing-direction-slider").
+        slider(landingDirectionSliderOptions).
+        slider("value", radToDeg(landingDirection)).
+        toggle(!intoTheWindLanding);
+
     var windDirectionSliderOptions = {
         min: 0,
         max: 360,
@@ -901,16 +934,7 @@ function initialize() {
         slider(openingAltitudeSliderOptions).
         slider("value", openingAltitude);
 
-    var landingDirectionSliderOptions = {
-        min: 0,
-        max: 360,
-        step: 5,
-        change: onLandingDirectionSliderValueChange,
-        slide: onLandingDirectionSliderValueChange
-    }
-    $("#landing-direction-slider").
-        slider(landingDirectionSliderOptions).
-        slider("value", radToDeg(landingDirection));
+    $("#into-the-wind").prop('checked', true).change(onIntoTheWindCheckboxToggle);
 
     var simulationSpeedSliderOptions = {
         min: 0,
