@@ -123,6 +123,7 @@ function startTutor(id) {
     }
 
     $(".tutor-button").click(function() {
+        ga('send', 'event', 'tutor', 'restart');
         nextDialogIndex = 0;
         var visible = allDialogs.filter(function() { return $(this).dialog("isOpen") }).dialog("close");
         if (visible.size() == 0) {
