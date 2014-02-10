@@ -144,6 +144,15 @@ function setLanguage(language) {
     updateLanguageRadio();
 
     $("#dz-finder").attr("placeholder", localize("Choose another landing area"));
+
+    if (isDialogOpen("#legend-dialog")) {
+        showLegendDialog("#legend-dialog");
+    }
+
+    var rightclick = $("#tutor-rightclick");
+    if (isDialogOpen("#tutor-rightclick")) {
+        rightclick.dialog("position", rightclick.dialog("position"));
+    }
 }
 
 function updateLanguageRadio() {
@@ -425,6 +434,11 @@ function defaultIfUndefined(x, def) {
 
 function parseBoolean(str) {
     return str == "true";
+}
+
+function isDialogOpen(id) {
+    var element = $("#legend-dialog");
+    return element.data("ui-dialog") && element.dialog("isOpen");
 }
 
 ////// UI update logic
@@ -712,7 +726,7 @@ function tuneRuler(id, ruler) {
 
 function showLegendDialog(id) {
     var options = {
-        title: localize("Legend"), // Only localized on startup, oops. The same happens to tutor anyway.
+        title: localize("Legend"),
         autoOpen: true,
         resizable: true,
         draggable: true,
