@@ -122,7 +122,7 @@ function startTutor(id) {
 
     $(".tutor-button").click(function() {
         nextDialogIndex = 0;
-        var visible = allDialogs.filter(":visible").dialog("close");
+        var visible = allDialogs.filter(function() { return $(this).dialog("isOpen") }).dialog("close");
         if (visible.size() == 0) {
             nextDialog();
         }
