@@ -320,7 +320,7 @@ function updateControllabilitySet() {
     }
 }
 
-function computeLandingPattern(location) {
+function computeLandingPattern(location, landingDirection) {
     var controlPointAltitudes = [100, 200, 300];
     var patternMode = 0.85;
     var speedH = getCanopyHorizontalSpeed(patternMode);
@@ -491,16 +491,9 @@ function updateSimulationSpeedSlider() {
 }
 
 function updateLandingPattern() {
-    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint()));
+    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint(), intoTheWindLanding ? windDirection + Math.PI : landingDirection));
 
     updateControllabilitySet();
-}
-
-function updateLandingDirectionSlider() {
-    if (intoTheWindLanding) {
-        landingDirection = normalizeAngle(windDirection + Math.PI);
-    }
-    $("#landing-direction-slider").slider("value", radToDeg(landingDirection));
 }
 
 ////// Event handlers
@@ -613,11 +606,7 @@ function onWindDirectionSliderValueChange(event, ui) {
     rotateDiv($("#wind-arrow > :last-child").get(0), windDirection);
     $("#wind-direction-value").html(formatHeading(reportedWindDirection(windDirection)));
 
-    if (intoTheWindLanding) {
-        updateLandingDirectionSlider();
-    } else {
-        updateLandingPattern(); // Only update in else because updateLandingDirectionSlider() updates it.
-    }
+    updateLandingPattern();
 }
 
 function onWindSpeedSliderValueChange(event, ui) {
@@ -645,11 +634,12 @@ function onIntoTheWindCheckboxToggle() {
     if (intoTheWindLanding) {
         $("#landing-direction-slider").slideUp();
         $("#landing-direction-arrow").fadeOut();
-        updateLandingDirectionSlider();
     } else {
         $("#landing-direction-slider").slideDown();
         $("#landing-direction-arrow").fadeIn();
     }
+
+    updateLandingPattern();
 }
 
 function onLandingDirectionSliderValueChange(event, ui) {
