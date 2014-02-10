@@ -46,7 +46,6 @@ var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
 var defaultMapZoom = 15;
 var minMapZoom = 12;
 var maxMapZoom = 18;
-var altitudeSliderMax = 500;
 
 ////// State
 var isSimulationRunning = false;
@@ -59,6 +58,7 @@ var prevUpdateTime;
 
 ////// Constants
 var eps = 1e-03; // Mostly used to compare altitude to zero
+var altitudeSliderMax = 500;
 
 ////// UI objects
 var map;
@@ -498,7 +498,6 @@ function updateCanopyStatus() {
 
     $("#mode-progressbar").progressbar("option", "value", canopyMode);
     $("#altitude-progressbar").progressbar("option", "value", canopyAltitude);
-    tuneRuler("#altitude-progressbar", "#altitude-ruler");
 }
 
 function updateSliderLabels() {
@@ -580,6 +579,7 @@ function onMapRightClick(event) {
         $("#status").show();
         isSimulationRunning = true;
     }
+    tuneRuler("#altitude-progressbar", "#altitude-ruler");
 }
 
 function onLandingSpotPositionChanged() {
