@@ -39,6 +39,8 @@ var lhsLandingPattern = readSetting("lhs-landing-pattern", false);
 // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
 var windDirection = Math.random() * Math.PI * 2; 
 var windSpeed = 5 + Math.random() * 2 - 1;
+var intoTheWindLanding = true;
+var landingDirection = 0;
 var openingAltitude = readSetting("opening-altitude", 700);
 var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
 var defaultMapZoom = 15;
@@ -258,10 +260,29 @@ function getCurrentLandingPoint() {
     return dzMarker.getPosition();
 }
 
-// TODO: implement
 // returns: canopy heading necessary to maintain desiredTrack ground track in given winds (not always possible, of course)
+// Simple vector addition: wind + canopySpeed = groundTrack
+//
+//                              .>desiredTrack
+//                            .
+//                          .*
+//                    beta. /
+//                      .  /
+//                    .   /H      Sine theorem:
+//                  .    /d
+//                .     /e        windSpeed       speedH
+//              .      /e         ---------  =  -----------
+//            .       /p          sin beta       sin alpha
+//          .        /s
+//        .         /               gamma = alpha + beta -- gamma is the external angle.
+//      . alpha    /gamma
+// ----*----------*--------------------->windDirection
+//     |windSpeed |
 function createGroundTrack(windSpeed, windDirection, speedH, desiredTrack) {
-
+    var alpha = windDirection - desiredTrack;
+    var beta = Math.asin(windSpeed * Math.sin(alpha) / speedH);
+    var gamma = alpha + beta;
+    return windDirection - gamma; // == desiredTrack + beta, but the code appears more straightforward that way.
 }
 
 function reachSet(windSpeed, windDirection, altitude, u) {
@@ -309,25 +330,36 @@ function updateControllabilitySet() {
     }
 }
 
-function computeLandingPattern(location) {
-    var controlPointAltitudes = [ 100, 200, 300 ];
+function computeLandingPattern(location, landingDirection) {
+    var controlPointAltitudes = [100, 200, 300];
     var patternMode = 0.85;
     var speedH = getCanopyHorizontalSpeed(patternMode);
     var speedV = getCanopyVerticalSpeed(patternMode);
     var rotationFactor = lhsLandingPattern ? 1 : -1;
 
     var timeToPoint1 = controlPointAltitudes[0] / speedV;
-    var point1 = moveInWind(location, windSpeed, windDirection + Math.PI, speedH, windDirection, timeToPoint1);
-
     var timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / speedV;
-    // In ordinary winds we hold crosswind ground track, in strong winds we move backwards with some arbitrary low angle to the wind
-    var angleIntoWind = windSpeed < speedH ? Math.acos(windSpeed / speedH) : Math.PI / 8;
-    var point2 = moveInWind(point1, windSpeed, windDirection + Math.PI, speedH, windDirection + rotationFactor * angleIntoWind, timeToPoint2);
-
     var timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV;
-    // In strong winds we always try to look into the wind, back to the wind otherwise
-    angleIntoWind = windSpeed < speedH ? Math.PI : 0;
-    var point3 = moveInWind(point2, windSpeed, windDirection + Math.PI, speedH, windDirection + angleIntoWind, timeToPoint3);
+
+    var heading;
+
+    // For now, strong winds imply into-the wind landing no matter what landing direction is given. This needs further thought.
+    heading = windSpeed < speedH ?
+        createGroundTrack(windSpeed, windDirection, speedH, landingDirection):
+        Math.PI + windDirection; // Into the wind
+
+    var point1 = moveInWind(location, windSpeed, windDirection, speedH, heading, -timeToPoint1); // Note that we specify the wind speed and canopy heading as though we're flying the pattern. But we give negative time, so we get the point where we need to start to arrive where we need.
+
+    heading = windSpeed < speedH ?
+        createGroundTrack(windSpeed, windDirection, speedH, landingDirection + rotationFactor * Math.PI / 2): // In ordinary winds we hold perpendicular ground track
+        Math.PI + windDirection + rotationFactor * Math.PI / 8; // in strong winds we move backwards with some arbitrary low angle to the wind
+
+    var point2 = moveInWind(point1, windSpeed, windDirection, speedH, heading, -timeToPoint2);
+
+    heading = windSpeed < speedH ?
+        createGroundTrack(windSpeed, windDirection, speedH, landingDirection + Math.PI):
+        Math.PI + windDirection; // Into the wind
+    var point3 = moveInWind(point2, windSpeed, windDirection, speedH, heading, -timeToPoint3);
 
     return [point3, point2, point1, location];
 }
@@ -349,6 +381,10 @@ function metersToFeet(meters) {
 
 function metersPerSecToMilesPerHour(metersPerSec) {
     return metersPerSec * 2.23693629;
+}
+
+function getLandingDirection() {
+    return intoTheWindLanding ? normalizeAngle(windDirection + Math.PI) : landingDirection;
 }
 
 function formatSpeed(metersPerSec, significantDigits) {
@@ -473,8 +509,12 @@ function updateSimulationSpeedSlider() {
     $("#simulation-speed-slider").slider("value", simulationSpeed);
 }
 
+function updateLandingDirectionValue() {
+    $("#landing-direction-value").html(formatHeading(getLandingDirection()));
+}
+
 function updateLandingPattern() {
-    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint()));
+    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint(), getLandingDirection()));
 
     updateControllabilitySet();
 }
@@ -586,8 +626,9 @@ function onTimeTick() {
 
 function onWindDirectionSliderValueChange(event, ui) {
     windDirection = degToRad(ui.value);
-    rotateDiv($("#windsock").get(0), windDirection);
+    rotateDiv($("#wind-arrow > :last-child").get(0), windDirection);
     $("#wind-direction-value").html(formatHeading(reportedWindDirection(windDirection)));
+    updateLandingDirectionValue();
 
     updateLandingPattern();
 }
@@ -610,6 +651,28 @@ function onOpeningAltitudeSliderValueChange(event, ui) {
 function onSimulationSpeedSliderValueChange(event, ui) {
     simulationSpeed = ui.value;
     $("#simulation-speed-value").html(formatSimulationSpeed(simulationSpeed));
+}
+
+function onIntoTheWindCheckboxToggle() {
+    intoTheWindLanding = $(this).prop('checked');
+    if (intoTheWindLanding) {
+        $("#landing-direction-slider").slideUp();
+        $("#landing-direction-arrow").fadeOut();
+    } else {
+        $("#landing-direction-slider").slideDown();
+        $("#landing-direction-arrow").fadeIn();
+    }
+
+    updateLandingDirectionValue();
+    updateLandingPattern();
+}
+
+function onLandingDirectionSliderValueChange(event, ui) {
+    landingDirection = degToRad(ui.value);
+    rotateDiv($("#landing-direction-arrow > :last-child").get(0), landingDirection);
+    updateLandingDirectionValue();
+
+    updateLandingPattern();
 }
 
 function onSelectLanguage() {
@@ -795,6 +858,7 @@ function initialize() {
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzMenu.get(0));
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#wind-arrow").get(0));
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#landing-direction-arrow").get(0));
     dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
     google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
 
@@ -844,6 +908,17 @@ function initialize() {
     $("#mode-progressbar").progressbar();
     $("#altitude-progressbar").progressbar();
 
+    var landingDirectionSliderOptions = {
+        min: 0,
+        max: 360,
+        step: 5,
+        change: onLandingDirectionSliderValueChange,
+        slide: onLandingDirectionSliderValueChange
+    }
+    $("#landing-direction-slider").
+        slider(landingDirectionSliderOptions).
+        toggle(!intoTheWindLanding);
+
     var windDirectionSliderOptions = {
         min: 0,
         max: 360,
@@ -876,6 +951,8 @@ function initialize() {
     $("#opening-altitude-slider").
         slider(openingAltitudeSliderOptions).
         slider("value", openingAltitude);
+
+    $("#into-the-wind").prop('checked', true).change(onIntoTheWindCheckboxToggle);
 
     var simulationSpeedSliderOptions = {
         min: 0,
