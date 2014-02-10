@@ -10,6 +10,7 @@ function startTutor(id) {
         if (nextDialogIndex < allDialogs.size()) {
             if (nextDialogIndex == allDialogs.size() - 1) {
                 saveSetting("tutor-finished", true);
+                ga('send', 'event', 'tutor', 'finished', {'nonInteraction': true});
             }
 
             allDialogs.eq(nextDialogIndex).dialog("open");
@@ -34,6 +35,7 @@ function startTutor(id) {
             text: localize("Skip tutor"),
             click: function() {
                 nextDialogIndex = allDialogs.size() - 1;
+                ga('send', 'event', 'tutor', 'skiptutor');
                 $(this).dialog("close");
             }
         }

@@ -614,6 +614,13 @@ function onTimeTick() {
         canopyLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, dt);
         canopyAltitude -= dt * speedV;
 
+        if (canopyAltitude < eps) {
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(canopyLocation, getCurrentLandingPoint());
+            ga('send', 'event', 'simulation', 'finished');
+            ga('send', 'event', 'simulation', 'finished', 'distance', Math.floor(distance));
+            ga('send', 'event', 'simulation', 'finished', 'angle-into-wind', Math.floor(radToDeg(normalizeAngle(Math.abs(canopyHeading - normalizeAngle(windDirection - Math.PI))))));
+        }
+
         if (showSteadyPoint) {
             var timeToLanding = canopyAltitude / speedV;
             steadyPointLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, timeToLanding);
@@ -688,6 +695,7 @@ function onSelectSystem() {
 }
 
 function onDzMenuItemSelected(event, ui) {
+    ga('send', 'event', 'dz', 'selected', ui.item.attr('id'));
     setDz(ui.item.attr('id'));
 }
 
@@ -720,9 +728,11 @@ function onPatternSelect() {
 function onFindNewDz() {
     var place = dzFinderAutocomplete.getPlace();
     if (!place.geometry) {
+        ga('send', 'event', 'dz', 'autocomplete', 'failed');
         return;
     }
 
+    ga('send', 'event', 'dz', 'autocomplete', 'success');
     setCustomDz($("#dz-finder").val(), place.geometry.location);
 }
 
@@ -825,6 +835,21 @@ function showAboutDialog(id) {
         }
     };
     $(id).dialog(options);
+}
+
+function initializeAnalyticsEvents() {
+    $(".legend-button").click(function() {
+        ga('send', 'event', 'button', 'click', 'legend');
+    });
+
+    google.maps.event.addListener(map, "rightclick", function() {
+        ga('send', 'event', 'simulation', 'started');
+        ga('send', 'event', 'simulation', 'started', 'altitude', openingAltitude);
+    });
+
+    $("input").change(function() {
+        ga('send', 'event', 'button', 'click', $(this).attr("id"));
+    });
 }
 
 function initialize() {
@@ -1019,6 +1044,8 @@ function initialize() {
     $(".about-button").click(function() {
         showAboutDialog("#about-dialog");
     });
+
+    initializeAnalyticsEvents();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
