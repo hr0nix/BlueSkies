@@ -8,13 +8,13 @@
         <link rel="image_src" href="images/control.png"/>
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
-        <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
         <script src="scripts/jquery.number.js"></script>
         <script src="scripts/jquery.cookie.js"></script>
         <script src="scripts/blueskies.js"></script>
         <script src="scripts/tutor.js"></script>
         <script src="scripts/ga.js"></script>
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" href="css/smoothness-theme/jquery-ui-1.10.4.custom.min.css">
         <link rel="stylesheet" type="text/css" href="css/index.css" />
     </head>
     <body>
@@ -22,7 +22,7 @@
             <div id="map-canvas"></div>
             <input id="dz-finder" class="controls" type="text">
             <div id="wind-arrow"><img src="images/windsock-base.png"><img src="images/windsock.png" id="windsock"></div>
-            <ul id="dz-selection-menu" class="margin">
+            <ul id="dz-selection-menu">
                 <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
                     <ul>
                         <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
@@ -54,17 +54,17 @@
         <div id="right-panel">
             <div id="status">
                 <h3><span lang="en">Canopy status</span><span lang="ru">Состояние</span></h3>
-                <div class="value-font">
-                    <div><span lang="en">Altitude: </span><span lang="ru">Высота: </span><span id="altitude-value"></span></div>
+                <div>
+                    <div class="element-label"><span lang="en">Altitude: </span><span lang="ru">Высота: </span><span id="altitude-value"></span></div>
                     <div>
-                        <div class="small-margin" id="altitude-progressbar"> </div>
+                        <div id="altitude-progressbar"> </div>
                         <ul id="altitude-ruler" class="ruler"><li>100</li><li>200</li><li>300</li></ul>
                     </div>
-                    <div class="small-margin"><span lang="en">Brake application: </span><span lang="ru">Режим купола: </span></div>
-                    <div class="small-margin" id="mode-progressbar"></div>
-                    <div class="margin"><span lang="en">Horizontal speed: </span><span lang="ru">Горизонталь: </span><span id="horizontal-speed-value"></span></div>
-                    <div class="small-margin"><span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
-                    <div class="margin" style="display:none"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
+                    <div class="element-label"><span lang="en">Brake application: </span><span lang="ru">Режим купола: </span></div>
+                    <div id="mode-progressbar"></div>
+                    <div class="element-label"><span lang="en">Horizontal speed: </span><span lang="ru">Горизонталь: </span><span id="horizontal-speed-value"></span></div>
+                    <div class="element-label"><span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
+                    <div class="element-label" style="display:none"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
                 </div>
             </div>
             <div>
@@ -75,15 +75,15 @@
                             <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en"><img src="images/GB.png"></label>
                             <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru"><img src="images/RU.png"></label>
                         </span>
-                        <span id="system-menu" class="margin">
+                        <span id="system-menu">
                             <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span lang="en">Metric</span><span lang="ru">СИ</span></label>
                             <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
 
-                    <div class="margin value-font"><span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span><span id="simulation-speed-value"></span></div>
-                    <div id="simulation-speed-slider" class="small-margin"></div>
-                    <div id="display-ui-element-buttons" class="margin">
+                    <div class="element-label"><span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span><span id="simulation-speed-value"></span></div>
+                    <div id="simulation-speed-slider"></div>
+                    <div id="display-ui-element-buttons" class="element-label">
                         <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox">
                             <span lang="en">
                             <img src="images/steady.png" title="Accuracy trick: you'll land there">
@@ -114,18 +114,18 @@
             <div>
                 <h3><span lang="en">Wind conditions</span><span lang="ru">Ветер</span></h3>
                 <div>
-                    <div class="value-font"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
-                    <div id="wind-direction-slider" class="small-margin"></div>
-                    <div class="margin value-font"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
-                    <div id="wind-speed-slider" class="small-margin"></div>
+                    <div class="element-label"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
+                    <div id="wind-direction-slider"></div>
+                    <div class="element-label"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
+                    <div id="wind-speed-slider"></div>
                 </div>
             </div>
             <div>
                 <h3><span lang="en">Pattern settings</span><span lang="ru">Коробочка</span></h3>
                 <div>
-                    <div class="value-font"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
-                    <div id="opening-altitude-slider" class="small-margin"></div>
-                    <div class="margin value-font">
+                    <div class="element-label"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
+                    <div id="opening-altitude-slider"></div>
+                    <div class="element-label">
                         <span lang="en">Landing pattern:</span><span lang="ru">Круг захода:</span>&nbsp;
                         <span id="pattern-menu">
                             <input id="pattern-hide" type="radio" name="pattern" checked="checked"><label for="pattern-hide"><span lang="en">Hide</span><span lang="ru">Нет</span></label>
@@ -138,11 +138,18 @@
             <div>
                 <h3><span lang="en">Info</span><span lang="ru">Информация</span></h3>
                 <div id="about-text">
-                    <div><a href="#" id="legend-button"><span lang="en">Show Legend</span><span lang="ru">Легенда</span></a></div>
-                    <div class="small-margin"><a href="#" id="about-button"><span lang="en">About</span><span lang="ru">О проекте (English)</span></a></div>
-                    <div class="small-margin"><a href="#" id="tutor-button"><span lang="en">Restart tutor</span><span lang="ru">Введение</span></a></div>
-                    <div class="small-margin"><a href="http://github.com/hr0nix/BlueSkies"><img src="images/GitHub-Mark-32px.png"><span lang="en">Check out on
-                    github</span><span lang="ru">Страница проекта на github</span></a></div>
+                    <div lang="en">
+                        <p>Try and play with the simulator. If you're stuck, you can get some help from <a href="#" class="legend-button">the
+                        legend</a> or you can <a href="#" class="tutor-button">restart the tutor</a> to go through the set of the dialogs again.</p> 
+                        <p><a href="#" class="about-button">Read more</a> about the project in general.</p>
+                        <p><a href="http://github.com/hr0nix/BlueSkies"><img src="images/GitHub-Mark-32px.png">Check out on github</a></p>
+                    </div>
+                    <div lang="ru">
+                        <p>Поэкспериментируйте с симулятором. Если вы запутались, попробуйте заглянуть в <a href="#" class="legend-button">легенду</a>
+                        или <a href="#" class="tutor-button">пересмотреть введение</a>.</p> 
+                        <p>Общая информация <a href="#" class="about-button">о симуляторе</a> (English).</p>
+                        <p><a href="http://github.com/hr0nix/BlueSkies"><img src="images/GitHub-Mark-32px.png">Страница симулятора на github</a></p>
+                    </div>
                 </div>
             </div>
         </div>

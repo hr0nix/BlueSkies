@@ -65,27 +65,27 @@ function startTutor(id) {
         "wind": {
             position: {
                 of: $("#wind-direction-slider").parent().parent(),
-                my: "right center",
-                at: "left center"
+                my: "right top",
+                at: "left top"
             }
         },
         "reachset": {
             position: {
                 of: "#display-ui-element-buttons",
-                my: "right center",
-                at: "left center"
+                my: "right top",
+                at: "left bottom"
             }
         },
         "pattern": {
             position: {
                 of: $("#opening-altitude-slider").parent().parent(),
-                my: "right center",
-                at: "left center"
+                my: "right top",
+                at: "left top"
             }
         },
         "restart": {
             position: {
-                of: "#tutor-button",
+                of: ".tutor-button:visible",
                 my: "right top",
                 at: "left bottom"
             },
@@ -120,7 +120,7 @@ function startTutor(id) {
         }, 3000);
     }
 
-    $("#tutor-button").click(function() {
+    $(".tutor-button").click(function() {
         nextDialogIndex = 0;
         var visible = allDialogs.filter(":visible").dialog("close");
         if (visible.size() == 0) {

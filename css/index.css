@@ -19,6 +19,7 @@ body {
     width: 28em;
     overflow-x: hidden;
     overflow-y: auto;
+    background-color: #99999f;
 }
 
 #right-panel > div {
@@ -28,15 +29,25 @@ body {
 }
 
 #right-panel > div > div {
-    padding: 1em;
+    padding: 13px 1em 15px;
 }
 
 #dz-selection-menu {
     width: 15em;
     margin-right: 1em;
+    margin-top: 16px;
 }
 
-.small-margin {
+.element-label {
+    margin-top: 15px;
+    font-family: Georgia, serif;
+}
+
+.element-label:first-child {
+    margin-top: 0px;
+}
+
+.element-label + div {
     margin-top: 6px;
 }
 
@@ -53,8 +64,12 @@ body {
 }
 
 #about-text a[href="#"] {
-    border-bottom: 1px dashed #000;
+    border-bottom: 1px dotted #000;
     text-decoration: none;
+}
+
+#about-text p:first-of-type {
+    margin-top: 0;
 }
 
 .ruler, .ruler li {
@@ -87,16 +102,8 @@ body {
     padding-top: 2px !important;
 }
 
-.margin {
-    margin-top: 18px;
-}
-
 #system-menu {
     margin-left: 10px;
-}
-
-.value-font {
-    font-family: Georgia, serif;
 }
 
 #about-dialog {
