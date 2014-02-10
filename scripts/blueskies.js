@@ -373,6 +373,10 @@ function metersPerSecToMilesPerHour(metersPerSec) {
     return metersPerSec * 2.23693629;
 }
 
+function getLandingDirection() {
+    return intoTheWindLanding ? normalizeAngle(windDirection + Math.PI) : landingDirection;
+}
+
 function formatSpeed(metersPerSec, significantDigits) {
     significantDigits = significantDigits || 0;
     return useMetricSystem
@@ -490,8 +494,12 @@ function updateSimulationSpeedSlider() {
     $("#simulation-speed-slider").slider("value", simulationSpeed);
 }
 
+function updateLandingDirectionValue() {
+    $("#landing-direction-value").html(formatHeading(getLandingDirection()));
+}
+
 function updateLandingPattern() {
-    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint(), intoTheWindLanding ? windDirection + Math.PI : landingDirection));
+    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint(), getLandingDirection()));
 
     updateControllabilitySet();
 }
@@ -605,6 +613,7 @@ function onWindDirectionSliderValueChange(event, ui) {
     windDirection = degToRad(ui.value);
     rotateDiv($("#wind-arrow > :last-child").get(0), windDirection);
     $("#wind-direction-value").html(formatHeading(reportedWindDirection(windDirection)));
+    updateLandingDirectionValue();
 
     updateLandingPattern();
 }
@@ -639,13 +648,14 @@ function onIntoTheWindCheckboxToggle() {
         $("#landing-direction-arrow").fadeIn();
     }
 
+    updateLandingDirectionValue();
     updateLandingPattern();
 }
 
 function onLandingDirectionSliderValueChange(event, ui) {
     landingDirection = degToRad(ui.value);
     rotateDiv($("#landing-direction-arrow > :last-child").get(0), landingDirection);
-    $("#landing-direction-value").html(formatHeading(landingDirection));
+    updateLandingDirectionValue();
 
     updateLandingPattern();
 }
@@ -892,7 +902,6 @@ function initialize() {
     }
     $("#landing-direction-slider").
         slider(landingDirectionSliderOptions).
-        slider("value", radToDeg(landingDirection)).
         toggle(!intoTheWindLanding);
 
     var windDirectionSliderOptions = {
