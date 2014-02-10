@@ -57,8 +57,10 @@ var canopyMode;
 var steadyPointLocation;
 var prevUpdateTime;
 
-////// UI objects
+////// Constants
+var eps = 1e-03; // Mostly used to compare altitude to zero
 
+////// UI objects
 var map;
 var canopyMarker;
 var steadyPointMarker;
@@ -325,7 +327,7 @@ function updateControllabilitySet() {
     updateReachSetVisibility(controllabilitySetObjects, showControllabilitySet);
 
     if (showControllabilitySet) {
-        var altitude = canopyAltitude > 1e-8 ? canopyAltitude : openingAltitude;
+        var altitude = canopyAltitude > eps ? canopyAltitude : openingAltitude;
         computeReachSet(controllabilitySetObjects, getCurrentLandingPoint(), altitude, false);
     }
 }
@@ -527,7 +529,7 @@ function onKeyDown(e) {
         pressedKeys[e.which] = true;
     }
 
-    if (isSimulationRunning && canopyAltitude > 0) {
+    if (isSimulationRunning && canopyAltitude > eps) {
         if (e.which == $.ui.keyCode.UP) {
             canopyMode += canopyModeUpdateSpeed;
         }
@@ -590,7 +592,7 @@ function onLandingSpotPositionChanged() {
 }
 
 function onTimeTick() {
-    if (isSimulationRunning && canopyAltitude > 0) {
+    if (isSimulationRunning && canopyAltitude > eps) {
         var currentUpdateTime = new Date().getTime();
         var dt = (currentUpdateTime - prevUpdateTime) / 1000.0;
         prevUpdateTime = currentUpdateTime;
