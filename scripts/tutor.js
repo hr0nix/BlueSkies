@@ -99,7 +99,7 @@ function startTutor(id) {
             position: {
                 of: "#map-canvas-container",
                 my: "center bottom",
-                at: "center bottom-10"
+                at: "center bottom-50"
             }
         }
     };
