@@ -18,6 +18,8 @@ function startTutor(id) {
         }
     }
 
+    var highlightClass = "tutor-highlight";
+
     var commonOptions = {
         autoOpen: false,
         resizable: false,
@@ -28,6 +30,7 @@ function startTutor(id) {
         show: "fade",
         hide: "fade",
         dialogClass: "tutor",
+        performHighlighting: true,
         buttons: [ {
             text: localize("Got it!"),
             click: closeDialog
@@ -40,12 +43,25 @@ function startTutor(id) {
             }
         }
         ],
-        close: nextDialog
+        open: function() {
+            if ($(this).dialog('option', "performHighlighting")) {
+                var of = $($(this).dialog('option', 'position').of);
+                of.addClass(highlightClass);
+            }
+        },
+        close: function() {
+            if ($(this).dialog('option', "performHighlighting")) {
+                var of = $($(this).dialog('option', 'position').of);
+                of.removeClass(highlightClass);
+            }
+            nextDialog();
+        }
     };
 
     var specificOptions = {
         "welcome": {
             modal: true,
+            performHighlighting: false,
             position: {
                 of: "#map-canvas-container"
             }
@@ -58,6 +74,7 @@ function startTutor(id) {
             }
         },
         "target": {
+            performHighlighting: false,
             position: {
                 of: "#map-canvas-container",
                 my: "left top",
@@ -90,13 +107,11 @@ function startTutor(id) {
                 of: ".tutor-button:visible",
                 my: "right top",
                 at: "left bottom"
-            },
-            open: function() {
-                location.href = "#tutor-button";
             }
         },
         "rightclick": {
             modal: false,
+            performHighlighting: false,
             buttons: [],
             position: {
                 of: "#map-canvas-container",
