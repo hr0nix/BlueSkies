@@ -12,6 +12,37 @@ body {
     margin-right: 28em;
 }
 
+.dz-selection-control {
+    margin-top: 16px;
+    font-size: 15px;
+    font-weight: 300;
+    height: 32px;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#dz-selection-menu {
+    width: 11em;
+    margin-right: 5px;
+    border-radius: 2px 0 0 2px;
+}
+
+.ui-menu {
+    z-index: 100;
+    width: 10em;
+}
+
+#dz-finder {
+    padding: 0 11px 0 13px;
+    width: 400px;
+    outline: none;
+    background-color: #fff;
+    text-overflow: ellipsis;
+    border-radius: 0 2px 2px 0;
+}
+
 #right-panel {
     position: absolute;
     right: 0;
@@ -30,12 +61,6 @@ body {
 
 #right-panel > div > div {
     padding: 13px 1em 15px;
-}
-
-#dz-selection-menu {
-    width: 15em;
-    margin-right: 1em;
-    margin-top: 16px;
 }
 
 .element-label {
@@ -150,11 +175,6 @@ body {
     margin-top: 1em;
 }
 
-.ui-menu {
-    z-index: 100;
-    width: 12em;
-}
-
 .tutor .ui-dialog-titlebar {
     display: none;
 }
@@ -169,21 +189,4 @@ body {
 
 :lang(ru) {
     display: none;
-}
-
-#dz-finder {
-    margin-top: 16px;
-    padding: 0 11px 0 13px;
-    width: 400px;
-    height: 32px;
-    border: 1px solid transparent;
-    border-radius: 2px 0 0 2px;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    outline: none;
-    background-color: #fff;
-    font-size: 15px;
-    font-weight: 300;
-    text-overflow: ellipsis;
 }
