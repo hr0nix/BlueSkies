@@ -10,7 +10,7 @@ body {
 }
 
 #map-canvas-container {
-    margin-right: 26em;
+    margin-right: 27em;
 }
 
 .dz-selection-control {
@@ -48,7 +48,7 @@ body {
     position: absolute;
     right: 0;
     top: 0;
-    width: 26em;
+    width: 27em;
     overflow-x: hidden;
     overflow-y: auto;
     background-color: #99999f;
