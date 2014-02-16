@@ -458,8 +458,8 @@ function setDz(dz) {
 
 function setCustomDz(name, latlng) {
     dropzones["dz-custom"] = latlng;
-    setDz("dz-custom");
     lastCustomDzName = name;
+    setDz("dz-custom");
 
     saveSetting("custom-dz-name", lastCustomDzName);
     saveSetting("custom-dz-location", packLatLng(latlng));
