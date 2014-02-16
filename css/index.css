@@ -15,6 +15,7 @@ body {
 
 .dz-selection-control {
     margin-top: 16px;
+    margin-left: 5px;
     font-size: 15px;
     font-weight: 300;
     height: 32px;
@@ -26,7 +27,6 @@ body {
 
 #dz-selection-menu {
     width: 11em;
-    margin-right: 5px;
     border-radius: 2px 0 0 2px;
 }
 
