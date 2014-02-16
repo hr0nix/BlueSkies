@@ -150,13 +150,13 @@ body {
     float: right;
 }
 
-.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button:first-of-type {
-    background-image: url("smoothness-theme/images/ui-bg_glass_75_14b00c_1x400.png");
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button:last-of-type {
+    background-image: url("smoothness-theme/images/ui-bg_glass_75_d70e0e_1x400.png");
     color: white;
 }
 
-.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button:last-of-type {
-    background-image: url("smoothness-theme/images/ui-bg_glass_75_d70e0e_1x400.png");
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset button:first-of-type {
+    background-image: url("smoothness-theme/images/ui-bg_glass_75_14b00c_1x400.png");
     color: white;
 }
 
