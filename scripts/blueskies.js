@@ -122,7 +122,8 @@ var ruResources = {
     "Choose another landing area": "Выберите другую площадку приземления",
     "Legend": "Легенда",
     "Got it!": "Дальше",
-    "Skip tutor": "Пропустить введение"
+    "Skip tutor": "Пропустить введение",
+    "Share a link": "Ссылка сюда"
 };
 var langResources = {
     "en": enResources,
@@ -475,8 +476,24 @@ function parseBoolean(str) {
 }
 
 function isDialogOpen(id) {
-    var element = $("#legend-dialog");
+    var element = $(id);
     return element.data("ui-dialog") && element.dialog("isOpen");
+}
+
+function getFullPath(location) {
+    return location.protocol + '//' + location.host + location.pathname;
+}
+
+function generateGETForLocation() {
+    var result = "?";
+    if (currentDropzoneId != "dz-custom") {
+        result += "dz=" + currentDropzoneId.replace("dz-","");
+    } else {
+        var latlng = dropzones["dz-custom"];
+        result += "lat=" + latlng.lat() + "&lng=" + latlng.lng();
+    }
+
+    return result;
 }
 
 ////// UI update logic
@@ -561,6 +578,30 @@ function onKeyUp(e) {
         }
         updateSimulationSpeedSlider();
     }
+}
+
+function onShareLinkClick() {
+    var shareDialogOptions = {
+        title: localize("Share a link"),
+        autoOpen: true,
+        resizable: true,
+        draggable: true,
+        minHeight: 0,
+        modal: true,
+        width: "auto",
+        show: "fade",
+        hide: "fade",
+        position: {
+            of: "#dz-finder",
+            my: "center top",
+            at: "center bottom+10"
+        },
+        buttons: {
+            "Ok": function() { $(this).dialog("close") } 
+        }
+    };
+    $("#share-dialog").dialog(shareDialogOptions);
+    $("#share-dialog").children("input").val(getFullPath(window.location) + generateGETForLocation()).focus().get(0).select();
 }
 
 function onMapRightClick(event) {
@@ -880,10 +921,13 @@ function initialize() {
                 }
             }
         });
+    var shareButton = $("#share-location");
+    shareButton.button().click(onShareLinkClick);
 
     var dzFinder = $("#dz-finder").get(0);
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzMenu.get(0));
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(shareButton.get(0));
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#wind-arrow").get(0));
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#landing-direction-arrow").get(0));
     dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
