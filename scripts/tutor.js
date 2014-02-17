@@ -44,15 +44,15 @@ function startTutor(id) {
         }
         ],
         open: function() {
-            if ($(this).dialog('option', "performHighlighting")) {
-                var of = $($(this).dialog('option', 'position').of);
-                of.addClass(highlightClass);
+            var $this = $(this);
+            if ($this.dialog('option', "performHighlighting")) {
+                $($this.dialog('option', 'position').of).addClass(highlightClass);
             }
         },
         close: function() {
-            if ($(this).dialog('option', "performHighlighting")) {
-                var of = $($(this).dialog('option', 'position').of);
-                of.removeClass(highlightClass);
+            var $this = $(this);
+            if ($this.dialog('option', "performHighlighting")) {
+                $($this.dialog('option', 'position').of).removeClass(highlightClass);
             }
             nextDialog();
         }

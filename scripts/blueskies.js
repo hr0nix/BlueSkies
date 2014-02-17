@@ -154,9 +154,9 @@ function setLanguage(language) {
         showLegendDialog("#legend-dialog");
     }
 
-    var rightclick = $("#tutor-rightclick");
+    var $rightclick = $("#tutor-rightclick");
     if (isDialogOpen("#tutor-rightclick")) {
-        rightclick.dialog("position", rightclick.dialog("position"));
+        $rightclick.dialog("position", $rightclick.dialog("position"));
     }
 }
 
@@ -441,14 +441,10 @@ function setDz(dz) {
         return;
     }
 
-    if (dz == "dz-custom") {
-        $("#dz-finder").val(lastCustomDzName);
-    } else {
-        $("#dz-finder").val("");
-    }
+    $("#dz-finder").val(dz == "dz-custom" ? lastCustomDzName : "");
 
     currentDropzoneId = dz;
-    $('#selected-dz').html($('#' + currentDropzoneId).children("a").html());
+    $('#selected-dz').html($('#' + currentDropzoneId + "> a").html());
     saveSetting("current-dropzone-id", currentDropzoneId);
     map.setCenter(dropzones[currentDropzoneId]);
     map.setZoom(defaultMapZoom);
@@ -476,8 +472,8 @@ function parseBoolean(str) {
 }
 
 function isDialogOpen(id) {
-    var element = $(id);
-    return element.data("ui-dialog") && element.dialog("isOpen");
+    var $id = $(id);
+    return $id.data("ui-dialog") && $id.dialog("isOpen");
 }
 
 function getFullPath(location) {
@@ -600,8 +596,13 @@ function onShareLinkClick() {
             "Ok": function() { $(this).dialog("close") }
         }
     };
-    $("#share-dialog").dialog(shareDialogOptions);
-    $("#share-dialog").children("input").val(getFullPath(window.location) + generateGETForLocation()).focus().get(0).select();
+    $("#share-dialog")
+        .dialog(shareDialogOptions)
+        .children("input")
+            .val(getFullPath(window.location) + generateGETForLocation())
+            .focus()
+            .get(0)
+                .select();
 }
 
 function onMapRightClick(event) {
@@ -829,13 +830,15 @@ function initializeReachSet(objects, color) {
 }
 
 function tuneRuler(id, ruler) {
-    var width = $(id).width(),
-        max = $(id).progressbar("option", "max"),
+    var $id = $(id),
+        width = $id.width(),
+        max = $id.progressbar("option", "max"),
         prevOffset = 0;
     $(ruler).children("li").each(function() {
-        var value = Number($(this).text()),
+        var $this = $(this),
+            value = Number($this.text()),
             offset = value * width / max;
-        $(this).css("padding-left", offset - prevOffset);
+        $this.css("padding-left", offset - prevOffset);
         prevOffset = offset;
     });
 }
@@ -861,8 +864,9 @@ function showLegendDialog(id) {
 }
 
 function showAboutDialog(id) {
-    if ($("#about-dialog").children().size() == 0) {
-        $('<iframe>', {src: "about.html"}).appendTo("#about-dialog");
+    var $id = $(id);
+    if ($id.children().size() == 0) {
+        $('<iframe>', {src: "about.html"}).appendTo($id);
     }
     var options = {
         title: localize("About"), // Only localized on startup, oops. The same happens to tutor anyway.
@@ -877,7 +881,7 @@ function showAboutDialog(id) {
             of: "#map-canvas-container"
         }
     };
-    $(id).dialog(options);
+    $id.dialog(options);
 }
 
 function initializeAnalyticsEvents() {
@@ -907,27 +911,27 @@ function initialize() {
     };
     map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
 
-    var dzMenu = $("#dz-selection-menu"),
+    var $dzMenu = $("#dz-selection-menu"),
         firstLevelPosition = { my: "left top", at: "left bottom" };
-    dzMenu.menu({
+    $dzMenu.menu({
             select: onDzMenuItemSelected,
             position: firstLevelPosition,
             blur: function() {
                 $(this).menu("option", "position", firstLevelPosition);
             },
             focus: function(e, ui) {
-                if (!ui.item.parent().is(dzMenu)) {
+                if (!ui.item.parent().is($dzMenu)) {
                     $(this).menu("option", "position", { my: "left top", at: "right top" });
                 }
             }
         });
-    var shareButton = $("#share-location");
-    shareButton.button().click(onShareLinkClick);
+    var $shareButton = $("#share-location");
+    $shareButton.button().click(onShareLinkClick);
 
     var dzFinder = $("#dz-finder").get(0);
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzMenu.get(0));
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push($dzMenu.get(0));
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(shareButton.get(0));
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push($shareButton.get(0));
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#wind-arrow").get(0));
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#landing-direction-arrow").get(0));
     dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
@@ -986,9 +990,9 @@ function initialize() {
         change: onLandingDirectionSliderValueChange,
         slide: onLandingDirectionSliderValueChange
     }
-    $("#landing-direction-slider").
-        slider(landingDirectionSliderOptions).
-        toggle(!intoTheWindLanding);
+    $("#landing-direction-slider")
+        .slider(landingDirectionSliderOptions)
+        .toggle(!intoTheWindLanding);
 
     var windDirectionSliderOptions = {
         min: 0,
@@ -997,9 +1001,9 @@ function initialize() {
         change: onWindDirectionSliderValueChange,
         slide: onWindDirectionSliderValueChange
     }
-    $("#wind-direction-slider").
-        slider(windDirectionSliderOptions).
-        slider("value", radToDeg(windDirection));
+    $("#wind-direction-slider")
+        .slider(windDirectionSliderOptions)
+        .slider("value", radToDeg(windDirection));
 
     var windSpeedSliderOptions = {
         min: 0,
@@ -1008,9 +1012,9 @@ function initialize() {
         change: onWindSpeedSliderValueChange,
         slide: onWindSpeedSliderValueChange
     }
-    $("#wind-speed-slider").
-        slider(windSpeedSliderOptions).
-        slider("value", windSpeed);
+    $("#wind-speed-slider")
+        .slider(windSpeedSliderOptions)
+        .slider("value", windSpeed);
 
     var openingAltitudeSliderOptions = {
         min: 100,
@@ -1019,9 +1023,9 @@ function initialize() {
         change: onOpeningAltitudeSliderValueChange,
         slide: onOpeningAltitudeSliderValueChange
     }
-    $("#opening-altitude-slider").
-        slider(openingAltitudeSliderOptions).
-        slider("value", openingAltitude);
+    $("#opening-altitude-slider")
+        .slider(openingAltitudeSliderOptions)
+        .slider("value", openingAltitude);
 
     $("#into-the-wind").prop('checked', true).change(onIntoTheWindCheckboxToggle);
 
@@ -1032,43 +1036,51 @@ function initialize() {
         change: onSimulationSpeedSliderValueChange,
         slide: onSimulationSpeedSliderValueChange
     }
-    $("#simulation-speed-slider").
-        slider(simulationSpeedSliderOptions).
-        slider("value", simulationSpeed);
+    $("#simulation-speed-slider")
+        .slider(simulationSpeedSliderOptions)
+        .slider("value", simulationSpeed);
 
     $(".ui-slider-handle").unbind('keydown');
 
     $("#select-lang-en").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
-    $("#language-menu").buttonset();
-    $("#language-menu > input").change(onSelectLanguage);
-    $("#language-menu").find('span.ui-button-text').addClass('no-padding');
+    $("#language-menu")
+        .buttonset()
+        .children("input")
+            .change(onSelectLanguage)
+            .end()
+        .find('span.ui-button-text')
+            .addClass('no-padding');
 
     $("#select-metric").prop('checked', useMetricSystem); // We set this before buttonset creation so the buttonset is updated properly
     $("#select-imperial").prop('checked', !useMetricSystem);
-    $("#system-menu").buttonset();
-    $("#system-menu > input").change(onSelectSystem);
+    $("#system-menu")
+        .buttonset()
+        .children("input")
+            .change(onSelectSystem);
 
     $("#dz-custom").toggle(dropzones["dz-custom"] != null);
 
-    $("#steady-point-checkbox").
-        prop('checked', showSteadyPoint).
-        change(onShowSteadyPointCheckboxToggle);
+    $("#steady-point-checkbox")
+        .prop('checked', showSteadyPoint)
+        .change(onShowSteadyPointCheckboxToggle);
 
-    $("#show-controllability-set-checkbox").
-        prop('checked', showControllabilitySet).
-        change(onShowControllabilitySetCheckboxToggle);
+    $("#show-controllability-set-checkbox")
+        .prop('checked', showControllabilitySet)
+        .change(onShowControllabilitySetCheckboxToggle);
 
-    $("#show-reachability-set-checkbox").
-        prop('checked', showReachabilitySet).
-        change(onShowReachabilitySetCheckboxToggle);
+    $("#show-reachability-set-checkbox")
+        .prop('checked', showReachabilitySet)
+        .change(onShowReachabilitySetCheckboxToggle);
 
     $("#display-ui-element-buttons").buttonset();
 
     $("#pattern-hide").prop('checked', !showLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-lhs").prop('checked', showLandingPattern && lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-rhs").prop('checked', showLandingPattern && !lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
-    $("#pattern-menu").buttonset();
-    $("#pattern-menu > input").change(onPatternSelect);
+    $("#pattern-menu")
+        .buttonset()
+        .children("input")
+            .change(onPatternSelect);
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
     $("#right-panel > div").accordion(accordionOptions);
@@ -1077,8 +1089,9 @@ function initialize() {
     parseParameters();
 
     google.maps.event.addListener(map, "rightclick", onMapRightClick);
-    $(document).keydown(onKeyDown);
-    $(document).keyup(onKeyUp);
+    $(document)
+        .keydown(onKeyDown)
+        .keyup(onKeyUp);
     window.setInterval(onTimeTick, updateFrequency);
 
     startTutor("#tutor-dialogs");
