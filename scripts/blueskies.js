@@ -1086,6 +1086,13 @@ function initialize() {
     $("#right-panel > div").accordion(accordionOptions);
     $("#status").hide();
 
+    $(".legend-button").click(function() {
+        showLegendDialog("#legend-dialog");
+    });
+    $(".about-button").click(function() {
+        showAboutDialog("#about-dialog");
+    });
+
     parseParameters();
 
     google.maps.event.addListener(map, "rightclick", onMapRightClick);
@@ -1095,14 +1102,6 @@ function initialize() {
     window.setInterval(onTimeTick, updateFrequency);
 
     startTutor("#tutor-dialogs");
-
-    // Place this after the tutor, because we can decide to select language there.
-    $(".legend-button").click(function() {
-        showLegendDialog("#legend-dialog");
-    });
-    $(".about-button").click(function() {
-        showAboutDialog("#about-dialog");
-    });
 
     initializeAnalyticsEvents();
 }
