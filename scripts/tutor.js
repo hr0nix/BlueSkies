@@ -1,6 +1,6 @@
 function startTutor(id) {
-    var allDialogs; // List of all dialog objects, populated from html automagically
-    var nextDialogIndex;
+    var allDialogs, // List of all dialog objects, populated from html automagically
+        nextDialogIndex;
 
     function closeDialog() {
         $(this).dialog("close");
@@ -123,7 +123,7 @@ function startTutor(id) {
 
     var allDialogs = $(id).children("div");
 
-    allDialogs.each(function(){
+    allDialogs.each(function() {
         var specific = specificOptions[$(this).attr("id").replace("tutor-","")];
         $(this).dialog(commonOptions).dialog("option", specific);
     });
