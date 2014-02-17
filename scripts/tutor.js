@@ -1,6 +1,6 @@
 function startTutor(id) {
-    var allDialogs; // List of all dialog objects, populated from html automagically
-    var nextDialogIndex;
+    var allDialogs, // List of all dialog objects, populated from html automagically
+        nextDialogIndex;
 
     function closeDialog() {
         $(this).dialog("close");
@@ -44,15 +44,15 @@ function startTutor(id) {
         }
         ],
         open: function() {
-            if ($(this).dialog('option', "performHighlighting")) {
-                var of = $($(this).dialog('option', 'position').of);
-                of.addClass(highlightClass);
+            var $this = $(this);
+            if ($this.dialog('option', "performHighlighting")) {
+                $($this.dialog('option', 'position').of).addClass(highlightClass);
             }
         },
         close: function() {
-            if ($(this).dialog('option', "performHighlighting")) {
-                var of = $($(this).dialog('option', 'position').of);
-                of.removeClass(highlightClass);
+            var $this = $(this);
+            if ($this.dialog('option', "performHighlighting")) {
+                $($this.dialog('option', 'position').of).removeClass(highlightClass);
             }
             nextDialog();
         }
@@ -123,7 +123,7 @@ function startTutor(id) {
 
     var allDialogs = $(id).children("div");
 
-    allDialogs.each(function(){
+    allDialogs.each(function() {
         var specific = specificOptions[$(this).attr("id").replace("tutor-","")];
         $(this).dialog(commonOptions).dialog("option", specific);
     });

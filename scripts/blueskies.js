@@ -1,75 +1,75 @@
 ////// Parameters
 
 // Canopy modes
-var horizontalSpeeds = [0, 2.5, 5, 7.5, 10];
-var verticalSpeeds = [10, 7, 5, 3, 5];
-var reachSetSteps = (horizontalSpeeds.length - 1) * 2 + 1; // we need this kind of step to make sure that during interpolations into the above arrays we get the exact hits
-var lastReachSetSteps = 3; // Experiments show that only the faster modes are efficient enough to be on the edge of reachability sets, so we only compute and draw those
+var horizontalSpeeds = [0, 2.5, 5, 7.5, 10],
+    verticalSpeeds = [10, 7, 5, 3, 5],
+    reachSetSteps = (horizontalSpeeds.length - 1) * 2 + 1, // we need this kind of step to make sure that during interpolations into the above arrays we get the exact hits
+    lastReachSetSteps = 3; // Experiments show that only the faster modes are efficient enough to be on the edge of reachability sets, so we only compute and draw those
 
 // Dropzones
 var dropzones = {
-    "dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
-    "dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
-    "dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
-    "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
-    "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181),
-    "dz-other-dubai" : new google.maps.LatLng(25.090282, 55.135681),
-    "dz-other-red-square": new google.maps.LatLng(55.754216, 37.620083),
-    "dz-other-statue-of-liberty": new google.maps.LatLng(40.690531, -74.04575),
-    "dz-custom" : readSetting("custom-dz-location", null, unpackLatLng)
-}
-var dzMarker;
-var lastCustomDzName = readSetting("custom-dz-name", "");
+        "dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
+        "dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
+        "dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
+        "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
+        "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181),
+        "dz-other-dubai" : new google.maps.LatLng(25.090282, 55.135681),
+        "dz-other-red-square": new google.maps.LatLng(55.754216, 37.620083),
+        "dz-other-statue-of-liberty": new google.maps.LatLng(40.690531, -74.04575),
+        "dz-custom" : readSetting("custom-dz-location", null, unpackLatLng)
+    },
+    lastCustomDzName = readSetting("custom-dz-name", ""),
+    dzMarker;
 
 // Time
-var updateFrequency = 20.0;
-var simulationSpeed = 1.0;
-var oldSimulationSpeed = 1.0; // for instant pausing on "p" support
-var headingUpdateSpeed = Math.PI / 4; // Radians __per second__
-var canopyModeUpdateSpeed = 0.05; // Mode units __per keydown event__
-var pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
+var updateFrequency = 20.0,
+    simulationSpeed = 1.0,
+    oldSimulationSpeed = 1.0, // for instant pausing on "p" support
+    headingUpdateSpeed = Math.PI / 4, // Radians __per second__
+    canopyModeUpdateSpeed = 0.05, // Mode units __per keydown event__
+    pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
 
 ////// Settings
-var showSteadyPoint = readSetting("show-steady-point", true);
-var useMetricSystem = readSetting("use-metric-system", true);
-var showReachabilitySet = readSetting("show-reachability-set", false);
-var showControllabilitySet = readSetting("show-controllability-set", false);
-var showLandingPattern = readSetting("show-landing-pattern", false);
-var lhsLandingPattern = readSetting("lhs-landing-pattern", false);
+var showSteadyPoint = readSetting("show-steady-point", true),
+    useMetricSystem = readSetting("use-metric-system", true),
+    showReachabilitySet = readSetting("show-reachability-set", false),
+    showControllabilitySet = readSetting("show-controllability-set", false),
+    showLandingPattern = readSetting("show-landing-pattern", false),
+    lhsLandingPattern = readSetting("lhs-landing-pattern", false);
 // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
-var windDirection = Math.random() * Math.PI * 2; 
-var windSpeed = 5 + Math.random() * 2 - 1;
-var intoTheWindLanding = true;
-var landingDirection = 0;
-var openingAltitude = readSetting("opening-altitude", 700);
-var currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson");
-var defaultMapZoom = 15;
-var minMapZoom = 12;
-var maxMapZoom = 18;
+var windDirection = Math.random() * Math.PI * 2,
+    windSpeed = 5 + Math.random() * 2 - 1,
+    intoTheWindLanding = true,
+    landingDirection = 0,
+    openingAltitude = readSetting("opening-altitude", 700),
+    currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson"),
+    defaultMapZoom = 15,
+    minMapZoom = 12,
+    maxMapZoom = 18;
 
 ////// State
-var isSimulationRunning = false;
-var canopyLocation;
-var canopyAltitude;
-var canopyHeading;
-var canopyMode;
-var steadyPointLocation;
-var prevUpdateTime;
+var isSimulationRunning = false,
+    canopyLocation,
+    canopyAltitude,
+    canopyHeading,
+    canopyMode,
+    steadyPointLocation,
+    prevUpdateTime;
 
 ////// Constants
-var eps = 1e-03; // Mostly used to compare altitude to zero
-var altitudeSliderMax = 500;
+var eps = 1e-03, // Mostly used to compare altitude to zero
+    altitudeSliderMax = 500;
 
 ////// UI objects
-var map;
-var canopyMarker;
-var steadyPointMarker;
-var landingPatternLine;
+var map,
+    canopyMarker,
+    steadyPointMarker,
+    landingPatternLine,
 
-var reachabilitySetObjects = [];
-var controllabilitySetObjects = [];
+    reachabilitySetObjects = [],
+    controllabilitySetObjects = [],
 
-var dzFinderAutocomplete;
+    dzFinderAutocomplete;
 
 ////// Persistence code
 function readSetting(key, def, converter) {
@@ -90,9 +90,9 @@ function saveSetting(key, value) {
 
 function wipeCookies() {
     var cookies = document.cookie.split(";");
-    for(var i = 0; i < cookies.length; i++) {
-        var equals = cookies[i].indexOf("=");
-        var name = equals > -1 ? cookies[i].substr(0, equals) : cookies[i];
+    for (var i = 0; i < cookies.length; i++) {
+        var equals = cookies[i].indexOf("="),
+            name = equals > -1 ? cookies[i].substr(0, equals) : cookies[i];
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
 }
@@ -108,27 +108,27 @@ function unpackLatLng(string) {
 
 ////// Localization for javascript
 
-var currentLanguage = "en";
-var enResources = {
-    "ms": "m/s",
-    "paused": "(paused)"
-};
-var ruResources = {
-    "ms": "м/с",
-    "mph": "миль/ч",
-    "m": "м",
-    "ft": "футов",
-    "paused": "", // too long anyway :)
-    "Choose another landing area": "Выберите другую площадку приземления",
-    "Legend": "Легенда",
-    "Got it!": "Дальше",
-    "Skip tutor": "Пропустить введение",
-    "Share a link": "Ссылка сюда"
-};
-var langResources = {
-    "en": enResources,
-    "ru": ruResources
-};
+var currentLanguage = "en",
+    enResources = {
+        "ms": "m/s",
+        "paused": "(paused)"
+    },
+    ruResources = {
+        "ms": "м/с",
+        "mph": "миль/ч",
+        "m": "м",
+        "ft": "футов",
+        "paused": "", // too long anyway :)
+        "Choose another landing area": "Выберите другую площадку приземления",
+        "Legend": "Легенда",
+        "Got it!": "Дальше",
+        "Skip tutor": "Пропустить введение",
+        "Share a link": "Ссылка сюда"
+    },
+    langResources = {
+        "en": enResources,
+        "ru": ruResources
+    };
 
 function localize(id) {
     return defaultIfUndefined(langResources[currentLanguage][id], id);
@@ -154,9 +154,9 @@ function setLanguage(language) {
         showLegendDialog("#legend-dialog");
     }
 
-    var rightclick = $("#tutor-rightclick");
+    var $rightclick = $("#tutor-rightclick");
     if (isDialogOpen("#tutor-rightclick")) {
-        rightclick.dialog("position", rightclick.dialog("position"));
+        $rightclick.dialog("position", $rightclick.dialog("position"));
     }
 }
 
@@ -169,9 +169,9 @@ function updateLanguageRadio() {
 
 // Get query string, from http://stackoverflow.com/a/979995/193903
 function getQueryString() {
-    var query_string = {};
-    var query = window.location.search.substring(1);
-    var vars = query.split("&");
+    var query_string = {},
+        query = window.location.search.substring(1),
+        vars = query.split("&");
     for (var i = 0; i < vars.length; i++) {
         var pair = vars[i].split("=");
         // If first entry with this name
@@ -213,15 +213,15 @@ function reportedWindDirection(direction) {
 }
 
 function moveCoords(coords, dx, dy) {
-    var earthRadius = 6378137;
-    var newLat = coords.lat() + radToDeg(dy / earthRadius);
-    var newLng = coords.lng() + radToDeg((dx / earthRadius) / Math.cos(degToRad(coords.lat())));
+    var earthRadius = 6378137,
+        newLat = coords.lat() + radToDeg(dy / earthRadius),
+        newLng = coords.lng() + radToDeg((dx / earthRadius) / Math.cos(degToRad(coords.lat())));
     return new google.maps.LatLng(newLat, newLng);
 }
 
 function moveInWind(coords, windSpeed, windDirection, speed, direction, time) {
-    var dx = speed * Math.sin(direction) + windSpeed * Math.sin(windDirection);
-    var dy = speed * Math.cos(direction) + windSpeed * Math.cos(windDirection);
+    var dx = speed * Math.sin(direction) + windSpeed * Math.sin(windDirection),
+        dy = speed * Math.cos(direction) + windSpeed * Math.cos(windDirection);
     return moveCoords(coords, dx * time, dy * time);
 }
 
@@ -282,16 +282,16 @@ function getCurrentLandingPoint() {
 // ----*----------*--------------------->windDirection
 //     |windSpeed |
 function createGroundTrack(windSpeed, windDirection, speedH, desiredTrack) {
-    var alpha = windDirection - desiredTrack;
-    var beta = Math.asin(windSpeed * Math.sin(alpha) / speedH);
-    var gamma = alpha + beta;
+    var alpha = windDirection - desiredTrack,
+        beta = Math.asin(windSpeed * Math.sin(alpha) / speedH),
+        gamma = alpha + beta;
     return windDirection - gamma; // == desiredTrack + beta, but the code appears more straightforward that way.
 }
 
 function reachSet(windSpeed, windDirection, altitude, u) {
-    var speedH = getCanopyHorizontalSpeed(u);
-    var speedV = getCanopyVerticalSpeed(u);
-    var time = altitude / speedV;
+    var speedH = getCanopyHorizontalSpeed(u),
+        speedV = getCanopyVerticalSpeed(u),
+        time = altitude / speedV;
     return {
         c: [time * windSpeed * Math.sin(windDirection), time * windSpeed * Math.cos(windDirection)],
         radius: time * speedH
@@ -301,9 +301,9 @@ function reachSet(windSpeed, windDirection, altitude, u) {
 function computeReachSet(objects, sourceLocation, altitude, reachability) {
     // Note that in the interface we forbid the stall mode. But still, in most cases it doesn't lead to the edge of the reach set
     for (var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++) {
-        var u = 1 / (reachSetSteps - 1) * i;
-        var set = reachSet(windSpeed, windDirection, altitude, u);
-        var shiftFactor = reachability ? 1 : -1; // for reachability we shift downwind, for controllability -- upwind
+        var u = 1 / (reachSetSteps - 1) * i,
+            set = reachSet(windSpeed, windDirection, altitude, u),
+            shiftFactor = reachability ? 1 : -1; // for reachability we shift downwind, for controllability -- upwind
 
         objects[i].setCenter(moveCoords(sourceLocation, shiftFactor * set.c[0], shiftFactor * set.c[1]));
         objects[i].setRadius(set.radius);
@@ -334,17 +334,17 @@ function updateControllabilitySet() {
 }
 
 function computeLandingPattern(location, landingDirection) {
-    var controlPointAltitudes = [100, 200, 300];
-    var patternMode = 0.85;
-    var speedH = getCanopyHorizontalSpeed(patternMode);
-    var speedV = getCanopyVerticalSpeed(patternMode);
-    var rotationFactor = lhsLandingPattern ? 1 : -1;
+    var controlPointAltitudes = [100, 200, 300],
+        patternMode = 0.85,
+        speedH = getCanopyHorizontalSpeed(patternMode),
+        speedV = getCanopyVerticalSpeed(patternMode),
+        rotationFactor = lhsLandingPattern ? 1 : -1,
 
-    var timeToPoint1 = controlPointAltitudes[0] / speedV;
-    var timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / speedV;
-    var timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV;
+        timeToPoint1 = controlPointAltitudes[0] / speedV,
+        timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / speedV,
+        timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV,
 
-    var heading;
+        heading;
 
     // For now, strong winds imply into-the wind landing no matter what landing direction is given. This needs further thought.
     heading = windSpeed < speedH ?
@@ -441,14 +441,10 @@ function setDz(dz) {
         return;
     }
 
-    if (dz == "dz-custom") {
-        $("#dz-finder").val(lastCustomDzName);
-    } else {
-        $("#dz-finder").val("");
-    }
+    $("#dz-finder").val(dz == "dz-custom" ? lastCustomDzName : "");
 
     currentDropzoneId = dz;
-    $('#selected-dz').html($('#' + currentDropzoneId).children("a").html());
+    $('#selected-dz').html($('#' + currentDropzoneId + "> a").html());
     saveSetting("current-dropzone-id", currentDropzoneId);
     map.setCenter(dropzones[currentDropzoneId]);
     map.setZoom(defaultMapZoom);
@@ -476,8 +472,8 @@ function parseBoolean(str) {
 }
 
 function isDialogOpen(id) {
-    var element = $(id);
-    return element.data("ui-dialog") && element.dialog("isOpen");
+    var $id = $(id);
+    return $id.data("ui-dialog") && $id.dialog("isOpen");
 }
 
 function getFullPath(location) {
@@ -597,11 +593,16 @@ function onShareLinkClick() {
             at: "center bottom+10"
         },
         buttons: {
-            "Ok": function() { $(this).dialog("close") } 
+            "Ok": function() { $(this).dialog("close") }
         }
     };
-    $("#share-dialog").dialog(shareDialogOptions);
-    $("#share-dialog").children("input").val(getFullPath(window.location) + generateGETForLocation()).focus().get(0).select();
+    $("#share-dialog")
+        .dialog(shareDialogOptions)
+        .children("input")
+            .val(getFullPath(window.location) + generateGETForLocation())
+            .focus()
+            .get(0)
+                .select();
 }
 
 function onMapRightClick(event) {
@@ -634,8 +635,8 @@ function onLandingSpotPositionChanged() {
 
 function onTimeTick() {
     if (isSimulationRunning && canopyAltitude > eps) {
-        var currentUpdateTime = new Date().getTime();
-        var dt = (currentUpdateTime - prevUpdateTime) / 1000.0;
+        var currentUpdateTime = new Date().getTime(),
+            dt = (currentUpdateTime - prevUpdateTime) / 1000.0;
         prevUpdateTime = currentUpdateTime;
 
         if (pressedKeys[37]) { // left arrow
@@ -648,8 +649,8 @@ function onTimeTick() {
         // Normalize canopy heading
         canopyHeading = normalizeAngle(canopyHeading);
 
-        var speedH = getCanopyHorizontalSpeed(canopyMode);
-        var speedV = getCanopyVerticalSpeed(canopyMode);
+        var speedH = getCanopyHorizontalSpeed(canopyMode),
+            speedV = getCanopyVerticalSpeed(canopyMode);
 
         dt *= simulationSpeed; // Only do it here because we don't want the responsiveness to be affected by the simulationSpeed, only the descent. Or do we?
         dt = Math.min(dt, canopyAltitude / speedV); // We don't want to go below ground
@@ -782,12 +783,12 @@ function onFindNewDz() {
 ////// Initialization
 
 function parseParameters() {
-    var queryString = getQueryString();
+    var queryString = getQueryString(),
 
-    var lang = defaultIfUndefined(queryString.lang, readSetting("language", "en"));
-    var dz = defaultIfUndefined(queryString.dz, currentDropzoneId.replace("dz-", ""));
-    var lat = queryString.lat;
-    var lng = queryString.lng;
+        lang = defaultIfUndefined(queryString.lang, readSetting("language", "en")),
+        dz = defaultIfUndefined(queryString.dz, currentDropzoneId.replace("dz-", "")),
+        lat = queryString.lat,
+        lng = queryString.lng;
 
     if (lang) {
         setLanguage(lang);
@@ -829,13 +830,15 @@ function initializeReachSet(objects, color) {
 }
 
 function tuneRuler(id, ruler) {
-    var width = $(id).width();
-    var max = $(id).progressbar("option", "max");
-    var prevOffset = 0;
+    var $id = $(id),
+        width = $id.width(),
+        max = $id.progressbar("option", "max"),
+        prevOffset = 0;
     $(ruler).children("li").each(function() {
-        var value = Number($(this).text());
-        var offset = value * width / max;
-        $(this).css("padding-left", offset - prevOffset);
+        var $this = $(this),
+            value = Number($this.text()),
+            offset = value * width / max;
+        $this.css("padding-left", offset - prevOffset);
         prevOffset = offset;
     });
 }
@@ -861,8 +864,9 @@ function showLegendDialog(id) {
 }
 
 function showAboutDialog(id) {
-    if ($("#about-dialog").children().size() == 0) {
-        $('<iframe>', {src: "about.html"}).appendTo("#about-dialog");
+    var $id = $(id);
+    if ($id.children().size() == 0) {
+        $('<iframe>', {src: "about.html"}).appendTo($id);
     }
     var options = {
         title: localize("About"), // Only localized on startup, oops. The same happens to tutor anyway.
@@ -877,7 +881,7 @@ function showAboutDialog(id) {
             of: "#map-canvas-container"
         }
     };
-    $(id).dialog(options);
+    $id.dialog(options);
 }
 
 function initializeAnalyticsEvents() {
@@ -907,27 +911,27 @@ function initialize() {
     };
     map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
 
-    var dzMenu = $("#dz-selection-menu");
-    var firstLevelPosition = { my: "left top", at: "left bottom" };
-    dzMenu.menu({
+    var $dzMenu = $("#dz-selection-menu"),
+        firstLevelPosition = { my: "left top", at: "left bottom" };
+    $dzMenu.menu({
             select: onDzMenuItemSelected,
             position: firstLevelPosition,
             blur: function() {
                 $(this).menu("option", "position", firstLevelPosition);
             },
             focus: function(e, ui) {
-                if (!ui.item.parent().is(dzMenu)) {
+                if (!ui.item.parent().is($dzMenu)) {
                     $(this).menu("option", "position", { my: "left top", at: "right top" });
                 }
             }
         });
-    var shareButton = $("#share-location");
-    shareButton.button().click(onShareLinkClick);
+    var $shareButton = $("#share-location");
+    $shareButton.button().click(onShareLinkClick);
 
     var dzFinder = $("#dz-finder").get(0);
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzMenu.get(0));
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push($dzMenu.get(0));
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(shareButton.get(0));
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push($shareButton.get(0));
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#wind-arrow").get(0));
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#landing-direction-arrow").get(0));
     dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
@@ -986,9 +990,9 @@ function initialize() {
         change: onLandingDirectionSliderValueChange,
         slide: onLandingDirectionSliderValueChange
     }
-    $("#landing-direction-slider").
-        slider(landingDirectionSliderOptions).
-        toggle(!intoTheWindLanding);
+    $("#landing-direction-slider")
+        .slider(landingDirectionSliderOptions)
+        .toggle(!intoTheWindLanding);
 
     var windDirectionSliderOptions = {
         min: 0,
@@ -997,9 +1001,9 @@ function initialize() {
         change: onWindDirectionSliderValueChange,
         slide: onWindDirectionSliderValueChange
     }
-    $("#wind-direction-slider").
-        slider(windDirectionSliderOptions).
-        slider("value", radToDeg(windDirection));
+    $("#wind-direction-slider")
+        .slider(windDirectionSliderOptions)
+        .slider("value", radToDeg(windDirection));
 
     var windSpeedSliderOptions = {
         min: 0,
@@ -1008,9 +1012,9 @@ function initialize() {
         change: onWindSpeedSliderValueChange,
         slide: onWindSpeedSliderValueChange
     }
-    $("#wind-speed-slider").
-        slider(windSpeedSliderOptions).
-        slider("value", windSpeed);
+    $("#wind-speed-slider")
+        .slider(windSpeedSliderOptions)
+        .slider("value", windSpeed);
 
     var openingAltitudeSliderOptions = {
         min: 100,
@@ -1019,9 +1023,9 @@ function initialize() {
         change: onOpeningAltitudeSliderValueChange,
         slide: onOpeningAltitudeSliderValueChange
     }
-    $("#opening-altitude-slider").
-        slider(openingAltitudeSliderOptions).
-        slider("value", openingAltitude);
+    $("#opening-altitude-slider")
+        .slider(openingAltitudeSliderOptions)
+        .slider("value", openingAltitude);
 
     $("#into-the-wind").prop('checked', true).change(onIntoTheWindCheckboxToggle);
 
@@ -1032,64 +1036,72 @@ function initialize() {
         change: onSimulationSpeedSliderValueChange,
         slide: onSimulationSpeedSliderValueChange
     }
-    $("#simulation-speed-slider").
-        slider(simulationSpeedSliderOptions).
-        slider("value", simulationSpeed);
+    $("#simulation-speed-slider")
+        .slider(simulationSpeedSliderOptions)
+        .slider("value", simulationSpeed);
 
     $(".ui-slider-handle").unbind('keydown');
 
     $("#select-lang-en").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
-    $("#language-menu").buttonset();
-    $("#language-menu > input").change(onSelectLanguage);
-    $("#language-menu").find('span.ui-button-text').addClass('no-padding');
+    $("#language-menu")
+        .buttonset()
+        .children("input")
+            .change(onSelectLanguage)
+            .end()
+        .find('span.ui-button-text')
+            .addClass('no-padding');
 
     $("#select-metric").prop('checked', useMetricSystem); // We set this before buttonset creation so the buttonset is updated properly
     $("#select-imperial").prop('checked', !useMetricSystem);
-    $("#system-menu").buttonset();
-    $("#system-menu > input").change(onSelectSystem);
+    $("#system-menu")
+        .buttonset()
+        .children("input")
+            .change(onSelectSystem);
 
     $("#dz-custom").toggle(dropzones["dz-custom"] != null);
 
-    $("#steady-point-checkbox").
-        prop('checked', showSteadyPoint).
-        change(onShowSteadyPointCheckboxToggle);
+    $("#steady-point-checkbox")
+        .prop('checked', showSteadyPoint)
+        .change(onShowSteadyPointCheckboxToggle);
 
-    $("#show-controllability-set-checkbox").
-        prop('checked', showControllabilitySet).
-        change(onShowControllabilitySetCheckboxToggle);
+    $("#show-controllability-set-checkbox")
+        .prop('checked', showControllabilitySet)
+        .change(onShowControllabilitySetCheckboxToggle);
 
-    $("#show-reachability-set-checkbox").
-        prop('checked', showReachabilitySet).
-        change(onShowReachabilitySetCheckboxToggle);
+    $("#show-reachability-set-checkbox")
+        .prop('checked', showReachabilitySet)
+        .change(onShowReachabilitySetCheckboxToggle);
 
     $("#display-ui-element-buttons").buttonset();
 
     $("#pattern-hide").prop('checked', !showLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-lhs").prop('checked', showLandingPattern && lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
     $("#pattern-rhs").prop('checked', showLandingPattern && !lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
-    $("#pattern-menu").buttonset();
-    $("#pattern-menu > input").change(onPatternSelect);
+    $("#pattern-menu")
+        .buttonset()
+        .children("input")
+            .change(onPatternSelect);
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
     $("#right-panel > div").accordion(accordionOptions);
     $("#status").hide();
 
-    parseParameters();
-
-    google.maps.event.addListener(map, "rightclick", onMapRightClick);
-    $(document).keydown(onKeyDown);
-    $(document).keyup(onKeyUp);
-    window.setInterval(onTimeTick, updateFrequency);
-
-    startTutor("#tutor-dialogs");
-
-    // Place this after the tutor, because we can decide to select language there.
-    $(".legend-button").click(function() { 
+    $(".legend-button").click(function() {
         showLegendDialog("#legend-dialog");
     });
     $(".about-button").click(function() {
         showAboutDialog("#about-dialog");
     });
+
+    parseParameters();
+
+    google.maps.event.addListener(map, "rightclick", onMapRightClick);
+    $(document)
+        .keydown(onKeyDown)
+        .keyup(onKeyUp);
+    window.setInterval(onTimeTick, updateFrequency);
+
+    startTutor("#tutor-dialogs");
 
     initializeAnalyticsEvents();
 }
