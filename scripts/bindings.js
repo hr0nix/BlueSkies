@@ -1,0 +1,40 @@
+ko.bindingHandlers.rotate = {
+    update: function(element, valueAccessor) {
+        rotateDiv($(element).get(0), ko.unwrap(valueAccessor()));
+    }
+};
+
+ko.bindingHandlers.fadeVisible = {
+    init: function(element, valueAccessor) {
+        var shouldDisplay = valueAccessor();
+        $(element).toggle(shouldDisplay);
+    },
+    update: function(element, valueAccessor) {
+        var shouldDisplay = valueAccessor();
+        shouldDisplay ? $(element).fadeIn() : $(element).fadeOut();
+    } 
+};
+
+ko.bindingHandlers.slideVisible = {
+    init: function(element, valueAccessor) {
+        var shouldDisplay = valueAccessor();
+        $(element).toggle(shouldDisplay);
+    },
+    update: function(element, valueAccessor) {
+        var shouldDisplay = valueAccessor();
+        shouldDisplay ? $(element).slideDown() : $(element).slideUp();
+    } 
+};
+
+ko.bindingHandlers.jqSlider = {
+    init: function(element, valueAccessor, allBindings) {
+        $(element)
+            .slider(allBindings.get('sliderOptions'))
+            .on('slide', function(event, ui) {
+                valueAccessor()(ui.value);
+            });
+    },
+    update: function(element, valueAccessor) {
+        $(element).slider("value", ko.unwrap(valueAccessor()));
+    }
+};

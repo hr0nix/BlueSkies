@@ -58,7 +58,8 @@ var isSimulationRunning = false,
 
 ////// Constants
 var eps = 1e-03, // Mostly used to compare altitude to zero
-    altitudeSliderMax = 500;
+    altitudeSliderMax = 500,
+    headingSliderOptions = { min: 0, max: Math.PI * 2, step: Math.PI / 180 * 5 };
 
 ////// UI objects
 var map,
@@ -226,7 +227,7 @@ function moveInWind(coords, windSpeed, windDirection, speed, direction, time) {
 }
 
 function rotateDiv(div, angle) {
-    var style = "rotate(" + radToDeg(angle) + "deg)";
+    var style = "rotate(" + angle + "deg)";
 
     div.style.webkitTransform = style;
     div.style.mozTransform = style;
@@ -387,7 +388,7 @@ function metersPerSecToMilesPerHour(metersPerSec) {
 }
 
 function getLandingDirection() {
-    return intoTheWindLanding ? normalizeAngle(windDirection + Math.PI) : landingDirection;
+    return viewModel.landingDirection();
 }
 
 function formatSpeed(metersPerSec, significantDigits) {
@@ -514,8 +515,6 @@ function updateCanopyStatus() {
 }
 
 function updateSliderLabels() {
-    $("#wind-direction-slider").slider("value", radToDeg(windDirection));
-    $("#wind-speed-slider").slider("value", windSpeed);
     $("#opening-altitude-slider").slider("value", openingAltitude);
 }
 
@@ -524,7 +523,6 @@ function updateSimulationSpeedSlider() {
 }
 
 function updateLandingDirectionValue() {
-    $("#landing-direction-value").html(formatHeading(getLandingDirection()));
 }
 
 function updateLandingPattern() {
@@ -677,8 +675,6 @@ function onTimeTick() {
 
 function onWindDirectionSliderValueChange(event, ui) {
     windDirection = degToRad(ui.value);
-    rotateDiv($("#wind-arrow > :last-child").get(0), windDirection);
-    $("#wind-direction-value").html(formatHeading(reportedWindDirection(windDirection)));
     updateLandingDirectionValue();
 
     updateLandingPattern();
@@ -686,7 +682,6 @@ function onWindDirectionSliderValueChange(event, ui) {
 
 function onWindSpeedSliderValueChange(event, ui) {
     windSpeed = ui.value;
-    $("#wind-speed-value").html(formatSpeed(windSpeed, 1));
 
     updateLandingPattern();
 }
@@ -706,13 +701,6 @@ function onSimulationSpeedSliderValueChange(event, ui) {
 
 function onIntoTheWindCheckboxToggle() {
     intoTheWindLanding = $(this).prop('checked');
-    if (intoTheWindLanding) {
-        $("#landing-direction-slider").slideUp();
-        $("#landing-direction-arrow").fadeOut();
-    } else {
-        $("#landing-direction-slider").slideDown();
-        $("#landing-direction-arrow").fadeIn();
-    }
 
     updateLandingDirectionValue();
     updateLandingPattern();
@@ -720,7 +708,6 @@ function onIntoTheWindCheckboxToggle() {
 
 function onLandingDirectionSliderValueChange(event, ui) {
     landingDirection = degToRad(ui.value);
-    rotateDiv($("#landing-direction-arrow > :last-child").get(0), landingDirection);
     updateLandingDirectionValue();
 
     updateLandingPattern();
@@ -983,39 +970,6 @@ function initialize() {
     $("#mode-progressbar").progressbar();
     $("#altitude-progressbar").progressbar();
 
-    var landingDirectionSliderOptions = {
-        min: 0,
-        max: 360,
-        step: 5,
-        change: onLandingDirectionSliderValueChange,
-        slide: onLandingDirectionSliderValueChange
-    }
-    $("#landing-direction-slider")
-        .slider(landingDirectionSliderOptions)
-        .toggle(!intoTheWindLanding);
-
-    var windDirectionSliderOptions = {
-        min: 0,
-        max: 360,
-        step: 5,
-        change: onWindDirectionSliderValueChange,
-        slide: onWindDirectionSliderValueChange
-    }
-    $("#wind-direction-slider")
-        .slider(windDirectionSliderOptions)
-        .slider("value", radToDeg(windDirection));
-
-    var windSpeedSliderOptions = {
-        min: 0,
-        max: 13,
-        step: 0.1,
-        change: onWindSpeedSliderValueChange,
-        slide: onWindSpeedSliderValueChange
-    }
-    $("#wind-speed-slider")
-        .slider(windSpeedSliderOptions)
-        .slider("value", windSpeed);
-
     var openingAltitudeSliderOptions = {
         min: 100,
         max: 3000,
@@ -1026,8 +980,6 @@ function initialize() {
     $("#opening-altitude-slider")
         .slider(openingAltitudeSliderOptions)
         .slider("value", openingAltitude);
-
-    $("#into-the-wind").prop('checked', true).change(onIntoTheWindCheckboxToggle);
 
     var simulationSpeedSliderOptions = {
         min: 0,

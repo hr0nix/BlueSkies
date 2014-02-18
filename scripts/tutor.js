@@ -83,7 +83,7 @@ function startTutor(id) {
         },
         "wind": {
             position: {
-                of: $("#wind-direction-slider").parent().parent(),
+                of: "#wind-conditions",
                 my: "right top",
                 at: "left top"
             }
