@@ -18,24 +18,24 @@ function ViewModel() {
         location: ko.observable(),
         altitude: ko.observable(),
         heading: ko.observable(),
-        mode: ko.observable()
+        mode: ko.observable(),
+
+        speedH: ko.computed(function() {
+            return getCanopyHorizontalSpeed(this.mode());
+        }, self.canopy, { deferEvaluation: true }),
+
+        speedV: ko.computed(function() {
+            return getCanopyVerticalSpeed(this.mode());
+        }, self.canopy, { deferEvaluation: true }),
+
+        steadyPoint: ko.computed(function() {
+            if (!self.simulation.started()) {
+                return undefined;
+            }
+            var timeToLanding = this.altitude() / this.speedV();
+            return moveInWind(this.location(), self.windSpeed(), self.windDirection(), this.speedH(), this.heading(), timeToLanding);
+        }, self.canopy, { deferEvaluation: true })
     };
-
-    self.canopy.speedH = ko.computed(function() {
-        return getCanopyHorizontalSpeed(this.mode());
-    }, self.canopy);
-
-    self.canopy.speedV = ko.computed(function() {
-        return getCanopyVerticalSpeed(this.mode());
-    }, self.canopy);
-
-    self.canopy.steadyPoint = ko.computed(function() {
-        if (!self.simulation.started()) {
-            return undefined;
-        }
-        var timeToLanding = this.altitude() / this.speedV();
-        return moveInWind(this.location(), self.windSpeed(), self.windDirection(), this.speedH(), this.heading(), timeToLanding);
-    }, self.canopy);
 
     self.currentDropzoneId = ko.observable("dz-uk-sibson");
 
