@@ -9,6 +9,42 @@ function ViewModel() {
     self.landingDirection = ko.computed(function() {
         return self.landIntoWind() ? normalizeAngle(self.windDirection() + Math.PI) : self.selectedLandingDirection();
     });
+
+    self.simulation = {
+        started: ko.observable(false)
+    };
+
+    self.canopy = {
+        location: ko.observable(),
+        altitude: ko.observable(),
+        heading: ko.observable(),
+        mode: ko.observable()
+    };
+
+    self.canopy.speedH = ko.computed(function() {
+        return getCanopyHorizontalSpeed(this.mode());
+    }, self.canopy);
+
+    self.canopy.speedV = ko.computed(function() {
+        return getCanopyVerticalSpeed(this.mode());
+    }, self.canopy);
+
+    self.canopy.steadyPoint = ko.computed(function() {
+        if (!self.simulation.started()) {
+            return undefined;
+        }
+        var timeToLanding = this.altitude() / this.speedV();
+        return moveInWind(this.location(), self.windSpeed(), self.windDirection(), this.speedH(), this.heading(), timeToLanding);
+    }, self.canopy);
+
+    self.currentDropzoneId = ko.observable("dz-uk-sibson");
+
+    self.startSimulation = function(location) {
+        self.canopy.location(location);
+        self.canopy.altitude(self.openingAltitude());
+        self.canopy.heading(self.windDirection() + Math.PI); // Into the wind
+        self.canopy.mode(0.6);
+    };
 }
 
 var viewModel = new ViewModel();

@@ -4,6 +4,7 @@ ko.bindingHandlers.rotate = {
     }
 };
 
+/// Visibility bindings
 ko.bindingHandlers.fadeVisible = {
     init: function(element, valueAccessor) {
         var shouldDisplay = valueAccessor();
@@ -26,6 +27,7 @@ ko.bindingHandlers.slideVisible = {
     } 
 };
 
+/// jQueury UI bindings
 ko.bindingHandlers.jqSlider = {
     init: function(element, valueAccessor, allBindings) {
         $(element)
@@ -38,3 +40,5 @@ ko.bindingHandlers.jqSlider = {
         $(element).slider("value", ko.unwrap(valueAccessor()));
     }
 };
+
+/// Google maps api bindings
