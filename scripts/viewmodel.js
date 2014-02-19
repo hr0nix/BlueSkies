@@ -47,10 +47,10 @@ function ViewModel() {
         speed: ko.observable(1.0),
         oldSpeed: 1.0,
 
-        tooglePause: function() {
+        togglePause: function() {
             if (self.simulation.speed() != 0) {
                 self.simulation.oldSpeed = self.simulation.speed();
-                self.simulation.speed(self.simulation.oldSpeed);
+                self.simulation.speed(0);
             } else {
                 self.simulation.speed(self.simulation.oldSpeed);
             }

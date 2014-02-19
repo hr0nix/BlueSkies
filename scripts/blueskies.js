@@ -556,7 +556,7 @@ function onKeyUp(e) {
     }
 
     if (String.fromCharCode(e.which) == "P") {
-        viewModel.simulation.togglePouse();
+        viewModel.simulation.togglePause();
     }
 }
 
