@@ -34,11 +34,35 @@ ko.bindingHandlers.jqSlider = {
             .slider(allBindings.get('sliderOptions'))
             .on('slide', function(event, ui) {
                 valueAccessor()(ui.value);
-            });
+            })
+            .find(".ui-slider-handle").unbind('keydown');
     },
     update: function(element, valueAccessor) {
         $(element).slider("value", ko.unwrap(valueAccessor()));
     }
 };
 
+ko.bindingHandlers.jqButtonset = {
+    init: function(element, valueAccessor) {
+        $(element).buttonset()
+            .find('span.ui-button-text')
+                .addClass('no-padding');
+    },
+    update: function(element, valueAccessor) {
+        $(element).buttonset('refresh');
+    }
+}
+
 /// Google maps api bindings
+
+/// Presentation bindings
+ko.bindingHandlers.setLanguage = {
+    init: function(element, valueAccessor) {
+        var language = ko.unwrap(valueAccessor());
+        setLanguage(element, language);
+    },
+    update: function(element, valueAccessor) {
+        var language = ko.unwrap(valueAccessor());
+        setLanguage(element, language);
+    }
+};

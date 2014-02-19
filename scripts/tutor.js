@@ -97,7 +97,7 @@ function startTutor(id) {
         },
         "pattern": {
             position: {
-                of: $("#opening-altitude-slider").parent().parent(),
+                of: "#pattern-settings",
                 my: "right top",
                 at: "left top"
             }

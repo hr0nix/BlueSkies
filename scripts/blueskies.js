@@ -135,7 +135,7 @@ function localize(id) {
     return defaultIfUndefined(langResources[currentLanguage][id], id);
 }
 
-function setLanguage(language) {
+function setLanguage(element, language) {
     if (!langResources[language]) {
         return;
     }
@@ -143,11 +143,11 @@ function setLanguage(language) {
     saveSetting("language", language);
     currentLanguage = language;
     for (var lang in langResources) {
-        $(":lang(" + lang + ")").toggle(lang == currentLanguage);
+        $(element).find(":lang(" + lang + ")").toggle(lang == currentLanguage);
     }
 
-    updateSliderLabels();
-    updateLanguageRadio();
+//    updateSliderLabels();
+//    updateLanguageRadio();
 
     $("#dz-finder").attr("placeholder", localize("Choose another landing area"));
 
@@ -162,8 +162,7 @@ function setLanguage(language) {
 }
 
 function updateLanguageRadio() {
-    $("#select-lang-" + currentLanguage).prop('checked', true);
-    $("#language-menu").buttonset('refresh');
+//    $("#select-lang-" + currentLanguage).prop('checked', true);
 }
 
 ////// Helpers
@@ -334,21 +333,25 @@ function updateControllabilitySet() {
     }
 }
 
-function computeLandingPattern(location, landingDirection) {
+function computeLandingPattern(location, wind, pattern) {
     var controlPointAltitudes = [100, 200, 300],
         patternMode = 0.85,
         speedH = getCanopyHorizontalSpeed(patternMode),
         speedV = getCanopyVerticalSpeed(patternMode),
-        rotationFactor = lhsLandingPattern ? 1 : -1,
+        rotationFactor = pattern.lhs() ? 1 : -1,
 
         timeToPoint1 = controlPointAltitudes[0] / speedV,
         timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / speedV,
         timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV,
 
-        heading;
+        heading,
+
+        windSpeed = wind.speed(),
+        windDirection = wind.direction(),
+        landingDirection = pattern.landingDirection();
 
     // For now, strong winds imply into-the wind landing no matter what landing direction is given. This needs further thought.
-    heading = windSpeed < speedH ?
+    heading = windSpeed() < speedH ?
         createGroundTrack(windSpeed, windDirection, speedH, landingDirection):
         Math.PI + windDirection; // Into the wind
 
@@ -388,7 +391,7 @@ function metersPerSecToMilesPerHour(metersPerSec) {
 }
 
 function getLandingDirection() {
-    return viewModel.landingDirection();
+    return viewModel.pattern.landingDirection();
 }
 
 function formatSpeed(metersPerSec, significantDigits) {
@@ -514,19 +517,8 @@ function updateCanopyStatus() {
     $("#altitude-progressbar").progressbar("option", "value", canopyAltitude);
 }
 
-function updateSliderLabels() {
-    $("#opening-altitude-slider").slider("value", openingAltitude);
-}
-
-function updateSimulationSpeedSlider() {
-    $("#simulation-speed-slider").slider("value", simulationSpeed);
-}
-
-function updateLandingDirectionValue() {
-}
-
 function updateLandingPattern() {
-    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint(), getLandingDirection()));
+//    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint(), getLandingDirection()));
 
     updateControllabilitySet();
 }
@@ -564,13 +556,7 @@ function onKeyUp(e) {
     }
 
     if (String.fromCharCode(e.which) == "P") {
-        if (simulationSpeed == 0) {
-            simulationSpeed = oldSimulationSpeed;
-        } else {
-            oldSimulationSpeed = simulationSpeed;
-            simulationSpeed = 0;
-        }
-        updateSimulationSpeedSlider();
+        viewModel.simulation.togglePouse();
     }
 }
 
@@ -694,29 +680,6 @@ function onOpeningAltitudeSliderValueChange(event, ui) {
     updateLandingPattern();
 }
 
-function onSimulationSpeedSliderValueChange(event, ui) {
-    simulationSpeed = ui.value;
-    $("#simulation-speed-value").html(formatSimulationSpeed(simulationSpeed));
-}
-
-function onIntoTheWindCheckboxToggle() {
-    intoTheWindLanding = $(this).prop('checked');
-
-    updateLandingDirectionValue();
-    updateLandingPattern();
-}
-
-function onLandingDirectionSliderValueChange(event, ui) {
-    landingDirection = degToRad(ui.value);
-    updateLandingDirectionValue();
-
-    updateLandingPattern();
-}
-
-function onSelectLanguage() {
-    setLanguage($(this).attr('id').replace("select-lang-",""));
-}
-
 function onSelectSystem() {
     useMetricSystem = $(this).attr('id') == "select-metric";
     saveSetting("use-metric-system", useMetricSystem);
@@ -778,7 +741,7 @@ function parseParameters() {
         lng = queryString.lng;
 
     if (lang) {
-        setLanguage(lang);
+//        setLanguage(lang);
     }
 
     if (dz) {
@@ -970,69 +933,7 @@ function initialize() {
     $("#mode-progressbar").progressbar();
     $("#altitude-progressbar").progressbar();
 
-    var openingAltitudeSliderOptions = {
-        min: 100,
-        max: 3000,
-        step: 50,
-        change: onOpeningAltitudeSliderValueChange,
-        slide: onOpeningAltitudeSliderValueChange
-    }
-    $("#opening-altitude-slider")
-        .slider(openingAltitudeSliderOptions)
-        .slider("value", openingAltitude);
-
-    var simulationSpeedSliderOptions = {
-        min: 0,
-        max: 5,
-        step: 0.1,
-        change: onSimulationSpeedSliderValueChange,
-        slide: onSimulationSpeedSliderValueChange
-    }
-    $("#simulation-speed-slider")
-        .slider(simulationSpeedSliderOptions)
-        .slider("value", simulationSpeed);
-
-    $(".ui-slider-handle").unbind('keydown');
-
-    $("#select-lang-en").prop('checked', true); // We set this before buttonset creation so the buttonset is updated properly
-    $("#language-menu")
-        .buttonset()
-        .children("input")
-            .change(onSelectLanguage)
-            .end()
-        .find('span.ui-button-text')
-            .addClass('no-padding');
-
-    $("#select-metric").prop('checked', useMetricSystem); // We set this before buttonset creation so the buttonset is updated properly
-    $("#select-imperial").prop('checked', !useMetricSystem);
-    $("#system-menu")
-        .buttonset()
-        .children("input")
-            .change(onSelectSystem);
-
     $("#dz-custom").toggle(dropzones["dz-custom"] != null);
-
-    $("#steady-point-checkbox")
-        .prop('checked', showSteadyPoint)
-        .change(onShowSteadyPointCheckboxToggle);
-
-    $("#show-controllability-set-checkbox")
-        .prop('checked', showControllabilitySet)
-        .change(onShowControllabilitySetCheckboxToggle);
-
-    $("#show-reachability-set-checkbox")
-        .prop('checked', showReachabilitySet)
-        .change(onShowReachabilitySetCheckboxToggle);
-
-    $("#display-ui-element-buttons").buttonset();
-
-    $("#pattern-hide").prop('checked', !showLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
-    $("#pattern-lhs").prop('checked', showLandingPattern && lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
-    $("#pattern-rhs").prop('checked', showLandingPattern && !lhsLandingPattern); // We set this before buttonset creation so the buttonset is updated properly
-    $("#pattern-menu")
-        .buttonset()
-        .children("input")
-            .change(onPatternSelect);
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
     $("#right-panel > div").accordion(accordionOptions);

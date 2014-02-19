@@ -17,16 +17,16 @@
         <link rel="stylesheet" href="css/smoothness-theme/jquery-ui-1.10.4.custom.min.css">
         <link rel="stylesheet" type="text/css" href="css/index.css" />
     </head>
-    <body>
+    <body data-bind="setLanguage: display.language">
         <div id="map-canvas-container">
             <div id="map-canvas"></div>
             <div id="wind-arrow" class="arrow-indicator">
                 <img src="images/windsock-base.png">
-                <img src="images/windsock.png" data-bind="rotate: radToDeg(windDirection())">
+                <img src="images/windsock.png" data-bind="rotate: radToDeg(wind.direction())">
             </div>
-            <div id="landing-direction-arrow" class="arrow-indicator" data-bind="fadeVisible: !landIntoWind()">
+            <div id="landing-direction-arrow" class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind()">
                 <img src="images/windsock-base.png">
-                <img src="images/arrow.png" data-bind="rotate: radToDeg(landingDirection())">
+                <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())">
             </div>
             <ul id="dz-selection-menu" class="dz-selection-control">
                 <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
@@ -78,24 +78,29 @@
                     <div class="element-label" style="display:none"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
                 </div>
             </div>
-            <div>
+            <div data-bind="with: display">
                 <h3><span lang="en">Display options</span><span lang="ru">Отображение</span></h3>
                 <div>
                     <div>
-                        <span id="language-menu">
-                            <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en"><img src="images/GB.png"></label>
-                            <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru"><img src="images/RU.png"></label>
+                        <span data-bind="jqButtonset: language">
+                            <input id="select-lang-en" type="radio" name="language" value="en" data-bind="checked: language"><label for="select-lang-en"><img src="images/GB.png"></label>
+                            <input id="select-lang-ru" type="radio" name="language" value="ru" data-bind="checked: language"><label for="select-lang-ru"><img src="images/RU.png"></label>
                         </span>
-                        <span id="system-menu">
-                            <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span lang="en">Metric</span><span lang="ru">СИ</span></label>
-                            <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
+                        <span data-bind="jqButtonset: unitSystem">
+                            <input id="select-metric" type="radio" name="system" value="metric" data-bind="checked: unitSystem"><label for="select-metric"><span lang="en">Metric</span><span lang="ru">СИ</span></label>
+                            <input id="select-imperial" type="radio" name="system" value="imperial" data-bind="checked: unitSystem"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
 
-                    <div class="element-label"><span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span><span id="simulation-speed-value"></span></div>
-                    <div id="simulation-speed-slider"></div>
-                    <div id="display-ui-element-buttons" class="element-label">
-                        <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox">
+                    <div class="element-label">
+                        <span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span>
+                        <span data-bind="html: formatSimulationSpeed($root.simulation.speed())"></span>
+                    </div>
+                    <div data-bind="jqSlider: $root.simulation.speed, sliderOptions: { min: 0, max: 5, step: 0.1 }"></div>
+
+                    <div id="display-ui-element-buttons" class="element-label" data-fbind="jqButtonset: [steadyPoint(), reachset(), controlset()]">
+                        <input type="checkbox" id="steady-point-checkbox" data-bind="checked: steadyPoint">
+                        <label for="steady-point-checkbox">
                             <span lang="en">
                             <img src="images/steady.png" title="Accuracy trick: you'll land there">
                             </span>
@@ -103,7 +108,8 @@
                             <img src="images/steady.png" title="Точка приземления">
                             </span>
                         </label>
-                        <input type="checkbox" id="show-controllability-set-checkbox"><label for="show-controllability-set-checkbox">
+                        <input type="checkbox" id="show-controllability-set-checkbox" data-bind="checked: reachset">
+                        <label for="show-controllability-set-checkbox">
                             <span lang="en">
                             <img src="images/control.png" title="Points you can reach the landing target from (at the current altitude)">
                             </span>
@@ -111,7 +117,38 @@
                             <img src="images/control.png" title="КВК: из каких точек все еще можно попасть в цель (с текущей высоты)">
                             </span>
                         </label>
-                        <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox">
+                        <input type="checkbox" id="show-reachability-set-checkbox" data-bind="checked: controlset">
+                        <label for="show-reachability-set-checkbox">
+                            <span lang="en">
+                            <img src="images/reach.png" title="The area on the ground still reachable from the current position">
+                            </span>
+                            <span lang="ru">
+                            <img src="images/reach.png" title="Точки на земле, в которые еще можно попасть из текущего положения">
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="element-label" data-fbind="jqButtonset: [steadyPoint(), reachset(), controlset()]">
+                        <input type="checkbox" id="fsteady-point-checkbox" data-bind="checked: steadyPoint">
+                        <label for="fsteady-point-checkbox">
+                            <span lang="en">
+                            <img src="images/steady.png" title="Accuracy trick: you'll land there">
+                            </span>
+                            <span lang="ru">
+                            <img src="images/steady.png" title="Точка приземления">
+                            </span>
+                        </label>
+                        <input type="checkbox" id="fshow-controllability-set-checkbox" data-bind="checked: reachset">
+                        <label for="fshow-controllability-set-checkbox">
+                            <span lang="en">
+                            <img src="images/control.png" title="Points you can reach the landing target from (at the current altitude)">
+                            </span>
+                            <span lang="ru">
+                            <img src="images/control.png" title="КВК: из каких точек все еще можно попасть в цель (с текущей высоты)">
+                            </span>
+                        </label>
+                        <input type="checkbox" id="fshow-reachability-set-checkbox" data-bind="checked: controlset">
+                        <label for="fshow-reachability-set-checkbox">
                             <span lang="en">
                             <img src="images/reach.png" title="The area on the ground still reachable from the current position">
                             </span>
@@ -122,40 +159,53 @@
                     </div>
                 </div>
             </div>
-            <div id="wind-conditions">
+            <div id="wind-conditions" data-bind="with: wind">
                 <h3><span lang="en">Wind conditions</span><span lang="ru">Ветер</span></h3>
                 <div>
                     <div class="element-label">
                         <span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span>
-                        <span data-bind="html: formatHeading(reportedWindDirection(windDirection()))"></span>
+                        <span data-bind="html: formatHeading(reportedWindDirection(direction()))"></span>
                     </div>
-                    <div data-bind="jqSlider: windDirection, sliderOptions: headingSliderOptions"></div>
+                    <div data-bind="jqSlider: direction, sliderOptions: headingSliderOptions"></div>
                     <div class="element-label">
                         <span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span>
-                        <span data-bind="html: formatSpeed(windSpeed(), 1)"></span>
+                        <span data-bind="html: formatSpeed(speed(), 1)"></span>
                     </div>
-                    <div data-bind="jqSlider: windSpeed, sliderOptions: { min: 0, max: 13, step: 0.1 }"></div>
+                    <div data-bind="jqSlider: speed, sliderOptions: { min: 0, max: 13, step: 0.1 }"></div>
                 </div>
             </div>
-            <div>
+            <div id="pattern-settings" data-bind="with: pattern">
                 <h3><span lang="en">Pattern settings</span><span lang="ru">Коробочка</span></h3>
                 <div>
-                    <div class="element-label"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
-                    <div id="opening-altitude-slider"></div>
+                    <div class="element-label">
+                        <span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span>
+                        <span data-bind="html: formatAltitude(openingAltitude())"></span>
+                    </div>
+                    <div data-bind="jqSlider: openingAltitude, sliderOptions: { min: 100, max: 3000, step: 50 }"></div>
+
                     <div class="element-label"><span lang="en">Landing direction: </span><span lang="ru">Курс приземления: </span>
                         <span data-bind="html: formatHeading(landingDirection())"></span>
                         <span class="float-right">
-                            <input id="into-the-wind" type="checkbox" data-bind="checked: landIntoWind">
+                            <input id="into-the-wind" type="checkbox" data-bind="checked: intoWind">
                             <label for="into-the-wind"><span lang="en">Into the wind</span><span lang="ru">Против ветра</span></label>
                         </span>
                     </div>
-                    <div data-bind="jqSlider: selectedLandingDirection, sliderOptions: headingSliderOptions, slideVisible: !landIntoWind()"></div>
+                    <div data-bind="jqSlider: selectedLandingDirection, sliderOptions: headingSliderOptions, slideVisible: !intoWind()"></div>
+
                     <div class="element-label">
                         <span lang="en">Landing pattern:</span><span lang="ru">Круг захода:</span>&nbsp;
-                        <span id="pattern-menu">
-                            <input id="pattern-hide" type="radio" name="pattern" checked="checked"><label for="pattern-hide"><span lang="en">Hide</span><span lang="ru">Нет</span></label>
-                            <input id="pattern-rhs" type="radio" name="pattern"><label for="pattern-rhs"><span lang="en">Right</span><span lang="ru">Правым</span></label>
-                            <input id="pattern-lhs" type="radio" name="pattern"><label for="pattern-lhs"><span lang="en">Left</span><span lang="ru">Левым</span></label>
+                        <span id="pattern-menu" data-bind="jqButtonset: display">
+                            <input id="pattern-hide" type="radio" name="pattern" value="hide" data-bind="checked: display">
+                            <label for="pattern-hide"><span lang="en">Hide</span><span lang="ru">Нет</span>
+                            </label>
+
+                            <input id="pattern-rhs" type="radio" name="pattern" value="rhs" data-bind="checked: display">
+                            <label for="pattern-rhs"><span lang="en">Right</span><span lang="ru">Правым</span>
+                            </label>
+
+                            <input id="pattern-lhs" type="radio" name="pattern" value="lhs" data-bind="checket: display">
+                            <label for="pattern-lhs"><span lang="en">Left</span><span lang="ru">Левым</span>
+                            </label>
                         </span>
                     </div>
                 </div>
