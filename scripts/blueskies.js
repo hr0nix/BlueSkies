@@ -706,17 +706,18 @@ function initialize() {
     var $dzMenu = $("#dz-selection-menu"),
         firstLevelPosition = { my: "left top", at: "left bottom" };
     $dzMenu.menu({
-            select: onDzMenuItemSelected,
-            position: firstLevelPosition,
-            blur: function() {
-                $(this).menu("option", "position", firstLevelPosition);
-            },
-            focus: function(e, ui) {
-                if (!ui.item.parent().is($dzMenu)) {
-                    $(this).menu("option", "position", { my: "left top", at: "right top" });
-                }
+        select: onDzMenuItemSelected,
+        position: firstLevelPosition,
+        blur: function() {
+            $(this).menu("option", "position", firstLevelPosition);
+        },
+        focus: function(e, ui) {
+            if (!ui.item.parent().is($dzMenu)) {
+                $(this).menu("option", "position", { my: "left top", at: "right top" });
             }
-        });
+        }
+    });
+
     var $shareButton = $("#share-location");
     $shareButton.button().click(onShareLinkClick);
 

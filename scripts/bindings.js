@@ -74,7 +74,7 @@ ko.bindingHandlers.jqButtonset = {
 };
 
 ko.bindingHandlers.jqProgressbar = {
-    init: function(element, valueAccessor, allBindings) {
+    init: function(element, valueAccessor) {
         $(element).progressbar();
     },
     update: function(element, valueAccessor) {
