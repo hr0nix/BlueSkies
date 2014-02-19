@@ -33,7 +33,7 @@ ko.bindingHandlers.fadeVisible = {
     update: function(element, valueAccessor) {
         var shouldDisplay = valueAccessor();
         shouldDisplay ? $(element).fadeIn() : $(element).fadeOut();
-    } 
+    }
 };
 
 ko.bindingHandlers.slideVisible = {
@@ -44,7 +44,7 @@ ko.bindingHandlers.slideVisible = {
     update: function(element, valueAccessor) {
         var shouldDisplay = valueAccessor();
         shouldDisplay ? $(element).slideDown() : $(element).slideUp();
-    } 
+    }
 };
 
 /// jQueury UI bindings

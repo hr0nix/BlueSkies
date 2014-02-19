@@ -66,7 +66,10 @@
             <div id="status">
                 <h3><span lang="en">Canopy status</span><span lang="ru">Состояние</span></h3>
                 <div>
-                    <div class="element-label"><span lang="en">Altitude: </span><span lang="ru">Высота: </span><span id="altitude-value"></span></div>
+                    <div class="element-label">
+                        <span lang="en">Altitude: </span><span lang="ru">Высота: </span>
+                        <span data-bind="html: formatAltitude(canopy.altitude(), 0)"></span>
+                    </div>
                     <div>
                         <div data-bind="jqProgressbar: { value: canopy.altitude(), max: display.maxAltitude() }"></div>
                         <ul class="ruler" data-bind="ruler: display.maxAltitude()"><li>100</li><li>200</li><li>300</li></ul>
@@ -136,36 +139,6 @@
                             </span>
                         </label>
                     </div>
-
-                    <div class="element-label" data-fbind="jqButtonset: [steadyPoint(), reachset(), controlset()]">
-                        <input type="checkbox" id="fsteady-point-checkbox" data-bind="checked: steadyPoint">
-                        <label for="fsteady-point-checkbox">
-                            <span lang="en">
-                            <img src="images/steady.png" title="Accuracy trick: you'll land there">
-                            </span>
-                            <span lang="ru">
-                            <img src="images/steady.png" title="Точка приземления">
-                            </span>
-                        </label>
-                        <input type="checkbox" id="fshow-controllability-set-checkbox" data-bind="checked: reachset">
-                        <label for="fshow-controllability-set-checkbox">
-                            <span lang="en">
-                            <img src="images/control.png" title="Points you can reach the landing target from (at the current altitude)">
-                            </span>
-                            <span lang="ru">
-                            <img src="images/control.png" title="КВК: из каких точек все еще можно попасть в цель (с текущей высоты)">
-                            </span>
-                        </label>
-                        <input type="checkbox" id="fshow-reachability-set-checkbox" data-bind="checked: controlset">
-                        <label for="fshow-reachability-set-checkbox">
-                            <span lang="en">
-                            <img src="images/reach.png" title="The area on the ground still reachable from the current position">
-                            </span>
-                            <span lang="ru">
-                            <img src="images/reach.png" title="Точки на земле, в которые еще можно попасть из текущего положения">
-                            </span>
-                        </label>
-                    </div>
                 </div>
             </div>
             <div id="wind-conditions" data-bind="with: wind">
@@ -203,7 +176,7 @@
 
                     <div class="element-label">
                         <span lang="en">Landing pattern:</span><span lang="ru">Круг захода:</span>&nbsp;
-                        <span id="pattern-menu" data-bind="jqButtonset: display">
+                        <span id="pattern-menu" data-fbind="jqButtonset: display">
                             <input id="pattern-hide" type="radio" name="pattern" value="hide" data-bind="checked: display">
                             <label for="pattern-hide"><span lang="en">Hide</span><span lang="ru">Нет</span>
                             </label>
@@ -224,13 +197,13 @@
                 <div id="about-text">
                     <div lang="en">
                         <p>Try and play with the simulator. If you're stuck, you can get some help from <a href="#" class="legend-button">the
-                        legend</a> or you can <a href="#" class="tutor-button">restart the tutor</a> to go through the set of the dialogs again.</p> 
+                        legend</a> or you can <a href="#" class="tutor-button">restart the tutor</a> to go through the set of the dialogs again.</p>
                         <p><a href="#" class="about-button">Read more</a> about the project in general.</p>
                         <p><a href="https://github.com/hr0nix/BlueSkies"><img src="images/GitHub-Mark-32px.png">Check out on github</a></p>
                     </div>
                     <div lang="ru">
                         <p>Поэкспериментируйте с симулятором. Если вы запутались, попробуйте заглянуть в <a href="#" class="legend-button">легенду</a>
-                        или <a href="#" class="tutor-button">пересмотреть введение</a>.</p> 
+                        или <a href="#" class="tutor-button">пересмотреть введение</a>.</p>
                         <p>Общая информация <a href="#" class="about-button">о симуляторе</a> (English).</p>
                         <p><a href="https://github.com/hr0nix/BlueSkies"><img src="images/GitHub-Mark-32px.png">Страница симулятора на github</a></p>
                     </div>

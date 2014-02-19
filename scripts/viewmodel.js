@@ -7,10 +7,15 @@ function ViewModel() {
 
         steadyPoint: ko.observable(false),
         reachset: ko.observable(false),
-        controlset: ko.observable(false)
+        controlset: ko.observable(false),
+
+        maxAltitude: ko.computed(function() {
+            return Math.max(altitudeProgressbarMax, self.pattern.openingAltitude());
+        }, this, { deferEvaluation: true })
     };
 
     self.wind = {
+        // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
         direction: ko.observable(Math.random() * Math.PI * 2),
         speed: ko.observable(5 + Math.random() * 2 - 1)
     };
@@ -45,8 +50,8 @@ function ViewModel() {
     self.simulation = {
         started: ko.observable(false),
         speed: ko.observable(1.0),
-        oldSpeed: 1.0,
 
+        oldSpeed: 1.0, // to support togglePause
         togglePause: function() {
             if (self.simulation.speed() != 0) {
                 self.simulation.oldSpeed = self.simulation.speed();
@@ -54,7 +59,11 @@ function ViewModel() {
             } else {
                 self.simulation.speed(self.simulation.oldSpeed);
             }
-        }
+        },
+
+        flying: ko.computed(function() {
+            return self.simulation.started() && self.canopy.altitude() > eps;
+        }, this, { deferEvaluation: true })
     };
 
     self.canopy = {
@@ -69,11 +78,25 @@ function ViewModel() {
 
         speedV: ko.computed(function() {
             return getCanopyVerticalSpeed(self.canopy.mode());
-        }, this, { deferEvaluation: true })
+        }, this, { deferEvaluation: true }),
+
+        modeChange: function(amount) {
+            var minMode = 0.1; // We don't allow flying in the stall
+            self.canopy.mode(clamp(self.canopy.mode() + amount, minMode, 1));
+        },
+
+        steeringInput: function(amount) {
+            self.canopy.heading(normalizeAngle(self.canopy.heading() + amount));
+        },
+
+        descend: function(time) {
+            self.canopy.altitude(self.canopy.altitude() - time * self.canopy.speedV());
+            self.canopy.location(moveInWind(self.canopy.location(), self.wind.speed(), self.wind.direction(), self.canopy.speedH(), self.canopy.heading(), time));
+        }
     };
 
     self.location = {
-        currentDropzoneId: ko.observable("dz-uk-sibson"),
+        id: ko.observable("dz-uk-sibson"),
 
         coords: ko.observable()
     };
@@ -86,8 +109,12 @@ function ViewModel() {
         return moveInWind(this.location(), self.windSpeed(), self.wind.direction(), this.speedH(), this.heading(), timeToLanding);
     }, self.canopy, { deferEvaluation: true });
 
-    self.startSimulation = function(location) {
-        self.canopy.location(location);
+    self.reachSetAltitude = ko.computed(function() {
+        return self.canopy.altitude() > eps ? self.canopy.altitude() : self.pattern.openingAltitude();
+    });
+
+    self.startSimulation = function(loc) {
+        self.canopy.location(loc);
         self.canopy.altitude(self.pattern.openingAltitude());
         self.canopy.heading(self.wind.direction() + Math.PI); // Into the wind
         self.canopy.mode(0.6);

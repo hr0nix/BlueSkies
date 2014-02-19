@@ -23,42 +23,21 @@ var dropzones = {
 
 // Time
 var updateFrequency = 20.0,
-    simulationSpeed = 1.0,
-    oldSimulationSpeed = 1.0, // for instant pausing on "p" support
     headingUpdateSpeed = Math.PI / 4, // Radians __per second__
     canopyModeUpdateSpeed = 0.05, // Mode units __per keydown event__
     pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
 
 ////// Settings
-var showSteadyPoint = readSetting("show-steady-point", true),
-    useMetricSystem = readSetting("use-metric-system", true),
-    showReachabilitySet = readSetting("show-reachability-set", false),
-    showControllabilitySet = readSetting("show-controllability-set", false),
-    showLandingPattern = readSetting("show-landing-pattern", false),
-    lhsLandingPattern = readSetting("lhs-landing-pattern", false);
-// We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
-var windDirection = Math.random() * Math.PI * 2,
-    windSpeed = 5 + Math.random() * 2 - 1,
-    intoTheWindLanding = true,
-    landingDirection = 0,
-    openingAltitude = readSetting("opening-altitude", 700),
-    currentDropzoneId = readSetting("current-dropzone-id", "dz-uk-sibson"),
-    defaultMapZoom = 15,
+var defaultMapZoom = 15,
     minMapZoom = 12,
     maxMapZoom = 18;
 
 ////// State
-var isSimulationRunning = false,
-    canopyLocation,
-    canopyAltitude,
-    canopyHeading,
-    canopyMode,
-    steadyPointLocation,
-    prevUpdateTime;
+var prevUpdateTime;
 
 ////// Constants
 var eps = 1e-03, // Mostly used to compare altitude to zero
-    altitudeSliderMax = 500,
+    altitudeProgressbarMax = 500,
     headingSliderOptions = { min: 0, max: Math.PI * 2, step: Math.PI / 180 * 5 };
 
 ////// UI objects
@@ -146,9 +125,6 @@ function setLanguage(element, language) {
         $(element).find(":lang(" + lang + ")").toggle(lang == currentLanguage);
     }
 
-//    updateSliderLabels();
-//    updateLanguageRadio();
-
     $("#dz-finder").attr("placeholder", localize("Choose another landing area"));
 
     if (isDialogOpen("#legend-dialog")) {
@@ -159,10 +135,6 @@ function setLanguage(element, language) {
     if (isDialogOpen("#tutor-rightclick")) {
         $rightclick.dialog("position", $rightclick.dialog("position"));
     }
-}
-
-function updateLanguageRadio() {
-//    $("#select-lang-" + currentLanguage).prop('checked', true);
 }
 
 ////// Helpers
@@ -302,7 +274,7 @@ function computeReachSet(objects, sourceLocation, altitude, reachability) {
     // Note that in the interface we forbid the stall mode. But still, in most cases it doesn't lead to the edge of the reach set
     for (var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++) {
         var u = 1 / (reachSetSteps - 1) * i,
-            set = reachSet(windSpeed, windDirection, altitude, u),
+            set = reachSet(viewModel.wind.speed(), viewModel.wind.direction(), viewModel.canopy.altitude(), u),
             shiftFactor = reachability ? 1 : -1; // for reachability we shift downwind, for controllability -- upwind
 
         objects[i].setCenter(moveCoords(sourceLocation, shiftFactor * set.c[0], shiftFactor * set.c[1]));
@@ -319,17 +291,16 @@ function updateReachSetVisibility(objects, visible) {
 function updateReachabilitySet() {
     updateReachSetVisibility(reachabilitySetObjects, showReachabilitySet);
 
-    if (showReachabilitySet && isSimulationRunning) {
-        computeReachSet(reachabilitySetObjects, canopyLocation, canopyAltitude, true);
+    if (showReachabilitySet && viewModel.simulation.started()) {
+        computeReachSet(reachabilitySetObjects, viewModel.canopy.location(), viewModel.canopy.altidude(), true);
     }
 }
 
 function updateControllabilitySet() {
-    updateReachSetVisibility(controllabilitySetObjects, showControllabilitySet);
+    updateReachSetVisibility(controllabilitySetObjects, viewModel.display.controlset());
 
-    if (showControllabilitySet) {
-        var altitude = canopyAltitude > eps ? canopyAltitude : openingAltitude;
-        computeReachSet(controllabilitySetObjects, getCurrentLandingPoint(), altitude, false);
+    if (viewModel.display.controlset()) {
+        computeReachSet(controllabilitySetObjects, getCurrentLandingPoint(), viewModel.reachSetAltitude, false);
     }
 }
 
@@ -390,20 +361,28 @@ function metersPerSecToMilesPerHour(metersPerSec) {
     return metersPerSec * 2.23693629;
 }
 
+function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
 function getLandingDirection() {
     return viewModel.pattern.landingDirection();
 }
 
+function useMetricSystem() {
+    return viewModel.display.unitSystem() === "metric";
+}
+
 function formatSpeed(metersPerSec, significantDigits) {
     significantDigits = significantDigits || 0;
-    return useMetricSystem
+    return useMetricSystem()
         ? $.number(metersPerSec, significantDigits) + " " + localize("ms")
         : $.number(metersPerSecToMilesPerHour(metersPerSec), significantDigits) + " " + localize("mph");
 }
 
 function formatAltitude(meters, significantDigits) {
     significantDigits = significantDigits || 0;
-    return useMetricSystem
+    return useMetricSystem()
         ? $.number(meters, significantDigits) + " " + localize("m")
         : $.number(metersToFeet(meters), significantDigits) + " " + localize("ft");
 }
@@ -418,28 +397,6 @@ function formatSimulationSpeed(speed, significantDigits) {
     return $.number(speed, significantDigits) + "x" + (speed == 0 ? " " + localize("paused") : "");
 }
 
-function setPatternType(type) {
-    switch (type) {
-        case "pattern-hide":
-            showLandingPattern = false;
-            break;
-
-        case "pattern-rhs":
-            showLandingPattern = true;
-            lhsLandingPattern = false;
-            break;
-
-        case "pattern-lhs":
-            showLandingPattern = true;
-            lhsLandingPattern = true;
-            break;
-    }
-    saveSetting("show-landing-pattern", showLandingPattern);
-    saveSetting("lhs-landing-pattern", lhsLandingPattern);
-    updateLandingPattern();
-    landingPatternLine.setVisible(showLandingPattern);
-}
-
 function setDz(dz) {
     if (!dropzones[dz]) {
         return;
@@ -447,13 +404,11 @@ function setDz(dz) {
 
     $("#dz-finder").val(dz == "dz-custom" ? lastCustomDzName : "");
 
-    currentDropzoneId = dz;
-    $('#selected-dz').html($('#' + currentDropzoneId + "> a").html());
-    saveSetting("current-dropzone-id", currentDropzoneId);
-    map.setCenter(dropzones[currentDropzoneId]);
+    viewModel.location.id(dz);
+    $('#selected-dz').html($('#' + viewModel.location.id() + "> a").html());
+    map.setCenter(dropzones[viewModel.location.id()]);
     map.setZoom(defaultMapZoom);
-    dzMarker.setPosition(dropzones[currentDropzoneId]);
-    updateLandingPattern();
+    dzMarker.setPosition(dropzones[viewModel.location.id()]);
 }
 
 function setCustomDz(name, latlng) {
@@ -486,8 +441,8 @@ function getFullPath(location) {
 
 function generateGETForLocation() {
     var result = "?";
-    if (currentDropzoneId != "dz-custom") {
-        result += "dz=" + currentDropzoneId.replace("dz-","");
+    if (viewModel.location.id() != "dz-custom") {
+        result += "dz=" + viewModel.location.id().replace("dz-","");
     } else {
         var latlng = dropzones["dz-custom"];
         result += "lat=" + latlng.lat() + "&lng=" + latlng.lng();
@@ -499,22 +454,12 @@ function generateGETForLocation() {
 ////// UI update logic
 
 function updateCanopyControls() {
-    canopyMarker.setPosition(canopyLocation);
-    canopyMarker.setIcon(createCanopyMarkerIcon(canopyHeading));
-    steadyPointMarker.setPosition(steadyPointLocation);
+    canopyMarker.setPosition(viewModel.canopy.location());
+    canopyMarker.setIcon(createCanopyMarkerIcon(viewModel.canopy.heading()));
+    steadyPointMarker.setPosition(viewModel.steadyPoint());
 
     updateReachabilitySet();
     updateControllabilitySet();
-}
-
-function updateCanopyStatus() {
-    $("#altitude-value").html(formatAltitude(canopyAltitude, 0));
-    $("#horizontal-speed-value").html(formatSpeed(getCanopyHorizontalSpeed(canopyMode), 1));
-    $("#vertical-speed-value").html(formatSpeed(getCanopyVerticalSpeed(canopyMode), 1));
-    $("#canopy-heading-value").html(formatHeading(canopyHeading, 0));
-
-    $("#mode-progressbar").progressbar("option", "value", canopyMode);
-    $("#altitude-progressbar").progressbar("option", "value", canopyAltitude);
 }
 
 function updateLandingPattern() {
@@ -531,22 +476,14 @@ function onKeyDown(e) {
         pressedKeys[e.which] = true;
     }
 
-    if (isSimulationRunning && canopyAltitude > eps) {
+    if (viewModel.simulation.flying()) {
         if (e.which == $.ui.keyCode.UP) {
-            canopyMode += canopyModeUpdateSpeed;
-        }
-        else if (e.which == $.ui.keyCode.DOWN) {
-            canopyMode -= canopyModeUpdateSpeed;
+            viewModel.canopy.modeChange(canopyModeUpdateSpeed);
+        } else if (e.which == $.ui.keyCode.DOWN) {
+            viewModel.canopy.modeChange(canopyModeUpdateSpeed);
         }
     }
 
-    // Clip canopy mode
-    var minMode = 0.1; // We don't allow flying in the stall
-    if (canopyMode < minMode) {
-        canopyMode = minMode;
-    } else if (canopyMode > 1) {
-        canopyMode = 1;
-    }
 }
 
 function onKeyUp(e) {
@@ -590,133 +527,52 @@ function onShareLinkClick() {
 }
 
 function onMapRightClick(event) {
-    canopyLocation = event.latLng;
-    canopyAltitude = openingAltitude;
-    canopyHeading = windDirection + Math.PI; // Into the wind
-    canopyMode = 0.6;
+    viewModel.startSimulation(event.latLng);
     prevUpdateTime = new Date().getTime();
 
-    $("#mode-progressbar").progressbar({value: canopyMode, max: 1});
-    $("#altitude-progressbar").progressbar({value: canopyAltitude, max: Math.max(openingAltitude, altitudeSliderMax)});
     $("#tutor-rightclick").dialog("close");
 
-    if (!isSimulationRunning) {
+    if (!viewModel.simulation.started()) {
         initializeCanopyImage();
-        $("#status").show();
-        isSimulationRunning = true;
     }
-    tuneRuler("#altitude-progressbar", "#altitude-ruler");
 }
 
 function onLandingSpotPositionChanged() {
-    if (currentDropzoneId == "dz-custom") {
+    if (viewModel.location.id() == "dz-custom") {
         dropzones["dz-custom"] = getCurrentLandingPoint();
         saveSetting("custom-dz-location", packLatLng(dropzones["dz-custom"]));
     }
-
-    updateLandingPattern();
 }
 
 function onTimeTick() {
-    if (isSimulationRunning && canopyAltitude > eps) {
+    if (viewModel.simulation.flying()) {
         var currentUpdateTime = new Date().getTime(),
             dt = (currentUpdateTime - prevUpdateTime) / 1000.0;
         prevUpdateTime = currentUpdateTime;
 
-        if (pressedKeys[37]) { // left arrow
-            canopyHeading -= headingUpdateSpeed * dt;
+        if (pressedKeys[$.ui.keyCode.LEFT]) {
+            viewModel.canopy.steeringInput(-headingUpdateSpeed * dt);
+        } else if (pressedKeys[$.ui.keyCode.RIGHT]) {
+            viewModel.canopy.steeringInput(+headingUpdateSpeed * dt);
         }
-        else if (pressedKeys[39]) { // right arrow
-            canopyHeading += headingUpdateSpeed * dt;
-        }
 
-        // Normalize canopy heading
-        canopyHeading = normalizeAngle(canopyHeading);
+        dt *= viewModel.simulation.speed(); // Only do it here because we don't want the responsiveness to be affected by the simulationSpeed, only the descent. Or do we?
+        dt = Math.min(dt, viewModel.canopy.altitude() / viewModel.canopy.speedV()); // We don't want to go below ground
 
-        var speedH = getCanopyHorizontalSpeed(canopyMode),
-            speedV = getCanopyVerticalSpeed(canopyMode);
+        viewModel.canopy.descend(dt);
 
-        dt *= simulationSpeed; // Only do it here because we don't want the responsiveness to be affected by the simulationSpeed, only the descent. Or do we?
-        dt = Math.min(dt, canopyAltitude / speedV); // We don't want to go below ground
-
-        canopyLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, dt);
-        canopyAltitude -= dt * speedV;
-
-        if (canopyAltitude < eps) {
-            var distance = google.maps.geometry.spherical.computeDistanceBetween(canopyLocation, getCurrentLandingPoint());
+        if (!viewModel.simulation.flying()) {
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.canopy.location(), getCurrentLandingPoint());
             ga('send', 'event', 'simulation', 'finished');
             ga('send', 'event', 'simulation', 'finished', 'distance', Math.floor(distance));
-            ga('send', 'event', 'simulation', 'finished', 'angle-into-wind', Math.floor(radToDeg(normalizeAngle(Math.abs(canopyHeading - normalizeAngle(windDirection - Math.PI))))));
+            ga('send', 'event', 'simulation', 'finished', 'angle-into-wind', Math.floor(radToDeg(normalizeAngle(Math.abs(viewModel.canopy.heading() - normalizeAngle(viewModel.wind.direction() - Math.PI))))));
         }
-
-        if (showSteadyPoint) {
-            var timeToLanding = canopyAltitude / speedV;
-            steadyPointLocation = moveInWind(canopyLocation, windSpeed, windDirection, speedH, canopyHeading, timeToLanding);
-        }
-
-        updateCanopyControls();
-        updateCanopyStatus();
     }
-}
-
-function onWindDirectionSliderValueChange(event, ui) {
-    windDirection = degToRad(ui.value);
-    updateLandingDirectionValue();
-
-    updateLandingPattern();
-}
-
-function onWindSpeedSliderValueChange(event, ui) {
-    windSpeed = ui.value;
-
-    updateLandingPattern();
-}
-
-function onOpeningAltitudeSliderValueChange(event, ui) {
-    openingAltitude = ui.value;
-    $("#opening-altitude-value").html(formatAltitude(openingAltitude));
-    saveSetting("opening-altitude", openingAltitude);
-
-    updateLandingPattern();
-}
-
-function onSelectSystem() {
-    useMetricSystem = $(this).attr('id') == "select-metric";
-    saveSetting("use-metric-system", useMetricSystem);
-
-    updateSliderLabels();
-    updateCanopyStatus();
 }
 
 function onDzMenuItemSelected(event, ui) {
     ga('send', 'event', 'dz', 'selected', ui.item.attr('id'));
     setDz(ui.item.attr('id'));
-}
-
-function onShowSteadyPointCheckboxToggle() {
-    showSteadyPoint = !showSteadyPoint;
-    saveSetting("show-steady-point", showSteadyPoint);
-
-    steadyPointMarker.setVisible(showSteadyPoint);
-}
-
-function onShowControllabilitySetCheckboxToggle() {
-    showControllabilitySet = !showControllabilitySet;
-
-    saveSetting("show-controllability-set", showControllabilitySet);
-
-    updateControllabilitySet();
-}
-
-function onShowReachabilitySetCheckboxToggle() {
-    showReachabilitySet = !showReachabilitySet;
-    saveSetting("show-reachability-set", showReachabilitySet);
-
-    updateReachabilitySet();
-}
-
-function onPatternSelect() {
-    setPatternType($(this).attr('id'));
 }
 
 function onFindNewDz() {
@@ -736,7 +592,7 @@ function parseParameters() {
     var queryString = getQueryString(),
 
         lang = defaultIfUndefined(queryString.lang, readSetting("language", "en")),
-        dz = defaultIfUndefined(queryString.dz, currentDropzoneId.replace("dz-", "")),
+        dz = defaultIfUndefined(queryString.dz, viewModel.location.id().replace("dz-", "")),
         lat = queryString.lat,
         lng = queryString.lng;
 
@@ -757,7 +613,7 @@ function parseParameters() {
 function initializeCanopyImage() {
     var canopyMarkerOptions = {
         map: map,
-        icon: createCanopyMarkerIcon(canopyHeading),
+        icon: createCanopyMarkerIcon(viewModel.canopy.heading()),
         zIndex: 4
     };
     canopyMarker = new google.maps.Marker(canopyMarkerOptions);
@@ -777,20 +633,6 @@ function initializeReachSet(objects, color) {
         objects.push(circle);
         google.maps.event.addListener(circle, "rightclick", onMapRightClick);
     }
-}
-
-function tuneRuler(id, ruler) {
-    var $id = $(id),
-        width = $id.width(),
-        max = $id.progressbar("option", "max"),
-        prevOffset = 0;
-    $(ruler).children("li").each(function() {
-        var $this = $(this),
-            value = Number($this.text()),
-            offset = value * width / max;
-        $this.css("padding-left", offset - prevOffset);
-        prevOffset = offset;
-    });
 }
 
 function showLegendDialog(id) {
@@ -841,7 +683,7 @@ function initializeAnalyticsEvents() {
 
     google.maps.event.addListener(map, "rightclick", function() {
         ga('send', 'event', 'simulation', 'started');
-        ga('send', 'event', 'simulation', 'started', 'altitude', openingAltitude);
+        ga('send', 'event', 'simulation', 'started', 'altitude', viewModel.pattern.openingAltitude);
     });
 
     $("input").change(function() {
@@ -855,7 +697,7 @@ function initialize() {
         minZoom: minMapZoom,
         maxZoom: maxMapZoom,
         streetViewControl: false,
-        center: dropzones[currentDropzoneId],
+        center: dropzones[viewModel.location.id()],
         keyboardShortcuts: false,
         mapTypeId: google.maps.MapTypeId.SATELLITE
     };
@@ -894,11 +736,11 @@ function initialize() {
         strokeOpacity: 1.0,
         strokeWeight: 2,
         zIndex: 1,
-        visible: showLandingPattern
+        visible: viewModel.pattern.show()
     });
 
     var steadyPointMarkerOptions = {
-        visible: showSteadyPoint,
+        visible: viewModel.display.steadyPoint(),
         map: map,
         icon: {
             path: google.maps.SymbolPath.CIRCLE,
@@ -917,7 +759,7 @@ function initialize() {
             strokeColor: 'yellow',
             scale: 8
         },
-        position: dropzones[currentDropzoneId],
+        position: dropzones[viewModel.location.id()],
         draggable: true,
         map: map,
         zIndex: 2
@@ -930,14 +772,10 @@ function initialize() {
     initializeReachSet(controllabilitySetObjects, '#0000FF');
     initializeReachSet(reachabilitySetObjects, '#FF0000');
 
-    $("#mode-progressbar").progressbar();
-    $("#altitude-progressbar").progressbar();
-
     $("#dz-custom").toggle(dropzones["dz-custom"] != null);
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
     $("#right-panel > div").accordion(accordionOptions);
-    $("#status").hide();
 
     $(".legend-button").click(function() {
         showLegendDialog("#legend-dialog");
