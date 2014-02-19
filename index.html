@@ -68,14 +68,23 @@
                 <div>
                     <div class="element-label"><span lang="en">Altitude: </span><span lang="ru">Высота: </span><span id="altitude-value"></span></div>
                     <div>
-                        <div id="altitude-progressbar"> </div>
-                        <ul id="altitude-ruler" class="ruler"><li>100</li><li>200</li><li>300</li></ul>
+                        <div data-bind="jqProgressbar: { value: canopy.altitude(), max: display.maxAltitude() }"></div>
+                        <ul class="ruler" data-bind="ruler: display.maxAltitude()"><li>100</li><li>200</li><li>300</li></ul>
                     </div>
                     <div class="element-label"><span lang="en">Brake application: </span><span lang="ru">Режим купола: </span></div>
-                    <div id="mode-progressbar"></div>
-                    <div class="element-label"><span lang="en">Horizontal speed: </span><span lang="ru">Горизонталь: </span><span id="horizontal-speed-value"></span></div>
-                    <div class="element-label"><span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
-                    <div class="element-label" style="display:none"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
+                    <div data-bind="jqProgressbar: { value: canopy.mode(), max: 1 }"></div>
+                    <div class="element-label">
+                        <span lang="en">Horizontal speed: </span><span lang="ru">Горизонталь: </span>
+                        <span data-bind="html: formatSpeed(canopy.speedH(), 1)"></span>
+                    </div>
+                    <div class="element-label">
+                        <span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span>
+                        <span data-bind="html: formatSpeed(canopy.speedV(), 1)"></span>
+                    </div>
+                    <div class="element-label" style="display:none">
+                        <span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span>
+                        <span data-bind="html: formatHeading(canopy.heading(), 0)"></span>
+                    </div>
                 </div>
             </div>
             <div data-bind="with: display">

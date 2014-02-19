@@ -115,6 +115,12 @@ body {
     display: inline-block;
 }
 
+.ruler {
+    padding-left: 1px;
+    padding-right: 1px;
+    width: 100%;
+}
+
 .ruler li {
     padding-left: 2cm; /* Modify this to distribute the markers */
     width: 2em;

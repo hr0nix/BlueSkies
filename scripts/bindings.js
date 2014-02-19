@@ -1,6 +1,26 @@
+/// Different custom bindings
+
 ko.bindingHandlers.rotate = {
     update: function(element, valueAccessor) {
         rotateDiv($(element).get(0), ko.unwrap(valueAccessor()));
+    }
+};
+
+ko.bindingHandlers.ruler = {
+    update: function(element, valueAccessor) {
+        var $element = $(element),
+            width = $element.width(),
+            max = ko.unwrap(valueAccessor()),
+
+            prevOffset = 0;
+
+        $element.children("li").each(function() {
+            var $this = $(this),
+                value = Number($this.text()),
+                offset = Math.round(value * width / max);
+            $this.css("padding-left", offset - prevOffset);
+            prevOffset = offset;
+        });
     }
 };
 
@@ -51,7 +71,16 @@ ko.bindingHandlers.jqButtonset = {
     update: function(element, valueAccessor) {
         $(element).buttonset('refresh');
     }
-}
+};
+
+ko.bindingHandlers.jqProgressbar = {
+    init: function(element, valueAccessor, allBindings) {
+        $(element).progressbar();
+    },
+    update: function(element, valueAccessor) {
+        $(element).progressbar(ko.unwrap(valueAccessor()));
+    }
+};
 
 /// Google maps api bindings
 
