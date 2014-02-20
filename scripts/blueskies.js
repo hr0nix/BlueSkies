@@ -18,8 +18,7 @@ var dropzones = {
         "dz-other-statue-of-liberty": new google.maps.LatLng(40.690531, -74.04575),
         "dz-custom" : readSetting("custom-dz-location", null, unpackLatLng)
     },
-    lastCustomDzName = readSetting("custom-dz-name", ""),
-    dzMarker;
+    lastCustomDzName = readSetting("custom-dz-name", "");
 
 // Time
 var updateFrequency = 20.0,
@@ -235,7 +234,7 @@ function getCanopyVerticalSpeed(mode) {
 }
 
 function getCurrentLandingPoint() {
-    return dzMarker.getPosition();
+    return viewModel.location.coords();
 }
 
 // returns: canopy heading necessary to maintain desiredTrack ground track in given winds (not always possible, of course)
@@ -411,7 +410,6 @@ function setDz(dz) {
     $('#selected-dz').html($('#' + viewModel.location.id() + "> a").html());
     map.setCenter(dropzones[viewModel.location.id()]);
     map.setZoom(defaultMapZoom);
-    dzMarker.setPosition(dropzones[viewModel.location.id()]);
 }
 
 function setCustomDz(name, latlng) {
@@ -679,6 +677,41 @@ function showAboutDialog(id) {
     $id.dialog(options);
 }
 
+function bindMarkerPosition(marker, observable) {
+    google.maps.event.addListener(marker, 'position_changed', function() {
+        observable(marker.getPosition());
+    });
+
+    observable.subscribe(function(newValue) {
+        if (newValue !== marker.getPosition()) {
+            marker.setPosition(newValue);
+        }
+    });
+}
+
+function bindVisibility(object, observable) {
+    observable.subscribe(function(newValue) {
+        object.setVisible(newValue);
+    });
+}
+
+function initDzMarker() {
+    var markerOptions = {
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            strokeColor: 'yellow',
+            scale: 8
+        },
+        position: dropzones[viewModel.location.id()],
+        draggable: true,
+        map: map,
+        zIndex: 2
+    }
+
+    var dzMarker = new google.maps.Marker(markerOptions);
+    bindMarkerPosition(dzMarker, viewModel.location.coords);
+}
+
 function initializeAnalyticsEvents() {
     $(".legend-button").click(function() {
         ga('send', 'event', 'button', 'click', 'legend');
@@ -757,21 +790,7 @@ function initialize() {
     };
     steadyPointMarker = new google.maps.Marker(steadyPointMarkerOptions);
 
-    var markerOptions = {
-        icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            strokeColor: 'yellow',
-            scale: 8
-        },
-        position: dropzones[viewModel.location.id()],
-        draggable: true,
-        map: map,
-        zIndex: 2
-    }
-
-    dzMarker = new google.maps.Marker(markerOptions);
-    google.maps.event.addListener(dzMarker, 'position_changed', onLandingSpotPositionChanged);
-
+    initDzMarker();
     // We initialize this early so UI events have something to update
     initializeReachSet(controllabilitySetObjects, '#0000FF');
     initializeReachSet(reachabilitySetObjects, '#FF0000');
