@@ -63,10 +63,13 @@ ko.bindingHandlers.jqSlider = {
 };
 
 ko.bindingHandlers.jqButtonset = {
-    init: function(element, valueAccessor) {
-        $(element).buttonset()
-            .find('span.ui-button-text')
-                .addClass('no-padding');
+    init: function(element, valueAccessor, allBindings) {
+        $(element).buttonset();
+        if (allBindings.get('no_padding')) {
+            $(element)
+                .find('span.ui-button-text')
+                    .addClass('no-padding');
+        }
     },
     update: function(element, valueAccessor) {
         $(element).buttonset('refresh');
