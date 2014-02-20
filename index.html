@@ -62,6 +62,12 @@
         </div>
 
         <div id="right-panel">
+            <div data-bind="if: debug.on">
+                <h3>Debug</h3>
+                <div>
+                    <div>Coords: <span data-bind="text: location.coords"></span></div>
+                </div>
+            </div>
             <div data-bind="visible: simulation.flying">
                 <h3><span lang="en">Canopy status</span><span lang="ru">Состояние</span></h3>
                 <div>

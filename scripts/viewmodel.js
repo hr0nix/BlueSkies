@@ -1,6 +1,10 @@
 function ViewModel() {
     var self = this;
 
+    self.debug = {
+        on: ko.observable(false)
+    };
+
     self.display = {
         language: ko.observable("en"),
         unitSystem: ko.observable("metric"),
