@@ -478,9 +478,9 @@ function onKeyDown(e) {
 
     if (viewModel.simulation.flying()) {
         if (e.which == $.ui.keyCode.UP) {
-            viewModel.canopy.modeChange(canopyModeUpdateSpeed);
+            viewModel.canopy.modeChange(+canopyModeUpdateSpeed);
         } else if (e.which == $.ui.keyCode.DOWN) {
-            viewModel.canopy.modeChange(canopyModeUpdateSpeed);
+            viewModel.canopy.modeChange(-canopyModeUpdateSpeed);
         }
     }
 
