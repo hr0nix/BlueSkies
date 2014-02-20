@@ -29,7 +29,7 @@
                 <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())">
             </div>
             <ul id="dz-selection-menu" class="dz-selection-control">
-                <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
+                <li><a href="#"><div id="selected-dz" data-bind="html: location.id()"></div></a>
                     <ul>
                         <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
                             <ul>
@@ -51,11 +51,12 @@
                                 <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
                             </ul>
                         </li>
-                        <li id="dz-custom"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
+                        <li id="dz-custom" data-bind="visible: location.custom.location != null"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
                     </ul>
                 </li>
             </ul>
-            <input id="dz-finder" class="dz-selection-control" type="text" data-bind="attr: { placeholder: localize('Choose another landing area') }">
+            <input id="dz-finder" class="dz-selection-control" type="text"
+                data-bind="value: location.id() == 'dz-custom' ? location.customName() : '', attr: { placeholder: localize('Choose another landing area') }">
             <button id="share-location" class="dz-selection-control" type="button" data-bind="attr: { title: localize('share-link') }">
                 <img src="images/share.png">
             </button>
@@ -66,6 +67,7 @@
                 <h3>Debug</h3>
                 <div>
                     <div>Coords: <span data-bind="text: location.coords"></span></div>
+                    <div>GET: <span data-bind="text: generateGETForLocation()"></span></div>
                 </div>
             </div>
             <div data-bind="visible: simulation.flying">

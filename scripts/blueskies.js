@@ -16,9 +16,8 @@ var dropzones = {
         "dz-other-dubai" : new google.maps.LatLng(25.090282, 55.135681),
         "dz-other-red-square": new google.maps.LatLng(55.754216, 37.620083),
         "dz-other-statue-of-liberty": new google.maps.LatLng(40.690531, -74.04575),
-        "dz-custom" : readSetting("custom-dz-location", null, unpackLatLng)
-    },
-    lastCustomDzName = readSetting("custom-dz-name", "");
+        "dz-custom" : 42
+    };
 
 // Time
 var updateFrequency = 20.0,
@@ -400,27 +399,20 @@ function formatSimulationSpeed(speed, significantDigits) {
 }
 
 function setDz(dz) {
-    if (!dropzones[dz]) {
+    if (dropzones[dz] == undefined) {
         return;
     }
 
-    $("#dz-finder").val(dz == "dz-custom" ? lastCustomDzName : "");
-
     viewModel.location.id(dz);
-    $('#selected-dz').html($('#' + viewModel.location.id() + "> a").html());
+
     map.setCenter(dropzones[viewModel.location.id()]);
     map.setZoom(defaultMapZoom);
 }
 
 function setCustomDz(name, latlng) {
-    dropzones["dz-custom"] = latlng;
-    lastCustomDzName = name;
+    viewModel.location.custom.name(name);
+    viewModel.location.custom.location(latlng);
     setDz("dz-custom");
-
-    saveSetting("custom-dz-name", lastCustomDzName);
-    saveSetting("custom-dz-location", packLatLng(latlng));
-
-    $("#dz-custom").show();
 }
 
 function defaultIfUndefined(x, def) {
@@ -445,7 +437,7 @@ function generateGETForLocation() {
     if (viewModel.location.id() != "dz-custom") {
         result += "dz=" + viewModel.location.id().replace("dz-","");
     } else {
-        var latlng = dropzones["dz-custom"];
+        var latlng = viewModel.location.custom.location();
         result += "lat=" + latlng.lat() + "&lng=" + latlng.lng();
     }
 
@@ -535,13 +527,6 @@ function onMapRightClick(event) {
 
     if (!viewModel.simulation.started()) {
         initializeCanopyImage();
-    }
-}
-
-function onLandingSpotPositionChanged() {
-    if (viewModel.location.id() == "dz-custom") {
-        dropzones["dz-custom"] = getCurrentLandingPoint();
-        saveSetting("custom-dz-location", packLatLng(dropzones["dz-custom"]));
     }
 }
 

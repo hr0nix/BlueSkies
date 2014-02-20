@@ -101,9 +101,23 @@ function ViewModel() {
 
     self.location = {
         id: ko.observable("dz-uk-sibson"),
+        coords: ko.observable(),
 
-        coords: ko.observable()
+        custom: {
+            location: ko.observable(null),
+            name: ko.observable()
+        },
+        set: function(id) {
+            self.location.coords(
+                id === "dz-custom" ?
+                    self.location.custom.location() :
+                    dropzones[id]);
+        }
     };
+
+    self.location.id.extend({ notify: 'always' });
+    self.location.id.subscribe(function(newId) {
+    });
 
     self.steadyPoint = ko.computed(function() {
         if (!self.simulation.started()) {
