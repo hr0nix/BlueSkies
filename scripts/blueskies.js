@@ -130,8 +130,6 @@ function setLanguage(element, language) {
         $(element).find(":lang(" + lang + ")").toggle(lang == language);
     }
 
-    $("#dz-finder").attr("placeholder", localize("Choose another landing area"));
-
     if (isDialogOpen("#legend-dialog")) {
         showLegendDialog("#legend-dialog");
     }
