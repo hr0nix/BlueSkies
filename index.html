@@ -56,9 +56,8 @@
                 </li>
             </ul>
             <input id="dz-finder" class="dz-selection-control" type="text">
-            <button id="share-location" class="dz-selection-control" type="button">
-                <span lang="en"><img src="images/share.png" title="Get link to current location"></span>
-                <span lang="ru"><img src="images/share.png" title="Получить ссылку на текущую точку"></span>
+            <button id="share-location" class="dz-selection-control" type="button" data-bind="attr: { title: localize('share-link') }">
+                <img src="images/share.png">
             </button>
         </div>
 
@@ -113,30 +112,15 @@
                     <div id="display-ui-element-buttons" class="element-label" data-fbind="jqButtonset: [steadyPoint(), reachset(), controlset()]">
                         <input type="checkbox" id="steady-point-checkbox" data-bind="checked: steadyPoint">
                         <label for="steady-point-checkbox">
-                            <span lang="en">
-                            <img src="images/steady.png" title="Accuracy trick: you'll land there">
-                            </span>
-                            <span lang="ru">
-                            <img src="images/steady.png" title="Точка приземления">
-                            </span>
+                            <img src="images/steady.png" data-bind="attr: { title: localize('accuracy trick') }">
                         </label>
                         <input type="checkbox" id="show-controllability-set-checkbox" data-bind="checked: reachset">
                         <label for="show-controllability-set-checkbox">
-                            <span lang="en">
-                            <img src="images/control.png" title="Points you can reach the landing target from (at the current altitude)">
-                            </span>
-                            <span lang="ru">
-                            <img src="images/control.png" title="КВК: из каких точек все еще можно попасть в цель (с текущей высоты)">
-                            </span>
+                            <img src="images/control.png" data-bind="attr: { title: localize('controlset') }">
                         </label>
                         <input type="checkbox" id="show-reachability-set-checkbox" data-bind="checked: controlset">
                         <label for="show-reachability-set-checkbox">
-                            <span lang="en">
-                            <img src="images/reach.png" title="The area on the ground still reachable from the current position">
-                            </span>
-                            <span lang="ru">
-                            <img src="images/reach.png" title="Точки на земле, в которые еще можно попасть из текущего положения">
-                            </span>
+                            <img src="images/reach.png" data-bind="attr: { title: localize('reachset') }">
                         </label>
                     </div>
                 </div>
@@ -185,7 +169,7 @@
                             <label for="pattern-rhs"><span lang="en">Right</span><span lang="ru">Правым</span>
                             </label>
 
-                            <input id="pattern-lhs" type="radio" name="pattern" value="lhs" data-bind="checket: display">
+                            <input id="pattern-lhs" type="radio" name="pattern" value="lhs" data-bind="checked: display">
                             <label for="pattern-lhs"><span lang="en">Left</span><span lang="ru">Левым</span>
                             </label>
                         </span>

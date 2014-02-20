@@ -90,7 +90,11 @@ function unpackLatLng(string) {
 
 var enResources = {
         "ms": "m/s",
-        "paused": "(paused)"
+        "paused": "(paused)",
+        "accuracy trick": "Accuracy trick: you'll land there",
+        "controlset": "Points you can reach the landing target from (at the current altitude)",
+        "reachset": "The area on the ground still reachable from the current position",
+        "share-link": "Get link to current location"
     },
     ruResources = {
         "ms": "м/с",
@@ -102,7 +106,11 @@ var enResources = {
         "Legend": "Легенда",
         "Got it!": "Дальше",
         "Skip tutor": "Пропустить введение",
-        "Share a link": "Ссылка сюда"
+        "Share a link": "Ссылка сюда",
+        "accuracy trick": "Точка приземления",
+        "controlset": "КВК: из каких точек все еще можно попасть в цель (с текущей высоты)",
+        "reachset": "Точки на земле, в которые еще можно попасть из текущего положения",
+        "share-link": "Получить ссылку на текущую точку"
     },
     langResources = {
         "en": enResources,
