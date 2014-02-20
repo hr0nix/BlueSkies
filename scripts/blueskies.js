@@ -569,7 +569,7 @@ function onFindNewDz() {
     }
 
     ga('send', 'event', 'dz', 'autocomplete', 'success');
-    setCustomDz($("#dz-finder").val(), place.geometry.location);
+    setCustomDz(place.formatted_address, place.geometry.location);
 }
 
 ////// Initialization
