@@ -111,10 +111,6 @@ function ViewModel() {
             }, this, { deferEvaluation: true })
         },
         set: function(id) {
-            if (self.location.id() === "dz-custom") {
-                self.location.custom.coords(self.location.coords());
-            }
-
             self.location.coords(id === "dz-custom" ? self.location.custom.coords() : dropzones[id]);
             self.location.id(id);
         },
@@ -128,6 +124,11 @@ function ViewModel() {
     };
 
     self.location.set("dz-uk-sibson");
+    self.location.coords.subscribe(function(newValue) {
+        if (self.location.id() == 'dz-custom') {
+            self.location.custom.coords(newValue);
+        }
+    });
 
     self.steadyPoint = ko.computed(function() {
         if (!self.simulation.started()) {
