@@ -2,7 +2,7 @@ function ViewModel() {
     var self = this;
 
     self.debug = {
-        on: ko.observable(false)
+        on: ko.observable(true)
     };
 
     self.display = {
@@ -100,24 +100,33 @@ function ViewModel() {
     };
 
     self.location = {
-        id: ko.observable("dz-uk-sibson"),
+        id: ko.observable(),
         coords: ko.observable(),
 
         custom: {
-            location: ko.observable(null),
-            name: ko.observable()
+            coords: ko.computed({
+                read: function() {
+                    return dropzones["dz-custom"];
+                },
+                write: function(value) {
+                    dropzones["dz-custom"] = value;
+                }
+            }),
+            name: ko.observable(),
+            available: ko.computed(function() {
+                return self.location.custom.coords() !== null;
+            }, this, { deferEvaluation: true })
         },
         set: function(id) {
-            self.location.coords(
-                id === "dz-custom" ?
-                    self.location.custom.location() :
-                    dropzones[id]);
+            if (self.location.id() === "dz-custom") {
+                self.location.custom.coords(self.location.coords());
+            }
+            self.location.id(id);
+            self.location.coords(dropzones[id]);
         }
     };
 
-    self.location.id.extend({ notify: 'always' });
-    self.location.id.subscribe(function(newId) {
-    });
+    self.location.set("dz-uk-sibson");
 
     self.steadyPoint = ko.computed(function() {
         if (!self.simulation.started()) {

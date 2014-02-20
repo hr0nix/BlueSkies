@@ -51,12 +51,12 @@
                                 <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
                             </ul>
                         </li>
-                        <li id="dz-custom" data-bind="visible: location.custom.location != null"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
+                        <li id="dz-custom" data-bind="visible: location.custom.available"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
                     </ul>
                 </li>
             </ul>
             <input id="dz-finder" class="dz-selection-control" type="text"
-                data-bind="value: location.id() == 'dz-custom' ? location.customName() : '', attr: { placeholder: localize('Choose another landing area') }">
+                data-bind="value: location.id() == 'dz-custom' ? location.custom.name() : '', attr: { placeholder: localize('Choose another landing area') }">
             <button id="share-location" class="dz-selection-control" type="button" data-bind="attr: { title: localize('share-link') }">
                 <img src="images/share.png">
             </button>

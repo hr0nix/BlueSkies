@@ -8,15 +8,15 @@ var horizontalSpeeds = [0, 2.5, 5, 7.5, 10],
 
 // Dropzones
 var dropzones = {
-        "dz-uk-sibson" : new google.maps.LatLng(52.560706, -0.395692),
-        "dz-uk-chatteris" :  new google.maps.LatLng(52.48866, 0.086044),
-        "dz-ru-puschino" : new google.maps.LatLng(54.790046, 37.642547),
-        "dz-ru-kolomna" : new google.maps.LatLng(55.091914, 38.917231),
-        "dz-ru-vatulino" : new google.maps.LatLng(55.663505, 36.142181),
-        "dz-other-dubai" : new google.maps.LatLng(25.090282, 55.135681),
+        "dz-uk-sibson": new google.maps.LatLng(52.560706, -0.395692),
+        "dz-uk-chatteris": new google.maps.LatLng(52.48866, 0.086044),
+        "dz-ru-puschino": new google.maps.LatLng(54.790046, 37.642547),
+        "dz-ru-kolomna": new google.maps.LatLng(55.091914, 38.917231),
+        "dz-ru-vatulino": new google.maps.LatLng(55.663505, 36.142181),
+        "dz-other-dubai": new google.maps.LatLng(25.090282, 55.135681),
         "dz-other-red-square": new google.maps.LatLng(55.754216, 37.620083),
         "dz-other-statue-of-liberty": new google.maps.LatLng(40.690531, -74.04575),
-        "dz-custom" : 42
+        "dz-custom": null
     };
 
 // Time
@@ -403,7 +403,7 @@ function setDz(dz) {
         return;
     }
 
-    viewModel.location.id(dz);
+    viewModel.location.set(dz);
 
     map.setCenter(dropzones[viewModel.location.id()]);
     map.setZoom(defaultMapZoom);
@@ -411,7 +411,7 @@ function setDz(dz) {
 
 function setCustomDz(name, latlng) {
     viewModel.location.custom.name(name);
-    viewModel.location.custom.location(latlng);
+    viewModel.location.custom.coords(latlng);
     setDz("dz-custom");
 }
 
@@ -437,7 +437,7 @@ function generateGETForLocation() {
     if (viewModel.location.id() != "dz-custom") {
         result += "dz=" + viewModel.location.id().replace("dz-","");
     } else {
-        var latlng = viewModel.location.custom.location();
+        var latlng = viewModel.location.custom.coords();
         result += "lat=" + latlng.lat() + "&lng=" + latlng.lng();
     }
 
