@@ -88,8 +88,7 @@ function unpackLatLng(string) {
 
 ////// Localization for javascript
 
-var currentLanguage = "en",
-    enResources = {
+var enResources = {
         "ms": "m/s",
         "paused": "(paused)"
     },
@@ -111,7 +110,7 @@ var currentLanguage = "en",
     };
 
 function localize(id) {
-    return defaultIfUndefined(langResources[currentLanguage][id], id);
+    return defaultIfUndefined(langResources[viewModel.display.language()][id], id);
 }
 
 function setLanguage(element, language) {
@@ -119,10 +118,8 @@ function setLanguage(element, language) {
         return;
     }
 
-    saveSetting("language", language);
-    currentLanguage = language;
     for (var lang in langResources) {
-        $(element).find(":lang(" + lang + ")").toggle(lang == currentLanguage);
+        $(element).find(":lang(" + lang + ")").toggle(lang == language);
     }
 
     $("#dz-finder").attr("placeholder", localize("Choose another landing area"));
@@ -133,7 +130,7 @@ function setLanguage(element, language) {
 
     var $rightclick = $("#tutor-rightclick");
     if (isDialogOpen("#tutor-rightclick")) {
-        $rightclick.dialog("position", $rightclick.dialog("position"));
+        $rightclick.dialog("option", "position", $rightclick.dialog("option", "position"));
     }
 }
 
@@ -597,7 +594,7 @@ function parseParameters() {
         lng = queryString.lng;
 
     if (lang) {
-//        setLanguage(lang);
+        viewModel.display.language(lang);
     }
 
     if (dz) {
