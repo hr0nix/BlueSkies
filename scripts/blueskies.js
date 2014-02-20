@@ -399,13 +399,13 @@ function formatSimulationSpeed(speed, significantDigits) {
 }
 
 function setDz(dz) {
-    if (dropzones[dz] == undefined) {
+    if (!(dz in dropzones)) {
         return;
     }
 
     viewModel.location.set(dz);
 
-    map.setCenter(dropzones[viewModel.location.id()]);
+    map.setCenter(viewModel.location.coords());
     map.setZoom(defaultMapZoom);
 }
 
@@ -687,7 +687,7 @@ function initDzMarker() {
             strokeColor: 'yellow',
             scale: 8
         },
-        position: dropzones[viewModel.location.id()],
+        position: viewModel.location.coords(),
         draggable: true,
         map: map,
         zIndex: 2
@@ -718,7 +718,7 @@ function initialize() {
         minZoom: minMapZoom,
         maxZoom: maxMapZoom,
         streetViewControl: false,
-        center: dropzones[viewModel.location.id()],
+        center: viewModel.location.coords(),
         keyboardShortcuts: false,
         mapTypeId: google.maps.MapTypeId.SATELLITE
     };
@@ -779,8 +779,6 @@ function initialize() {
     // We initialize this early so UI events have something to update
     initializeReachSet(controllabilitySetObjects, '#0000FF');
     initializeReachSet(reachabilitySetObjects, '#FF0000');
-
-    $("#dz-custom").toggle(dropzones["dz-custom"] != null);
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
     $("#right-panel > div").accordion(accordionOptions);

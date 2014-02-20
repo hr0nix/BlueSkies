@@ -104,29 +104,26 @@ function ViewModel() {
         coords: ko.observable(),
 
         custom: {
-            coords: ko.computed({
-                read: function() {
-                    return dropzones["dz-custom"];
-                },
-                write: function(value) {
-                    dropzones["dz-custom"] = value;
-                }
-            }),
+            coords: ko.observable(),
             name: ko.observable(),
             available: ko.computed(function() {
-                return self.location.custom.coords() !== null;
+                return self.location.custom.coords() !== undefined;
             }, this, { deferEvaluation: true })
         },
         set: function(id) {
             if (self.location.id() === "dz-custom") {
                 self.location.custom.coords(self.location.coords());
             }
+
+            self.location.coords(id === "dz-custom" ? self.location.custom.coords() : dropzones[id]);
             self.location.id(id);
-            self.location.coords(dropzones[id]);
         },
 
         name: ko.computed(function() {
             return $("#" + self.location.id() + "> a").html();
+        }, this, { deferEvaluation: true }),
+        finderText: ko.computed(function() {
+            return (self.location.id() == 'dz-custom' ? self.location.custom.name() : '')
         }, this, { deferEvaluation: true })
     };
 
