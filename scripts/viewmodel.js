@@ -123,7 +123,11 @@ function ViewModel() {
             }
             self.location.id(id);
             self.location.coords(dropzones[id]);
-        }
+        },
+
+        name: ko.computed(function() {
+            return $("#" + self.location.id() + "> a").html();
+        }, this, { deferEvaluation: true })
     };
 
     self.location.set("dz-uk-sibson");
