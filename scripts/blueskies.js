@@ -523,7 +523,7 @@ function onShareLinkClick() {
 }
 
 function onMapRightClick(event) {
-    viewModel.startSimulation(event.latLng);
+    viewModel.simulation.start(event.latLng);
     prevUpdateTime = new Date().getTime();
 
     $("#tutor-rightclick").dialog("close");

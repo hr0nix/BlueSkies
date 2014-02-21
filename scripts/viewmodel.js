@@ -67,7 +67,20 @@ function ViewModel() {
 
         flying: ko.computed(function() {
             return self.simulation.started() && self.canopy.altitude() > eps;
-        }, this, { deferEvaluation: true })
+        }, this, { deferEvaluation: true }),
+
+        start: function(loc) {
+            self.canopy.location(loc);
+            self.canopy.altitude(self.pattern.openingAltitude());
+            self.canopy.heading(self.wind.direction() + Math.PI); // Into the wind
+            self.canopy.mode(0.6);
+
+            self.simulation.started(true);
+        },
+
+        stop: function() {
+            self.canopy.altitude(0);
+        }
     };
 
     self.canopy = {
@@ -145,15 +158,6 @@ function ViewModel() {
     self.reachSetAltitude = ko.computed(function() {
         return self.canopy.altitude() > eps ? self.canopy.altitude() : self.pattern.openingAltitude();
     });
-
-    self.startSimulation = function(loc) {
-        self.canopy.location(loc);
-        self.canopy.altitude(self.pattern.openingAltitude());
-        self.canopy.heading(self.wind.direction() + Math.PI); // Into the wind
-        self.canopy.mode(0.6);
-
-        self.simulation.started(true);
-    };
 }
 
 var viewModel = new ViewModel();

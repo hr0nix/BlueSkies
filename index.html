@@ -69,6 +69,7 @@
                     <div>Coords: <span data-bind="text: formatCoords(location.coords())"></span></div>
                     <div>GET: <span data-bind="text: generateGETForLocation()"></span></div>
                     <div>loc: <span data-bind="text: formatCoords(canopy.location())"></span></div>
+                    <div><button data-bind="click: simulation.stop">Stop</button></div>
                 </div>
             </div>
             <div id="status" data-bind="slideVisible: simulation.flying">
