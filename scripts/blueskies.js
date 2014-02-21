@@ -325,10 +325,6 @@ function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
 }
 
-function getLandingDirection() {
-    return viewModel.pattern.landingDirection();
-}
-
 function useMetricSystem() {
     return viewModel.display.unitSystem() === "metric";
 }
