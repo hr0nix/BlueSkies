@@ -309,9 +309,9 @@ function formatCoords(latlng, significantDigits) {
     if (!latlng) {
         return '';
     }
-    return '(' 
-        + $.number(latlng.lat(), significantDigits) + ', ' 
-        + $.number(latlng.lng(), significantDigits) 
+    return '('
+        + $.number(latlng.lat(), significantDigits) + ', '
+        + $.number(latlng.lng(), significantDigits)
         + ')';
 }
 
