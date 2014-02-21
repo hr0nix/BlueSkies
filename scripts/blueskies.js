@@ -697,7 +697,7 @@ function initDzMarker() {
 function initSteadyPointMarker() {
     var options = {
         visible: viewModel.display.steadyPoint(),
-        position: viewModel.steadyPoint(),
+        position: viewModel.analytics.steadyPoint(),
         map: map,
         icon: {
             path: google.maps.SymbolPath.CIRCLE,
@@ -711,7 +711,7 @@ function initSteadyPointMarker() {
     var steadyPointMarker = new google.maps.Marker(options);
 
     bindVisibility(steadyPointMarker, viewModel.display.steadyPoint);
-    bindMarkerPosition(steadyPointMarker, viewModel.steadyPoint);
+    bindMarkerPosition(steadyPointMarker, viewModel.analytics.steadyPoint);
 }
 
 function initCanopyMarker() {

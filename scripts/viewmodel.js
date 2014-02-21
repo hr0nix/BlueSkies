@@ -147,17 +147,19 @@ function ViewModel() {
         }
     });
 
-    self.steadyPoint = ko.computed(function() {
-        if (!self.simulation.flying()) {
-            return undefined;
-        }
-        var timeToLanding = this.altitude() / this.speedV();
-        return moveInWind(this.location(), self.wind.speed(), self.wind.direction(), this.speedH(), this.heading(), timeToLanding);
-    }, self.canopy, { deferEvaluation: true });
-
     self.reachSetAltitude = ko.computed(function() {
         return self.canopy.altitude() > eps ? self.canopy.altitude() : self.pattern.openingAltitude();
     });
+
+    self.analytics = {
+        steadyPoint: ko.computed(function() {
+            if (!self.simulation.flying()) {
+                return undefined;
+            }
+            var timeToLanding = this.altitude() / this.speedV();
+            return moveInWind(this.location(), self.wind.speed(), self.wind.direction(), this.speedH(), this.heading(), timeToLanding);
+        }, self.canopy, { deferEvaluation: true })
+    };
 }
 
 var viewModel = new ViewModel();
