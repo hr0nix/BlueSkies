@@ -24,6 +24,8 @@ function ViewModel() {
         reachset: ko.observable(false),
         controlset: ko.observable(false),
 
+        fullscreen: ko.observable(false),
+
         maxAltitude: ko.computed(function() {
             return Math.max(altitudeProgressbarMax, self.pattern.openingAltitude());
         }, this, { deferEvaluation: true })

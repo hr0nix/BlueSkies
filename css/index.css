@@ -9,8 +9,12 @@ body {
     overflow-y: hidden;
 }
 
-body > div:first-child {
+.map-normal {
     margin-right: 27em;
+}
+
+.map-fullscreen {
+    margin-right: 0;
 }
 
 .dz-selection-control {
