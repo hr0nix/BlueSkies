@@ -84,19 +84,6 @@ ko.bindingHandlers.jqProgressbar = {
     }
 };
 
-/// Google maps api bindings
-
-ko.bindingHandlers.marker = {
-    init: function(element, valueAccessor, allBindings) {
-        var options = allBindings.get('markerOptions');
-        var marker = new google.maps.Marker(options);
-    },
-    update: function(element, valueAccessor, allBindings) {
-        var marker = allBindings.get('marker');
-        marker.setPosition(ko.unwrap(valueAccessor()));
-    }
-};
-
 /// Presentation bindings
 ko.bindingHandlers.setLanguage = {
     init: function(element, valueAccessor) {
