@@ -163,11 +163,6 @@ function ViewModel() {
     };
 
     self.location.id("uk-sibson");
-    self.location.coords.subscribe(function(newValue) {
-        if (self.location.id() == 'custom') {
-            self.location.custom.coords(newValue);
-        }
-    });
 
     self.reachSetAltitude = ko.computed(function() {
         return self.simulation.flying() ? self.canopy.altitude() : self.pattern.openingAltitude();

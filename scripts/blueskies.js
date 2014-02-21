@@ -559,6 +559,12 @@ function initDzMarker() {
 
     var dzMarker = new google.maps.Marker(options);
     bindMarkerPosition(dzMarker, viewModel.location.coords);
+
+    google.maps.event.addListener(dzMarker, 'drag', function() {
+        if (viewModel.location.id() == 'custom') {
+            viewModel.location.custom.coords(dzMarker.getPosition());
+        }
+    });
 }
 
 function initSteadyPointMarker() {
