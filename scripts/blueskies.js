@@ -657,6 +657,10 @@ function initialize() {
     };
     map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
 
+    viewModel.display.fullscreen.subscribe(function() {
+        google.maps.event.trigger(map, "resize");
+    });
+
     var $dzMenu = $("#dz-selection-menu"),
         firstLevelPosition = { my: "left top", at: "left bottom" };
     $dzMenu.menu({
