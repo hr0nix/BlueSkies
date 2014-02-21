@@ -34,9 +34,9 @@ function ViewModel() {
             return self.pattern.display() !== "hide";
         }, this, { deferEvaluation: true }),
         lhs: ko.computed(function() {
-            return
-                !self.pattern.show() ? undefined :
-                self.pattern.display() === "lhs";
+            return self.pattern.show() ? 
+                (self.pattern.display() === "lhs"):
+                undefined;
         }, this, { deferEvaluation: true }),
 
         landingDirection: ko.computed(function() {
