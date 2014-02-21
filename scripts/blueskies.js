@@ -40,10 +40,6 @@ var eps = 1e-03, // Mostly used to compare altitude to zero
 
 ////// UI objects
 var map,
-
-    reachabilitySetObjects = [],
-    controllabilitySetObjects = [],
-
     dzFinderAutocomplete;
 
 ////// Persistence code
@@ -254,48 +250,39 @@ function createGroundTrack(windSpeed, windDirection, speedH, desiredTrack) {
     return windDirection - gamma; // == desiredTrack + beta, but the code appears more straightforward that way.
 }
 
-function reachSet(windSpeed, windDirection, altitude, u) {
+function reachSetFromOrigin(wind, altitude, u) {
     var speedH = getCanopyHorizontalSpeed(u),
         speedV = getCanopyVerticalSpeed(u),
-        time = altitude / speedV;
+        time = altitude / speedV,
+
+        windSpeed = wind.speed(),
+        windDirection = wind.direction();
     return {
-        c: [time * windSpeed * Math.sin(windDirection), time * windSpeed * Math.cos(windDirection)],
+        center: [
+            time * windSpeed * Math.sin(windDirection),
+            time * windSpeed * Math.cos(windDirection)
+        ],
         radius: time * speedH
     };
 }
 
-function computeReachSet(objects, sourceLocation, altitude, reachability) {
+function computeReachSet(sourceLocation, altitude, reachability) {
+    var result = [];
     // Note that in the interface we forbid the stall mode. But still, in most cases it doesn't lead to the edge of the reach set
     for (var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++) {
         var u = 1 / (reachSetSteps - 1) * i,
-            set = reachSet(viewModel.wind.speed(), viewModel.wind.direction(), viewModel.canopy.altitude(), u),
+            set = reachSetFromOrigin(viewModel.wind, altitude, u),
             shiftFactor = reachability ? 1 : -1; // for reachability we shift downwind, for controllability -- upwind
 
-        objects[i].setCenter(moveCoords(sourceLocation, shiftFactor * set.c[0], shiftFactor * set.c[1]));
-        objects[i].setRadius(set.radius);
+        result.push({
+            center: moveCoords(sourceLocation,
+                shiftFactor * set.center[0],
+                shiftFactor * set.center[1]),
+            radius: set.radius
+        });
     }
-}
 
-function updateReachSetVisibility(objects, visible) {
-    for (var i = 0; i < objects.length; i++) {
-        objects[i].setVisible(visible);
-    }
-}
-
-function updateReachabilitySet() {
-    updateReachSetVisibility(reachabilitySetObjects, showReachabilitySet);
-
-    if (showReachabilitySet && viewModel.simulation.started()) {
-        computeReachSet(reachabilitySetObjects, viewModel.canopy.location(), viewModel.canopy.altidude(), true);
-    }
-}
-
-function updateControllabilitySet() {
-    updateReachSetVisibility(controllabilitySetObjects, viewModel.display.controlset());
-
-    if (viewModel.display.controlset()) {
-        computeReachSet(controllabilitySetObjects, getCurrentLandingPoint(), viewModel.reachSetAltitude, false);
-    }
+    return result;
 }
 
 function computeLandingPattern(location, wind, pattern) {
@@ -575,22 +562,6 @@ function parseParameters() {
     }
 }
 
-function initializeReachSet(objects, color) {
-    for (var i = 0; i < reachSetSteps; i++) {
-        var circleOptions = {
-            strokeColor: color,
-            strokeOpacity: 0.0,
-            fillColor: color,
-            fillOpacity: 0.15,
-            map: map,
-            zIndex: 0
-        };
-        var circle = new google.maps.Circle(circleOptions)
-        objects.push(circle);
-        google.maps.event.addListener(circle, "rightclick", onMapRightClick);
-    }
-}
-
 function showLegendDialog(id) {
     var options = {
         title: localize("Legend"),
@@ -662,6 +633,22 @@ function bindPolyline(poly, observable) {
     });
 }
 
+function bindCircles(circles, observable) {
+    observable.subscribe(function(newValue) {
+        for (var i = 0; i < circles.length; i++) {
+            if (!newValue) {
+                circles[i].setVisible(false);
+            } else {
+                circles[i].setVisible(true);
+                circles[i].setCenter(newValue[i].center);
+                circles[i].setRadius(newValue[i].radius);
+            }
+        }
+    });
+
+    var tmp = observable(); // Evaluate it now to catch further updates
+}
+
 function initLandingPattern() {
     var landingPatternLine = new google.maps.Polyline({
         map: map,
@@ -725,6 +712,32 @@ function initCanopyMarker() {
     bindIcon(canopyMarker, viewModel.canopy.icon);
 }
 
+function createReachSetCircles(circles, color) {
+    for (var i = 0; i < lastReachSetSteps; i++) {
+        var circleOptions = {
+            strokeColor: color,
+            strokeOpacity: 0.0,
+            fillColor: color,
+            fillOpacity: 0.15,
+            map: map,
+            zIndex: 0
+        };
+        var circle = new google.maps.Circle(circleOptions);
+        circles.push(circle);
+        google.maps.event.addListener(circle, "rightclick", onMapRightClick);
+    }
+}
+
+function initReachSets() {
+    var reachSetCircles = [],
+        controlSetCircles = [];
+    createReachSetCircles(controlSetCircles, '#0000FF');
+    createReachSetCircles(reachSetCircles, '#FF0000');
+
+    bindCircles(reachSetCircles, viewModel.analytics.reachSet);
+    bindCircles(controlSetCircles, viewModel.analytics.controlSet);
+}
+
 function initializeAnalyticsEvents() {
     $(".legend-button").click(function() {
         ga('send', 'event', 'button', 'click', 'legend');
@@ -784,9 +797,7 @@ function initialize() {
     initSteadyPointMarker();
     initCanopyMarker();
 
-    // We initialize this early so UI events have something to update
-    initializeReachSet(controllabilitySetObjects, '#0000FF');
-    initializeReachSet(reachabilitySetObjects, '#FF0000');
+    initReachSets();
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
     $("#right-panel > div").accordion(accordionOptions);

@@ -148,7 +148,7 @@ function ViewModel() {
     });
 
     self.reachSetAltitude = ko.computed(function() {
-        return self.canopy.altitude() > eps ? self.canopy.altitude() : self.pattern.openingAltitude();
+        return self.simulation.flying() ? self.canopy.altitude() : self.pattern.openingAltitude();
     });
 
     self.analytics = {
@@ -158,7 +158,20 @@ function ViewModel() {
             }
             var timeToLanding = this.altitude() / this.speedV();
             return moveInWind(this.location(), self.wind.speed(), self.wind.direction(), this.speedH(), this.heading(), timeToLanding);
-        }, self.canopy, { deferEvaluation: true })
+        }, self.canopy, { deferEvaluation: true }),
+
+        reachSet: ko.computed(function() {
+            if (!(self.display.reachset() && self.simulation.flying())) {
+                return undefined;
+            }
+            return computeReachSet(self.canopy.location(), self.canopy.altitude(), true);
+        }, this, { deferEvaluation: true }),
+        controlSet: ko.computed(function() {
+            if (!self.display.controlset()) {
+                return undefined;
+            }
+            return computeReachSet(self.location.coords(), self.reachSetAltitude(), false);
+        }, this, { deferEvaluation: true })
     };
 }
 
