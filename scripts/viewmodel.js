@@ -128,8 +128,8 @@ function ViewModel() {
             }, this, { deferEvaluation: true })
         },
         set: function(id) {
-            self.location.coords(id === "dz-custom" ? self.location.custom.coords() : dropzones[id]);
             self.location.id(id);
+            self.location.coords(id === "dz-custom" ? self.location.custom.coords() : dropzones[id]);
         },
 
         name: ko.computed(function() {
