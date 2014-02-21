@@ -646,7 +646,7 @@ function bindCircles(circles, observable) {
         }
     });
 
-    var tmp = observable(); // Evaluate it now to catch further updates
+    observable(); // Evaluate it now to catch further updates
 }
 
 function initLandingPattern() {
