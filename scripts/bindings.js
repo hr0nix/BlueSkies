@@ -1,10 +1,22 @@
 /// Different custom bindings
 
+(function() {
+var rotateDiv = function(div, angle) {
+    var style = "rotate(" + angle + "deg)";
+
+    div.style.webkitTransform = style;
+    div.style.mozTransform = style;
+    div.style.msTransform = style;
+    div.style.oTransform = style;
+    div.style.transform = style;
+};
+
 ko.bindingHandlers.rotate = {
     update: function(element, valueAccessor) {
         rotateDiv($(element).get(0), ko.unwrap(valueAccessor()));
     }
 };
+})();
 
 ko.bindingHandlers.ruler = {
     update: function(element, valueAccessor) {

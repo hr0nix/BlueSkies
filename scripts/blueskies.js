@@ -191,16 +191,6 @@ function moveInWind(coords, windSpeed, windDirection, speed, direction, time) {
     return moveCoords(coords, dx * time, dy * time);
 }
 
-function rotateDiv(div, angle) {
-    var style = "rotate(" + angle + "deg)";
-
-    div.style.webkitTransform = style;
-    div.style.mozTransform = style;
-    div.style.msTransform = style;
-    div.style.oTransform = style;
-    div.style.transform = style;
-}
-
 function interpolate(arr, coeff) {
     if (coeff <= 0) {
         return arr[0];
