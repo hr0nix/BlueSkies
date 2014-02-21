@@ -20,7 +20,7 @@ var dropzones = {
     };
 
 // Time
-var updateFrequency = 20.0,
+var updateInterval = 20.0,
     headingUpdateSpeed = Math.PI / 4, // Radians __per second__
     canopyModeUpdateSpeed = 0.05, // Mode units __per keydown event__
     pressedKeys = {}; // Monitor which keys are pressed. To provide good control response.
@@ -808,7 +808,7 @@ function initialize() {
     $(document)
         .keydown(onKeyDown)
         .keyup(onKeyUp);
-    window.setInterval(onTimeTick, updateFrequency);
+    window.setInterval(onTimeTick, updateInterval);
 
     startTutor("#tutor-dialogs");
 
