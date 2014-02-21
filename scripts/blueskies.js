@@ -40,8 +40,6 @@ var eps = 1e-03, // Mostly used to compare altitude to zero
 
 ////// UI objects
 var map,
-    canopyMarker,
-    steadyPointMarker,
     landingPatternLine,
 
     reachabilitySetObjects = [],
@@ -454,8 +452,6 @@ function generateGETForLocation() {
 ////// UI update logic
 
 function updateCanopyControls() {
-    canopyMarker.setPosition(viewModel.canopy.location());
-    canopyMarker.setIcon(createCanopyMarkerIcon(viewModel.canopy.heading()));
     steadyPointMarker.setPosition(viewModel.steadyPoint());
 
     updateReachabilitySet();
@@ -531,10 +527,6 @@ function onMapRightClick(event) {
     prevUpdateTime = new Date().getTime();
 
     $("#tutor-rightclick").dialog("close");
-
-    if (!viewModel.simulation.started()) {
-        initializeCanopyImage();
-    }
 }
 
 function onTimeTick() {
@@ -603,15 +595,6 @@ function parseParameters() {
     }
 }
 
-function initializeCanopyImage() {
-    var canopyMarkerOptions = {
-        map: map,
-        icon: createCanopyMarkerIcon(viewModel.canopy.heading()),
-        zIndex: 4
-    };
-    canopyMarker = new google.maps.Marker(canopyMarkerOptions);
-}
-
 function initializeReachSet(objects, color) {
     for (var i = 0; i < reachSetSteps; i++) {
         var circleOptions = {
@@ -670,7 +653,7 @@ function showAboutDialog(id) {
 }
 
 function bindMarkerPosition(marker, observable) {
-    google.maps.event.addListener(marker, 'position_changed', function() {
+    google.maps.event.addListener(marker, 'drag', function() {
         observable(marker.getPosition());
     });
 
@@ -681,6 +664,12 @@ function bindMarkerPosition(marker, observable) {
     });
 }
 
+function bindIcon(marker, observable) {
+    observable.subscribe(function(newValue) {
+        marker.setIcon(newValue);
+    });
+}
+
 function bindVisibility(object, observable) {
     observable.subscribe(function(newValue) {
         object.setVisible(newValue);
@@ -688,7 +677,7 @@ function bindVisibility(object, observable) {
 }
 
 function initDzMarker() {
-    var markerOptions = {
+    var options = {
         icon: {
             path: google.maps.SymbolPath.CIRCLE,
             strokeColor: 'yellow',
@@ -698,10 +687,41 @@ function initDzMarker() {
         draggable: true,
         map: map,
         zIndex: 2
-    }
+    };
 
-    var dzMarker = new google.maps.Marker(markerOptions);
+    var dzMarker = new google.maps.Marker(options);
     bindMarkerPosition(dzMarker, viewModel.location.coords);
+}
+
+function initSteadyPointMarker() {
+    var options = {
+        visible: viewModel.display.steadyPoint(),
+        position: viewModel.steadyPoint(),
+        map: map,
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 5,
+            fillColor: '#FF00FF',
+            fillOpacity: 1,
+            strokeWeight: 0
+        },
+        zIndex: 3
+    };
+    var steadyPointMarker = new google.maps.Marker(options);
+
+    bindVisibility(steadyPointMarker, viewModel.display.steadyPoint);
+    bindMarkerPosition(steadyPointMarker, viewModel.steadyPoint);
+}
+
+function initCanopyMarker() {
+    var options = {
+        map: map,
+        icon: viewModel.canopy.icon(),
+        zIndex: 4
+    };
+    var canopyMarker = new google.maps.Marker(options);
+    bindMarkerPosition(canopyMarker, viewModel.canopy.location);
+    bindIcon(canopyMarker, viewModel.canopy.icon);
 }
 
 function initializeAnalyticsEvents() {
@@ -768,21 +788,10 @@ function initialize() {
         visible: viewModel.pattern.show()
     });
 
-    var steadyPointMarkerOptions = {
-        visible: viewModel.display.steadyPoint(),
-        map: map,
-        icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 5,
-            fillColor: '#FF00FF',
-            fillOpacity: 1,
-            strokeWeight: 0
-        },
-        zIndex: 3
-    };
-    steadyPointMarker = new google.maps.Marker(steadyPointMarkerOptions);
-
     initDzMarker();
+    initSteadyPointMarker();
+    initCanopyMarker();
+
     // We initialize this early so UI events have something to update
     initializeReachSet(controllabilitySetObjects, '#0000FF');
     initializeReachSet(reachabilitySetObjects, '#FF0000');

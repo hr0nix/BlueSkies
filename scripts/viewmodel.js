@@ -84,6 +84,10 @@ function ViewModel() {
             return getCanopyVerticalSpeed(self.canopy.mode());
         }, this, { deferEvaluation: true }),
 
+        icon: ko.computed(function() {
+            return createCanopyMarkerIcon(self.canopy.heading());
+        }, this, { deferEvaluation: true }),
+
         modeChange: function(amount) {
             var minMode = 0.1; // We don't allow flying in the stall
             self.canopy.mode(clamp(self.canopy.mode() + amount, minMode, 1));
@@ -135,7 +139,7 @@ function ViewModel() {
             return undefined;
         }
         var timeToLanding = this.altitude() / this.speedV();
-        return moveInWind(this.location(), self.windSpeed(), self.wind.direction(), this.speedH(), this.heading(), timeToLanding);
+        return moveInWind(this.location(), self.wind.speed(), self.wind.direction(), this.speedH(), this.heading(), timeToLanding);
     }, self.canopy, { deferEvaluation: true });
 
     self.reachSetAltitude = ko.computed(function() {
