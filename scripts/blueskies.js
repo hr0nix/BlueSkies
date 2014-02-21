@@ -267,19 +267,19 @@ function reachSetFromOrigin(wind, altitude, u) {
 }
 
 function computeReachSet(sourceLocation, altitude, reachability) {
-    var result = [];
+    var result = Array(lastReachSetSteps);
     // Note that in the interface we forbid the stall mode. But still, in most cases it doesn't lead to the edge of the reach set
-    for (var i = reachSetSteps - lastReachSetSteps; i < reachSetSteps; i++) {
-        var u = 1 / (reachSetSteps - 1) * i,
+    for (var i = 0; i < lastReachSetSteps; i++) {
+        var u = 1 / (reachSetSteps - 1) * (i + reachSetSteps - lastReachSetSteps),
             set = reachSetFromOrigin(viewModel.wind, altitude, u),
             shiftFactor = reachability ? 1 : -1; // for reachability we shift downwind, for controllability -- upwind
 
-        result.push({
+        result[i] = {
             center: moveCoords(sourceLocation,
                 shiftFactor * set.center[0],
                 shiftFactor * set.center[1]),
             radius: set.radius
-        });
+        };
     }
 
     return result;
