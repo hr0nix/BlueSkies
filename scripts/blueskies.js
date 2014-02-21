@@ -539,7 +539,7 @@ function showLegendDialog(id) {
         show: "fade",
         hide: "fade",
         position: {
-            of: "#map-canvas-container",
+            of: "#map-canvas",
             my: "left bottom",
             at: "left+50 bottom-50"
         }
@@ -562,7 +562,7 @@ function showAboutDialog(id) {
         show: "fade",
         hide: "fade",
         position: {
-            of: "#map-canvas-container"
+            of: "#map-canvas"
         }
     };
     $id.dialog(options);

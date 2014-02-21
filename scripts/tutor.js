@@ -63,7 +63,7 @@ function startTutor(id) {
             modal: true,
             performHighlighting: false,
             position: {
-                of: "#map-canvas-container"
+                of: "#map-canvas"
             }
         },
         "dz-selection": {
@@ -76,7 +76,7 @@ function startTutor(id) {
         "target": {
             performHighlighting: false,
             position: {
-                of: "#map-canvas-container",
+                of: "#map-canvas",
                 my: "left top",
                 at: "center+10 center+10"
             }
@@ -114,7 +114,7 @@ function startTutor(id) {
             performHighlighting: false,
             buttons: [],
             position: {
-                of: "#map-canvas-container",
+                of: "#map-canvas",
                 my: "center bottom",
                 at: "center bottom-50"
             }

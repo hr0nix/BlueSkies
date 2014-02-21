@@ -1,4 +1,4 @@
-html, body, #map-canvas-container, #map-canvas, #right-panel {
+html, body, body > div:first-child, #map-canvas, #right-panel {
     height: 100%;
     font-size: small;
 }
@@ -9,7 +9,7 @@ body {
     overflow-y: hidden;
 }
 
-#map-canvas-container {
+body > div:first-child {
     margin-right: 27em;
 }
 
