@@ -107,3 +107,50 @@ ko.bindingHandlers.setLanguage = {
         setLanguage(element, language);
     }
 };
+
+/// Google maps binding helpers
+function bindMarkerPosition(marker, observable) {
+    google.maps.event.addListener(marker, 'drag', function() {
+        observable(marker.getPosition());
+    });
+
+    observable.subscribe(function(newValue) {
+        if (newValue !== marker.getPosition()) {
+            marker.setPosition(newValue);
+        }
+    });
+}
+
+function bindIcon(marker, observable) {
+    observable.subscribe(function(newValue) {
+        marker.setIcon(newValue);
+    });
+}
+
+function bindVisibility(object, observable) {
+    observable.subscribe(function(newValue) {
+        object.setVisible(newValue);
+    });
+}
+
+function bindPolyline(poly, observable) {
+    observable.subscribe(function(newValue) {
+        poly.setPath(newValue);
+    });
+}
+
+function bindCircles(circles, observable) {
+    observable.subscribe(function(newValue) {
+        for (var i = 0; i < circles.length; i++) {
+            if (!newValue) {
+                circles[i].setVisible(false);
+            } else {
+                circles[i].setVisible(true);
+                circles[i].setCenter(newValue[i].center);
+                circles[i].setRadius(newValue[i].radius);
+            }
+        }
+    });
+
+    observable(); // Evaluate it now to catch further updates
+}
