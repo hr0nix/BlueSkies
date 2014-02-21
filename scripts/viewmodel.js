@@ -196,6 +196,10 @@ function ViewModel() {
         }, this, { deferEvaluation: true })
     };
 
+    self.misc = {
+        tutorFinished: ko.observable(false)
+    };
+
     self.persistence = {
         // List of observables to save and load
         _list: [
@@ -210,7 +214,9 @@ function ViewModel() {
             self.location.custom.coords,
             self.location.custom.name,
 
-            self.pattern.openingAltitude
+            self.pattern.openingAltitude,
+
+            self.misc.tutorFinished
         ],
         // If _list is only appended to after the release, we don't need to
         // change _version. If _list is modified incompatibly, or we need to reset user
