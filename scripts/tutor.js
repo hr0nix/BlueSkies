@@ -9,7 +9,7 @@ function startTutor(id) {
     function nextDialog() {
         if (nextDialogIndex < allDialogs.size()) {
             if (nextDialogIndex == allDialogs.size() - 1) {
-                saveSetting("tutor-finished", true);
+                // TODO: finished
                 ga('send', 'event', 'tutor', 'finished', {'nonInteraction': true});
             }
 
@@ -128,7 +128,7 @@ function startTutor(id) {
         $(this).dialog(commonOptions).dialog("option", specific);
     });
 
-    var finished = readSetting("tutor-finished", false);
+    var finished = true;
     nextDialogIndex = finished ? allDialogs.size() - 1 : 0;
     nextDialog();
     if (finished) {

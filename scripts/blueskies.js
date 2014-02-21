@@ -29,43 +29,7 @@ var eps = 1e-03, // Mostly used to compare altitude to zero
 var map,
     dzFinderAutocomplete;
 
-////// Persistence code
-function readSetting(key, def, converter) {
-    var converters = {
-        'string': String,
-        'number': Number,
-        'boolean': parseBoolean
-    };
-    return defaultIfUndefined($.cookie(key, converter || converters[typeof def]), def);
-}
-
-function saveSetting(key, value) {
-    var cookieOptions = {
-        expires: 10
-    };
-    $.cookie(key, value, cookieOptions);
-}
-
-function wipeCookies() {
-    var cookies = document.cookie.split(";");
-    for (var i = 0; i < cookies.length; i++) {
-        var equals = cookies[i].indexOf("="),
-            name = equals > -1 ? cookies[i].substr(0, equals) : cookies[i];
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    }
-}
-
-function packLatLng(latlng) {
-    return JSON.stringify([latlng.lat(), latlng.lng()]);
-}
-
-function unpackLatLng(string) {
-    var latlng = JSON.parse(string);
-    return new google.maps.LatLng(latlng[0], latlng[1]);
-}
-
 ////// Localization for javascript
-
 var enResources = {
         "ms": "m/s",
         "paused": "(paused)",
@@ -508,8 +472,8 @@ function onFindNewDz() {
 function parseParameters() {
     var queryString = getQueryString(),
 
-        lang = defaultIfUndefined(queryString.lang, readSetting("language", "en")),
-        dz = defaultIfUndefined(queryString.dz, viewModel.location.id()),
+        lang = queryString.lang,
+        dz = queryString.dz,
         lat = queryString.lat,
         lng = queryString.lng;
 
