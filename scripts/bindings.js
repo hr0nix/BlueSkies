@@ -9,7 +9,6 @@ ko.bindingHandlers.rotate = {
 ko.bindingHandlers.ruler = {
     update: function(element, valueAccessor) {
         var $element = $(element),
-            width = $element.width(),
             max = ko.unwrap(valueAccessor()),
 
             prevOffset = 0;
@@ -17,8 +16,8 @@ ko.bindingHandlers.ruler = {
         $element.children("li").each(function() {
             var $this = $(this),
                 value = Number($this.text()),
-                offset = Math.round(value * width / max);
-            $this.css("padding-left", offset - prevOffset);
+                offset = Math.round(value / max * 100);
+            $this.css("padding-left", (offset - prevOffset) + "%");
             prevOffset = offset;
         });
     }
