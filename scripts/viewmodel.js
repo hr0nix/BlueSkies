@@ -135,7 +135,7 @@ function ViewModel() {
     });
 
     self.steadyPoint = ko.computed(function() {
-        if (!self.simulation.started()) {
+        if (!self.simulation.flying()) {
             return undefined;
         }
         var timeToLanding = this.altitude() / this.speedV();
