@@ -412,7 +412,6 @@ function onKeyDown(e) {
             viewModel.canopy.modeChange(-canopyModeUpdateSpeed);
         }
     }
-
 }
 
 function onKeyUp(e) {
@@ -727,7 +726,6 @@ function initialize() {
     initDzMarker();
     initSteadyPointMarker();
     initCanopyMarker();
-
     initReachSets();
 
     var accordionOptions = { collapsible: true, heightStyle: "content" };
