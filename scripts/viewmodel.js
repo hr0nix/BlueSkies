@@ -1,5 +1,16 @@
 function ViewModel() {
     var self = this;
+    var dropzones = {
+        "uk-sibson": [52.560706, -0.395692],
+        "uk-chatteris": [52.48866, 0.086044],
+        "ru-puschino": [54.790046, 37.642547],
+        "ru-kolomna": [55.091914, 38.917231],
+        "ru-vatulino": [55.663505, 36.142181],
+        "other-dubai": [25.090282, 55.135681],
+        "other-red-square": [55.754216, 37.620083],
+        "other-statue-of-liberty": [40.690531, -74.04575],
+        "custom": null
+    };
 
     self.debug = {
         on: ko.observable(true)
@@ -128,21 +139,27 @@ function ViewModel() {
             }, this, { deferEvaluation: true })
         },
         set: function(id) {
+            if (!(id in dropzones)) {
+                return false;
+            }
+
             self.location.id(id);
-            self.location.coords(id === "dz-custom" ? self.location.custom.coords() : dropzones[id]);
+            self.location.coords(id === "custom" ? self.location.custom.coords() : createLatLng(dropzones[id]));
+
+            return true;
         },
 
         name: ko.computed(function() {
-            return $("#" + self.location.id() + "> a").html();
+            return $("#dz-" + self.location.id() + "> a").html();
         }, this, { deferEvaluation: true }),
         finderText: ko.computed(function() {
-            return (self.location.id() == 'dz-custom' ? self.location.custom.name() : '')
+            return (self.location.id() == 'custom' ? self.location.custom.name() : '')
         }, this, { deferEvaluation: true })
     };
 
-    self.location.set("dz-uk-sibson");
+    self.location.set("uk-sibson");
     self.location.coords.subscribe(function(newValue) {
-        if (self.location.id() == 'dz-custom') {
+        if (self.location.id() == 'custom') {
             self.location.custom.coords(newValue);
         }
     });

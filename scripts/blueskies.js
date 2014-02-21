@@ -6,19 +6,6 @@ var horizontalSpeeds = [0, 2.5, 5, 7.5, 10],
     reachSetSteps = (horizontalSpeeds.length - 1) * 2 + 1, // we need this kind of step to make sure that during interpolations into the above arrays we get the exact hits
     lastReachSetSteps = 3; // Experiments show that only the faster modes are efficient enough to be on the edge of reachability sets, so we only compute and draw those
 
-// Dropzones
-var dropzones = {
-        "dz-uk-sibson": new google.maps.LatLng(52.560706, -0.395692),
-        "dz-uk-chatteris": new google.maps.LatLng(52.48866, 0.086044),
-        "dz-ru-puschino": new google.maps.LatLng(54.790046, 37.642547),
-        "dz-ru-kolomna": new google.maps.LatLng(55.091914, 38.917231),
-        "dz-ru-vatulino": new google.maps.LatLng(55.663505, 36.142181),
-        "dz-other-dubai": new google.maps.LatLng(25.090282, 55.135681),
-        "dz-other-red-square": new google.maps.LatLng(55.754216, 37.620083),
-        "dz-other-statue-of-liberty": new google.maps.LatLng(40.690531, -74.04575),
-        "dz-custom": null
-    };
-
 // Time
 var updateInterval = 20.0,
     headingUpdateSpeed = Math.PI / 4, // Radians __per second__
@@ -364,21 +351,21 @@ function formatCoords(latlng, significantDigits) {
         + ')';
 }
 
+function createLatLng(coords) {
+    return new google.maps.LatLng(coords[0], coords[1]);
+}
+
 function setDz(dz) {
-    if (!(dz in dropzones)) {
-        return;
+    if (viewModel.location.set(dz)) {
+        map.setCenter(viewModel.location.coords());
+        map.setZoom(defaultMapZoom);
     }
-
-    viewModel.location.set(dz);
-
-    map.setCenter(viewModel.location.coords());
-    map.setZoom(defaultMapZoom);
 }
 
 function setCustomDz(name, latlng) {
     viewModel.location.custom.name(name);
     viewModel.location.custom.coords(latlng);
-    setDz("dz-custom");
+    setDz("custom");
 }
 
 function defaultIfUndefined(x, def) {
@@ -400,8 +387,8 @@ function getFullPath(location) {
 
 function generateGETForLocation() {
     var result = "?";
-    if (viewModel.location.id() != "dz-custom") {
-        result += "dz=" + viewModel.location.id().replace("dz-","");
+    if (viewModel.location.id() != "custom") {
+        result += "dz=" + viewModel.location.id();
     } else {
         var latlng = viewModel.location.custom.coords();
         result += "lat=" + latlng.lat() + "&lng=" + latlng.lng();
@@ -503,7 +490,7 @@ function onTimeTick() {
 
 function onDzMenuItemSelected(event, ui) {
     ga('send', 'event', 'dz', 'selected', ui.item.attr('id'));
-    setDz(ui.item.attr('id'));
+    setDz(ui.item.attr('id').replace("dz-", ""));
 }
 
 function onFindNewDz() {
@@ -523,7 +510,7 @@ function parseParameters() {
     var queryString = getQueryString(),
 
         lang = defaultIfUndefined(queryString.lang, readSetting("language", "en")),
-        dz = defaultIfUndefined(queryString.dz, viewModel.location.id().replace("dz-", "")),
+        dz = defaultIfUndefined(queryString.dz, viewModel.location.id()),
         lat = queryString.lat,
         lng = queryString.lng;
 
@@ -532,7 +519,7 @@ function parseParameters() {
     }
 
     if (dz) {
-        setDz("dz-" + dz);
+        setDz(dz);
     }
 
     if (lat && lng) {
