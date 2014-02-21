@@ -138,8 +138,30 @@ function ViewModel() {
             coords: ko.observable(),
             name: ko.observable(),
             available: ko.computed(function() {
-                return self.location.custom.coords() !== undefined;
-            }, this, { deferEvaluation: true })
+                return !!self.location.custom.coords();
+            }, this, { deferEvaluation: true }),
+
+            // This is used for persistence
+            coordsJS: ko.computed({
+                read: function() {
+                    if (self.location.custom.coords()) {
+                        return [
+                            self.location.custom.coords().lat(),
+                            self.location.custom.coords().lng()
+                        ];
+                    } else {
+                        return null;
+                    }
+                },
+                write: function(val) {
+                    if (val) {
+                        self.location.custom.coords(createLatLng(val));
+                    } else {
+                        self.location.custom.coords(null);
+                    }
+                },
+                deferEvaluation: true
+            })
         },
         id: ko.computed({
             write: function(id) {
@@ -205,9 +227,9 @@ function ViewModel() {
             self.display.controlset,
             self.display.pattern,
 
-            self.location.id,
-            self.location.custom.coords,
+            self.location.custom.coordsJS,
             self.location.custom.name,
+            self.location.id,
 
             self.pattern.openingAltitude,
 
