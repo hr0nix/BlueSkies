@@ -34,6 +34,10 @@ body {
     border-radius: 2px 0 0 2px;
 }
 
+.current-dz > a {
+    color: red;
+}
+
 .ui-menu {
     z-index: 100;
     width: 10em;

@@ -28,7 +28,7 @@
                 <img src="images/windsock-base.png">
                 <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())">
             </div>
-            <ul id="dz-selection-menu" class="dz-selection-control">
+            <ul id="dz-selection-menu" class="dz-selection-control" data-bind="currentDz: location.id">
                 <li><a href="#"><div id="selected-dz" data-bind="html: location.name"></div></a>
                     <ul>
                         <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>

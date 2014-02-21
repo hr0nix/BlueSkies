@@ -35,6 +35,18 @@ ko.bindingHandlers.ruler = {
     }
 };
 
+ko.bindingHandlers.currentDz = {
+    update: function(element, valueAccessor) {
+        var id = "#dz-" + ko.unwrap(valueAccessor());
+        $(element)
+            .find('li')
+                .removeClass('current-dz')
+                .end()
+            .find(id)
+                .addClass('current-dz');
+    }
+};
+
 /// Visibility bindings
 ko.bindingHandlers.fadeVisible = {
     init: function(element, valueAccessor) {
