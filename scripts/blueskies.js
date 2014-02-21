@@ -40,7 +40,6 @@ var eps = 1e-03, // Mostly used to compare altitude to zero
 
 ////// UI objects
 var map,
-    landingPatternLine,
 
     reachabilitySetObjects = [],
     controllabilitySetObjects = [],
@@ -321,7 +320,7 @@ function computeLandingPattern(location, wind, pattern) {
         landingDirection = pattern.landingDirection();
 
     // For now, strong winds imply into-the wind landing no matter what landing direction is given. This needs further thought.
-    heading = windSpeed() < speedH ?
+    heading = windSpeed < speedH ?
         createGroundTrack(windSpeed, windDirection, speedH, landingDirection):
         Math.PI + windDirection; // Into the wind
 
@@ -447,21 +446,6 @@ function generateGETForLocation() {
     }
 
     return result;
-}
-
-////// UI update logic
-
-function updateCanopyControls() {
-    steadyPointMarker.setPosition(viewModel.steadyPoint());
-
-    updateReachabilitySet();
-    updateControllabilitySet();
-}
-
-function updateLandingPattern() {
-//    landingPatternLine.setPath(computeLandingPattern(getCurrentLandingPoint(), getLandingDirection()));
-
-    updateControllabilitySet();
 }
 
 ////// Event handlers
@@ -676,6 +660,27 @@ function bindVisibility(object, observable) {
     });
 }
 
+function bindPolyline(poly, observable) {
+    observable.subscribe(function(newValue) {
+        poly.setPath(newValue);
+    });
+}
+
+function initLandingPattern() {
+    var landingPatternLine = new google.maps.Polyline({
+        map: map,
+        geodesic: false,
+        strokeColor: '#00FFFF',
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+        zIndex: 1,
+        path: viewModel.pattern.points()
+    });
+
+    bindVisibility(landingPatternLine, viewModel.pattern.show);
+    bindPolyline(landingPatternLine, viewModel.pattern.points);
+}
+
 function initDzMarker() {
     var options = {
         icon: {
@@ -778,16 +783,7 @@ function initialize() {
     dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
     google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
 
-    landingPatternLine = new google.maps.Polyline({
-        map: map,
-        geodesic: false,
-        strokeColor: '#00FFFF',
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
-        zIndex: 1,
-        visible: viewModel.pattern.show()
-    });
-
+    initLandingPattern();
     initDzMarker();
     initSteadyPointMarker();
     initCanopyMarker();

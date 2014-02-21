@@ -45,7 +45,7 @@ function ViewModel() {
 
         points: ko.computed(function() {
             if (!self.pattern.show()) {
-                return undefined;
+                return [];
             }
             return computeLandingPattern(self.location.coords(), self.wind, self.pattern);
         }, this, { deferEvaluation: true })
