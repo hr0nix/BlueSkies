@@ -368,11 +368,15 @@ function formatSimulationSpeed(speed, significantDigits) {
     return $.number(speed, significantDigits) + "x" + (speed == 0 ? " " + localize("paused") : "");
 }
 
-function formatCoords(latlng) {
+function formatCoords(latlng, significantDigits) {
+    significantDigits = significantDigits || 6;
     if (!latlng) {
         return '';
     }
-    return '(' + $.number(latlng.lat(), 6) + ', ' + $.number(latlng.lng(), 6) + ')';
+    return '(' 
+        + $.number(latlng.lat(), significantDigits) + ', ' 
+        + $.number(latlng.lng(), significantDigits) 
+        + ')';
 }
 
 function setDz(dz) {
