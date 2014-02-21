@@ -66,8 +66,9 @@
             <div data-bind="if: debug.on">
                 <h3>Debug</h3>
                 <div>
-                    <div>Coords: <span data-bind="text: location.coords"></span></div>
+                    <div>Coords: <span data-bind="text: formatCoords(location.coords())"></span></div>
                     <div>GET: <span data-bind="text: generateGETForLocation()"></span></div>
+                    <div>loc: <span data-bind="text: formatCoords(canopy.location())"></span></div>
                 </div>
             </div>
             <div id="status" data-bind="slideVisible: simulation.flying">

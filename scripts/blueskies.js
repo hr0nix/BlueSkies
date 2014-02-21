@@ -398,6 +398,13 @@ function formatSimulationSpeed(speed, significantDigits) {
     return $.number(speed, significantDigits) + "x" + (speed == 0 ? " " + localize("paused") : "");
 }
 
+function formatCoords(latlng) {
+    if (!latlng) {
+        return '';
+    }
+    return '(' + $.number(latlng.lat(), 6) + ', ' + $.number(latlng.lng(), 6) + ')';
+}
+
 function setDz(dz) {
     if (!(dz in dropzones)) {
         return;
