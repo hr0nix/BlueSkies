@@ -26,22 +26,22 @@ ko.bindingHandlers.ruler = {
 /// Visibility bindings
 ko.bindingHandlers.fadeVisible = {
     init: function(element, valueAccessor) {
-        var shouldDisplay = valueAccessor();
+        var shouldDisplay = ko.unwrap(valueAccessor());
         $(element).toggle(shouldDisplay);
     },
     update: function(element, valueAccessor) {
-        var shouldDisplay = valueAccessor();
+        var shouldDisplay = ko.unwrap(valueAccessor());
         shouldDisplay ? $(element).fadeIn() : $(element).fadeOut();
     }
 };
 
 ko.bindingHandlers.slideVisible = {
     init: function(element, valueAccessor) {
-        var shouldDisplay = valueAccessor();
+        var shouldDisplay = ko.unwrap(valueAccessor());
         $(element).toggle(shouldDisplay);
     },
     update: function(element, valueAccessor) {
-        var shouldDisplay = valueAccessor();
+        var shouldDisplay = ko.unwrap(valueAccessor());
         shouldDisplay ? $(element).slideDown() : $(element).slideUp();
     }
 };
