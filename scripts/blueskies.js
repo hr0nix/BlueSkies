@@ -151,10 +151,10 @@ function interpolate(arr, coeff) {
         return arr[arr.length - 1];
     }
 
-    scaledCoeff = coeff * (arr.length - 1);
-    index1 = Math.floor(scaledCoeff);
-    index2 = Math.ceil(scaledCoeff);
-    mixCoeff = scaledCoeff - index1;
+    var scaledCoeff = coeff * (arr.length - 1),
+        index1 = Math.floor(scaledCoeff),
+        index2 = Math.ceil(scaledCoeff),
+        mixCoeff = scaledCoeff - index1;
     return arr[index1] * (1 - mixCoeff) + arr[index2] * mixCoeff;
 }
 
