@@ -606,7 +606,8 @@ function initCanopyMarker() {
     bindIcon(canopyMarker, viewModel.canopy.icon);
 }
 
-function createReachSetCircles(circles, color) {
+function createReachSetCircles(color) {
+    var circles = [];
     for (var i = 0; i < lastReachSetSteps; i++) {
         var circleOptions = {
             strokeColor: color,
@@ -620,16 +621,13 @@ function createReachSetCircles(circles, color) {
         circles.push(circle);
         google.maps.event.addListener(circle, "rightclick", onMapRightClick);
     }
+
+    return circles;
 }
 
 function initReachSets() {
-    var reachSetCircles = [],
-        controlSetCircles = [];
-    createReachSetCircles(controlSetCircles, '#0000FF');
-    createReachSetCircles(reachSetCircles, '#FF0000');
-
-    bindCircles(reachSetCircles, viewModel.analytics.reachSet);
-    bindCircles(controlSetCircles, viewModel.analytics.controlSet);
+    bindCircles(createReachSetCircles('#FF0000'), viewModel.analytics.reachSet);
+    bindCircles(createReachSetCircles('#0000FF'), viewModel.analytics.controlSet);
 }
 
 function initializeAnalyticsEvents() {
