@@ -320,10 +320,7 @@ function createLatLng(coords) {
 }
 
 function setDz(dz) {
-    if (viewModel.location.set(dz)) {
-        map.setCenter(viewModel.location.coords());
-        map.setZoom(defaultMapZoom);
-    }
+    viewModel.location.id(dz);
 }
 
 function setCustomDz(name, latlng) {
@@ -657,6 +654,7 @@ function initialize() {
     };
     map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
 
+    bindMapCenter(map, viewModel.location.id, viewModel.location.coords);
     viewModel.display.fullscreen.subscribe(function() {
         google.maps.event.trigger(map, "resize");
     });
@@ -704,6 +702,10 @@ function initialize() {
         showAboutDialog("#about-dialog");
     });
 
+    $(window).on('beforeunload', function() {
+        viewModel.persistence.save();
+    });
+    viewModel.persistence.load();
     parseParameters();
 
     google.maps.event.addListener(map, "rightclick", onMapRightClick);

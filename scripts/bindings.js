@@ -109,6 +109,13 @@ ko.bindingHandlers.setLanguage = {
 };
 
 /// Google maps binding helpers
+function bindMapCenter(map, detect, center) {
+    detect.subscribe(function() {
+        map.setCenter(center());
+        map.setZoom(defaultMapZoom);
+    });
+}
+
 function bindMarkerPosition(marker, observable) {
     google.maps.event.addListener(marker, 'drag', function() {
         observable(marker.getPosition());

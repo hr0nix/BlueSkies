@@ -24,6 +24,8 @@ function ViewModel() {
         reachset: ko.observable(false),
         controlset: ko.observable(false),
 
+        pattern: ko.observable("hide"),
+
         fullscreen: ko.observable(false),
 
         maxAltitude: ko.computed(function() {
@@ -42,13 +44,12 @@ function ViewModel() {
         intoWind: ko.observable(true),
         openingAltitude: ko.observable(700),
 
-        display: ko.observable("hide"),
         show: ko.computed(function() {
-            return self.pattern.display() !== "hide";
+            return self.display.pattern() !== "hide";
         }, this, { deferEvaluation: true }),
         lhs: ko.computed(function() {
-            return self.pattern.show() ? 
-                (self.pattern.display() === "lhs"):
+            return self.pattern.show() ?
+                (self.display.pattern() === "lhs"):
                 undefined;
         }, this, { deferEvaluation: true }),
 
@@ -130,7 +131,7 @@ function ViewModel() {
     };
 
     self.location = {
-        id: ko.observable(),
+        _id: ko.observable(),
         coords: ko.observable(),
 
         custom: {
@@ -140,16 +141,18 @@ function ViewModel() {
                 return self.location.custom.coords() !== undefined;
             }, this, { deferEvaluation: true })
         },
-        set: function(id) {
-            if (!(id in dropzones)) {
-                return false;
-            }
+        id: ko.computed({
+            write: function(id) {
+                if (!(id in dropzones)) {
+                    return;
+                }
 
-            self.location.id(id);
-            self.location.coords(id === "custom" ? self.location.custom.coords() : createLatLng(dropzones[id]));
-
-            return true;
-        },
+                self.location.coords(id === "custom" ? self.location.custom.coords() : createLatLng(dropzones[id]));
+                self.location._id(id);
+            },
+            read: function() { return self.location._id(); },
+            deferEvaluation: true
+        }),
 
         name: ko.computed(function() {
             return $("#dz-" + self.location.id() + "> a").html();
@@ -159,7 +162,7 @@ function ViewModel() {
         }, this, { deferEvaluation: true })
     };
 
-    self.location.set("uk-sibson");
+    self.location.id("uk-sibson");
     self.location.coords.subscribe(function(newValue) {
         if (self.location.id() == 'custom') {
             self.location.custom.coords(newValue);
@@ -191,6 +194,52 @@ function ViewModel() {
             }
             return computeReachSet(self.location.coords(), self.reachSetAltitude(), false);
         }, this, { deferEvaluation: true })
+    };
+
+    self.persistence = {
+        // List of observables to save and load
+        _list: [
+            self.display.language,
+            self.display.unitSystem,
+            self.display.steadyPoint,
+            self.display.reachset,
+            self.display.controlset,
+            self.display.pattern,
+
+            self.location.id,
+            self.location.custom.coords,
+            self.location.custom.name,
+
+            self.pattern.openingAltitude
+        ],
+        // If _list is only appended to after the release, we don't need to
+        // change _version. If _list is modified incompatibly, or we need to reset user
+        // saved settings for other reasons, bump _version!
+        _version: 1,
+
+        save: function() {
+            if (!localStorage) {
+                return;
+            }
+
+            var saveData = self.persistence._list.map(function(observable) {
+                return observable();
+            });
+
+            localStorage.persistence = JSON.stringify(saveData);
+            localStorage.version = self.persistence._version;
+        },
+
+        load: function() {
+            if (!localStorage || localStorage.version != self.persistence._version) {
+                return;
+            }
+
+            var saveData = JSON.parse(localStorage.persistence);
+            for (var i = 0; i < saveData.length; i++ ) {
+                self.persistence._list[i](saveData[i]);
+            }
+        }
     };
 }
 

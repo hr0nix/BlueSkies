@@ -71,6 +71,7 @@
                     <div>loc: <span data-bind="text: formatCoords(canopy.location())"></span></div>
                     <div><button data-bind="click: simulation.stop">Stop</button></div>
                     <div><input type="checkbox" data-bind="checked: display.fullscreen">Fullscreen </div>
+                    <div><button data-bind="click: persistence.save">Save</button><button data-bind="click: persistence.load">Load</button></div>
                 </div>
             </div>
             <div id="status" data-bind="slideVisible: simulation.flying">
@@ -171,16 +172,16 @@
 
                     <div class="element-label">
                         <span lang="en">Landing pattern:</span><span lang="ru">Круг захода:</span>&nbsp;
-                        <span id="pattern-menu" data-fbind="jqButtonset: display">
-                            <input id="pattern-hide" type="radio" name="pattern" value="hide" data-bind="checked: display">
+                        <span id="pattern-menu" data-fbind="jqButtonset: $root.display.pattern">
+                            <input id="pattern-hide" type="radio" name="pattern" value="hide" data-bind="checked: $root.display.pattern">
                             <label for="pattern-hide"><span lang="en">Hide</span><span lang="ru">Нет</span>
                             </label>
 
-                            <input id="pattern-rhs" type="radio" name="pattern" value="rhs" data-bind="checked: display">
+                            <input id="pattern-rhs" type="radio" name="pattern" value="rhs" data-bind="checked: $root.display.pattern">
                             <label for="pattern-rhs"><span lang="en">Right</span><span lang="ru">Правым</span>
                             </label>
 
-                            <input id="pattern-lhs" type="radio" name="pattern" value="lhs" data-bind="checked: display">
+                            <input id="pattern-lhs" type="radio" name="pattern" value="lhs" data-bind="checked: $root.display.pattern">
                             <label for="pattern-lhs"><span lang="en">Left</span><span lang="ru">Левым</span>
                             </label>
                         </span>
