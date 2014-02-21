@@ -229,10 +229,6 @@ function getCanopyVerticalSpeed(mode) {
     return interpolate(verticalSpeeds, mode);
 }
 
-function getCurrentLandingPoint() {
-    return viewModel.location.coords();
-}
-
 // returns: canopy heading necessary to maintain desiredTrack ground track in given winds (not always possible, of course)
 // Simple vector addition: wind + canopySpeed = groundTrack
 //
@@ -531,7 +527,7 @@ function onTimeTick() {
         viewModel.canopy.descend(dt);
 
         if (!viewModel.simulation.flying()) {
-            var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.canopy.location(), getCurrentLandingPoint());
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.canopy.location(), viewModel.location.coords());
             ga('send', 'event', 'simulation', 'finished');
             ga('send', 'event', 'simulation', 'finished', 'distance', Math.floor(distance));
             ga('send', 'event', 'simulation', 'finished', 'angle-into-wind', Math.floor(radToDeg(normalizeAngle(Math.abs(viewModel.canopy.heading() - normalizeAngle(viewModel.wind.direction() - Math.PI))))));
