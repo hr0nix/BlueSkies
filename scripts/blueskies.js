@@ -640,7 +640,7 @@ function initializeAnalyticsEvents() {
 
     google.maps.event.addListener(map, "rightclick", function() {
         ga('send', 'event', 'simulation', 'started');
-        ga('send', 'event', 'simulation', 'started', 'altitude', viewModel.pattern.openingAltitude);
+        ga('send', 'event', 'simulation', 'started', 'altitude', viewModel.pattern.openingAltitude());
     });
 
     $("input").change(function() {
