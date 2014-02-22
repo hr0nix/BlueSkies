@@ -709,7 +709,9 @@ function initialize() {
     });
 
     $(window).on('beforeunload', function() {
-        viewModel.persistence.save();
+        if (viewModel.persistence.saveOnExit()) {
+            viewModel.persistence.save();
+        }
     });
     viewModel.persistence.load();
     parseParameters();

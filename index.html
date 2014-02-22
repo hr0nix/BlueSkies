@@ -71,7 +71,8 @@
                     <div>loc: <span data-bind="text: formatCoords(canopy.location())"></span></div>
                     <div><button data-bind="click: simulation.stop">Stop</button></div>
                     <div><input type="checkbox" data-bind="checked: display.fullscreen">Fullscreen </div>
-                    <div><button data-bind="click: persistence.save">Save</button><button data-bind="click: persistence.load">Load</button></div>
+                    <div><button data-bind="click: persistence.save">Save</button><button data-bind="click: persistence.load">Load</button><button
+                    data-bind="click: persistence.reset">Reset</button></div>
                 </div>
             </div>
             <div id="status" data-bind="slideVisible: simulation.flying">

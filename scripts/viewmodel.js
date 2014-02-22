@@ -240,6 +240,8 @@ function ViewModel() {
         // saved settings for other reasons, bump _version!
         _version: 1,
 
+        saveOnExit: ko.observable(true),
+
         save: function() {
             if (!localStorage) {
                 return;
@@ -262,6 +264,14 @@ function ViewModel() {
             for (var i = 0; i < saveData.length; i++ ) {
                 self.persistence._list[i](saveData[i]);
             }
+        },
+
+        reset: function() {
+            if (localStorage) {
+                localStorage.removeItem("persistence");
+                localStorage.removeItem("version");
+            }
+            self.persistence.saveOnExit(false);
         }
     };
 }
