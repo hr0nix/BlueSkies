@@ -13,7 +13,7 @@ function ViewModel() {
     };
 
     self.debug = {
-        on: ko.observable(true)
+        on: ko.observable(false)
     };
 
     self.display = {
