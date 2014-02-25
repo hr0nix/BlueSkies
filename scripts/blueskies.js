@@ -26,8 +26,7 @@ var eps = 1e-03, // Mostly used to compare altitude to zero
     headingSliderOptions = { min: 0, max: Math.PI * 2, step: Math.PI / 180 * 5 };
 
 ////// UI objects
-var map,
-    dzFinderAutocomplete;
+var map;
 
 ////// Localization for javascript
 var enResources = {
@@ -454,7 +453,7 @@ function onDzMenuItemSelected(event, ui) {
 }
 
 function onFindNewDz() {
-    var place = dzFinderAutocomplete.getPlace();
+    var place = this.getPlace();
     if (!place.geometry) {
         ga('send', 'event', 'dz', 'autocomplete', 'failed');
         return;
@@ -689,7 +688,7 @@ function initialize() {
     map.controls[google.maps.ControlPosition.TOP_CENTER].push($shareButton.get(0));
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#wind-arrow").get(0));
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#landing-direction-arrow").get(0));
-    dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
+    var dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
     google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
 
     initLandingPattern();
