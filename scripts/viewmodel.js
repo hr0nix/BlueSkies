@@ -131,7 +131,7 @@ function ViewModel() {
     };
 
     self.location = {
-        _id: ko.observable(),
+        _id: ko.observable().extend({ notify: 'always' }),
         coords: ko.observable(),
 
         custom: {
@@ -174,7 +174,7 @@ function ViewModel() {
             },
             read: function() { return self.location._id(); },
             deferEvaluation: true
-        }),
+        }).extend({ notify: 'always' }),
 
         name: ko.computed(function() {
             return $("#dz-" + self.location.id() + "> a").html();
