@@ -225,42 +225,56 @@ function computeReachSet(sourceLocation, altitude, reachability) {
     return result;
 }
 
+function computeHeadings(wind, pattern, speedH) {
+    var rotationFactor = pattern.lhs() ? 1 : -1,
+
+        windSpeed = wind.speed(),
+        windDirection = wind.direction(),
+        landingDirection = pattern.landingDirection();
+    // We need to set up heading array to give the headings we hold on each leg, from ground up,
+    // i.e. heading[0] is the heading we hold on the final, heading[1] on the crosswind leg etc
+    if (windSpeed < speedH) {
+        return [
+            landingDirection,
+            landingDirection + rotationFactor * Math.PI / 2, // In ordinary winds we hold perpendicular ground track
+            landingDirection + Math.PI
+        ].map(function(track) { return createGroundTrack(windSpeed, windDirection, speedH, track); });
+    } else {
+        // For now, strong winds imply into-the wind landing no matter what landing direction is given. This needs further thought.
+        return [
+            Math.PI + windDirection,
+            Math.PI + windDirection + rotationFactor * Math.PI / 8, // in strong winds we move backwards with some arbitrary low angle to the wind
+            Math.PI + windDirection // Into the wind
+        ];
+    }
+}
+
 function computeLandingPattern(location, wind, pattern) {
     var controlPointAltitudes = [100, 200, 300],
         patternMode = 0.85,
         speedH = getCanopyHorizontalSpeed(patternMode),
         speedV = getCanopyVerticalSpeed(patternMode),
-        rotationFactor = pattern.lhs() ? 1 : -1,
-
-        timeToPoint1 = controlPointAltitudes[0] / speedV,
-        timeToPoint2 = (controlPointAltitudes[1] - controlPointAltitudes[0]) / speedV,
-        timeToPoint3 = (controlPointAltitudes[2] - controlPointAltitudes[1]) / speedV,
-
-        heading,
 
         windSpeed = wind.speed(),
         windDirection = wind.direction(),
-        landingDirection = pattern.landingDirection();
 
-    // For now, strong winds imply into-the wind landing no matter what landing direction is given. This needs further thought.
-    heading = windSpeed < speedH ?
-        createGroundTrack(windSpeed, windDirection, speedH, landingDirection):
-        Math.PI + windDirection; // Into the wind
+        heading = computeHeadings(wind, pattern, speedH),
 
-    var point1 = moveInWind(location, windSpeed, windDirection, speedH, heading, -timeToPoint1); // Note that we specify the wind speed and canopy heading as though we're flying the pattern. But we give negative time, so we get the point where we need to start to arrive where we need.
+        prevPoint = location,
+        prevAltitude = 0,
 
-    heading = windSpeed < speedH ?
-        createGroundTrack(windSpeed, windDirection, speedH, landingDirection + rotationFactor * Math.PI / 2): // In ordinary winds we hold perpendicular ground track
-        Math.PI + windDirection + rotationFactor * Math.PI / 8; // in strong winds we move backwards with some arbitrary low angle to the wind
+        result = [location];
+    for (var i = 0; i < controlPointAltitudes.length; i++) {
+        time = (controlPointAltitudes[i] - prevAltitude) / speedV;
 
-    var point2 = moveInWind(point1, windSpeed, windDirection, speedH, heading, -timeToPoint2);
+        var point = moveInWind(prevPoint, windSpeed, windDirection, speedH, heading[i], -time); // Note that we specify the wind speed and canopy heading as though we're flying the pattern. But we give negative time, so we get the point where we need to start to arrive where we need.
 
-    heading = windSpeed < speedH ?
-        createGroundTrack(windSpeed, windDirection, speedH, landingDirection + Math.PI):
-        Math.PI + windDirection; // Into the wind
-    var point3 = moveInWind(point2, windSpeed, windDirection, speedH, heading, -timeToPoint3);
+        prevPoint = point;
+        prevAltitude = controlPointAltitudes[i];
+        result.push(point);
+    }
 
-    return [point3, point2, point1, location];
+    return result;
 }
 
 function metersToFeet(meters) {
