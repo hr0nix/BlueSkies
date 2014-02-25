@@ -346,10 +346,6 @@ function defaultIfUndefined(x, def) {
     return (typeof x === 'undefined') ? def : x;
 }
 
-function parseBoolean(str) {
-    return str == "true";
-}
-
 function isDialogOpen(id) {
     var $id = $(id);
     return $id.data("ui-dialog") && $id.dialog("isOpen");
