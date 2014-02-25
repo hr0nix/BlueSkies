@@ -106,13 +106,13 @@
                 <h3><span lang="en">Display options</span><span lang="ru">Отображение</span></h3>
                 <div>
                     <div>
-                        <span data-fbind="jqButtonset: language, no_padding: true">
-                            <input id="select-lang-en" type="radio" name="language" value="en" data-bind="checked: language"><label for="select-lang-en"><img src="images/GB.png"></label>
-                            <input id="select-lang-ru" type="radio" name="language" value="ru" data-bind="checked: language"><label for="select-lang-ru"><img src="images/RU.png"></label>
+                        <span data-bind="jqButtonset: true, no_padding: true">
+                            <input id="select-lang-en" type="radio" name="language" value="en" data-bind="jqChecked: language"><label for="select-lang-en"><img src="images/GB.png"></label>
+                            <input id="select-lang-ru" type="radio" name="language" value="ru" data-bind="jqChecked: language"><label for="select-lang-ru"><img src="images/RU.png"></label>
                         </span>&nbsp;
-                        <span data-fbind="jqButtonset: unitSystem">
-                            <input id="select-metric" type="radio" name="system" value="metric" data-bind="checked: unitSystem"><label for="select-metric"><span lang="en">Metric</span><span lang="ru">СИ</span></label>
-                            <input id="select-imperial" type="radio" name="system" value="imperial" data-bind="checked: unitSystem"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
+                        <span data-bind="jqButtonset: true">
+                            <input id="select-metric" type="radio" name="system" value="metric" data-bind="jqChecked: unitSystem"><label for="select-metric"><span lang="en">Metric</span><span lang="ru">СИ</span></label>
+                            <input id="select-imperial" type="radio" name="system" value="imperial" data-bind="jqChecked: unitSystem"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
 
@@ -122,16 +122,16 @@
                     </div>
                     <div data-bind="jqSlider: $root.simulation.speed, sliderOptions: { min: 0, max: 5, step: 0.1 }"></div>
 
-                    <div id="display-ui-element-buttons" class="element-label" data-fbind="jqButtonset: [steadyPoint(), reachset(), controlset()]">
-                        <input type="checkbox" id="steady-point-checkbox" data-bind="checked: steadyPoint">
+                    <div id="display-ui-element-buttons" class="element-label" data-bind="jqButtonset: true">
+                        <input type="checkbox" id="steady-point-checkbox" data-bind="jqChecked: steadyPoint">
                         <label for="steady-point-checkbox">
                             <img src="images/steady.png" data-bind="attr: { title: localize('accuracy trick') }">
                         </label>
-                        <input type="checkbox" id="show-controllability-set-checkbox" data-bind="checked: controlset">
+                        <input type="checkbox" id="show-controllability-set-checkbox" data-bind="jqChecked: controlset">
                         <label for="show-controllability-set-checkbox">
                             <img src="images/control.png" data-bind="attr: { title: localize('controlset') }">
                         </label>
-                        <input type="checkbox" id="show-reachability-set-checkbox" data-bind="checked: reachset">
+                        <input type="checkbox" id="show-reachability-set-checkbox" data-bind="jqChecked: reachset">
                         <label for="show-reachability-set-checkbox">
                             <img src="images/reach.png" data-bind="attr: { title: localize('reachset') }">
                         </label>
@@ -173,16 +173,16 @@
 
                     <div class="element-label">
                         <span lang="en">Landing pattern:</span><span lang="ru">Круг захода:</span>&nbsp;
-                        <span id="pattern-menu" data-fbind="jqButtonset: $root.display.pattern">
-                            <input id="pattern-hide" type="radio" name="pattern" value="hide" data-bind="checked: $root.display.pattern">
+                        <span id="pattern-menu" data-bind="jqButtonset: true">
+                            <input id="pattern-hide" type="radio" name="pattern" value="hide" data-bind="jqChecked: $root.display.pattern">
                             <label for="pattern-hide"><span lang="en">Hide</span><span lang="ru">Нет</span>
                             </label>
 
-                            <input id="pattern-rhs" type="radio" name="pattern" value="rhs" data-bind="checked: $root.display.pattern">
+                            <input id="pattern-rhs" type="radio" name="pattern" value="rhs" data-bind="jqChecked: $root.display.pattern">
                             <label for="pattern-rhs"><span lang="en">Right</span><span lang="ru">Правым</span>
                             </label>
 
-                            <input id="pattern-lhs" type="radio" name="pattern" value="lhs" data-bind="checked: $root.display.pattern">
+                            <input id="pattern-lhs" type="radio" name="pattern" value="lhs" data-bind="jqChecked: $root.display.pattern">
                             <label for="pattern-lhs"><span lang="en">Left</span><span lang="ru">Левым</span>
                             </label>
                         </span>

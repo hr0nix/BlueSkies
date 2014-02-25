@@ -93,9 +93,18 @@ ko.bindingHandlers.jqButtonset = {
                 .find('span.ui-button-text')
                     .addClass('no-padding');
         }
-    },
+    }
+};
+
+ko.bindingHandlers.jqChecked = {
+    after: ko.bindingHandlers.checked.after,
+    init: ko.bindingHandlers.checked.init,
     update: function(element, valueAccessor) {
-        $(element).buttonset('refresh');
+        ko.unwrap(valueAccessor()); // We call this to depend on value so the update function is called again
+        if (ko.bindingHandlers.checked.update) {
+            ko.bindingHandlers.checked.update(element, valueAccessor);
+        }
+        $(element).parent().buttonset('refresh');
     }
 };
 
