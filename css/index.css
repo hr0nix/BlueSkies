@@ -1,4 +1,4 @@
-html, body, #map-canvas-container, #map-canvas, #right-panel {
+html, body, body > div:first-child, #map-canvas, #right-panel {
     height: 100%;
     font-size: small;
 }
@@ -9,8 +9,12 @@ body {
     overflow-y: hidden;
 }
 
-#map-canvas-container {
+.map-normal {
     margin-right: 27em;
+}
+
+.map-fullscreen {
+    margin-right: 0;
 }
 
 .dz-selection-control {
@@ -28,6 +32,10 @@ body {
 #dz-selection-menu {
     width: 11em;
     border-radius: 2px 0 0 2px;
+}
+
+.current-dz > a {
+    color: red;
 }
 
 .ui-menu {
@@ -108,15 +116,17 @@ body {
     margin-bottom: 0;
 }
 
-#landing-direction-arrow {
-    display: none;
-}
-
 .ruler, .ruler li {
     margin: 0;
     padding: 0;
     list-style: none;
     display: inline-block;
+}
+
+.ruler {
+    padding-left: 1px;
+    padding-right: 1px;
+    width: 100%;
 }
 
 .ruler li {
@@ -140,10 +150,6 @@ body {
 .no-padding {
     padding-bottom: 1px !important;
     padding-top: 2px !important;
-}
-
-#system-menu {
-    margin-left: 10px;
 }
 
 .float-right {

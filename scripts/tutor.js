@@ -9,7 +9,7 @@ function startTutor(id) {
     function nextDialog() {
         if (nextDialogIndex < allDialogs.size()) {
             if (nextDialogIndex == allDialogs.size() - 1) {
-                saveSetting("tutor-finished", true);
+                viewModel.misc.tutorFinished(true);
                 ga('send', 'event', 'tutor', 'finished', {'nonInteraction': true});
             }
 
@@ -63,7 +63,7 @@ function startTutor(id) {
             modal: true,
             performHighlighting: false,
             position: {
-                of: "#map-canvas-container"
+                of: "#map-canvas"
             }
         },
         "dz-selection": {
@@ -76,14 +76,14 @@ function startTutor(id) {
         "target": {
             performHighlighting: false,
             position: {
-                of: "#map-canvas-container",
+                of: "#map-canvas",
                 my: "left top",
                 at: "center+10 center+10"
             }
         },
         "wind": {
             position: {
-                of: $("#wind-direction-slider").parent().parent(),
+                of: "#wind-conditions",
                 my: "right top",
                 at: "left top"
             }
@@ -97,7 +97,7 @@ function startTutor(id) {
         },
         "pattern": {
             position: {
-                of: $("#opening-altitude-slider").parent().parent(),
+                of: "#pattern-settings",
                 my: "right top",
                 at: "left top"
             }
@@ -114,7 +114,7 @@ function startTutor(id) {
             performHighlighting: false,
             buttons: [],
             position: {
-                of: "#map-canvas-container",
+                of: "#map-canvas",
                 my: "center bottom",
                 at: "center bottom-50"
             }
@@ -128,14 +128,9 @@ function startTutor(id) {
         $(this).dialog(commonOptions).dialog("option", specific);
     });
 
-    var finished = readSetting("tutor-finished", false);
+    var finished = viewModel.misc.tutorFinished();
     nextDialogIndex = finished ? allDialogs.size() - 1 : 0;
     nextDialog();
-    if (finished) {
-        setTimeout(function() {
-            $("#tutor-rightclick").dialog("close");
-        }, 3000);
-    }
 
     $(".tutor-button").click(function() {
         ga('send', 'event', 'tutor', 'restart');
