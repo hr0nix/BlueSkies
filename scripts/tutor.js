@@ -131,11 +131,6 @@ function startTutor(id) {
     var finished = viewModel.misc.tutorFinished();
     nextDialogIndex = finished ? allDialogs.size() - 1 : 0;
     nextDialog();
-    if (finished) {
-        setTimeout(function() {
-            $("#tutor-rightclick").dialog("close");
-        }, 3000);
-    }
 
     $(".tutor-button").click(function() {
         ga('send', 'event', 'tutor', 'restart');
