@@ -158,6 +158,7 @@ ko.bindingHandlers.mapFinder = {
 
 /// Google maps binding helpers
 function bindMapCenter(map, observable) {
+    map.setCenter(observable());
     observable.subscribe(function(newValue) {
         map.setCenter(newValue);
         map.setZoom(defaultMapZoom);
