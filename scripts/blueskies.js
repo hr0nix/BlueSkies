@@ -669,6 +669,14 @@ function initialize() {
         google.maps.event.trigger(map, "resize");
     });
 
+    $(window).on('beforeunload', function() {
+        if (viewModel.persistence.saveOnExit()) {
+            viewModel.persistence.save();
+        }
+    });
+    viewModel.persistence.load();
+    parseParameters();
+
     var $dzMenu = $("#dz-selection-menu"),
         firstLevelPosition = { my: "left top", at: "left bottom" },
         otherLevelsPosition = { my: "left top", at: "right top" };
@@ -700,14 +708,6 @@ function initialize() {
     $(".about-button").click(function() {
         showAboutDialog("#about-dialog");
     });
-
-    $(window).on('beforeunload', function() {
-        if (viewModel.persistence.saveOnExit()) {
-            viewModel.persistence.save();
-        }
-    });
-    viewModel.persistence.load();
-    parseParameters();
 
     google.maps.event.addListener(map, "rightclick", onMapRightClick);
     $(document)
