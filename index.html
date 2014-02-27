@@ -105,6 +105,13 @@
                         <span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span>
                         <span data-bind="html: formatHeading(canopy.heading(), 0)"></span>
                     </div>
+
+                    <div class="element-label">
+                        <span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span>
+                        <span data-bind="html: formatSimulationSpeed(simulation.speed())"></span>
+                    </div>
+                    <div data-bind="jqSlider: simulation.speed, sliderOptions: { min: 0, max: 5, step: 0.1 }"></div>
+                    <a href="#" class="link-button" data-bind="click: simulation.togglePause, text: simulation.pauseText"></a>
                 </div>
             </div>
             <div data-bind="with: display">
@@ -120,13 +127,6 @@
                             <input id="select-imperial" type="radio" name="system" value="imperial" data-bind="jqChecked: unitSystem"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
-
-                    <div class="element-label">
-                        <span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span>
-                        <a href="#" class="link-button float-right" data-bind="click: $root.simulation.togglePause, text: $root.simulation.pauseText"></a>
-                        <span data-bind="html: formatSimulationSpeed($root.simulation.speed())"></span>
-                    </div>
-                    <div data-bind="jqSlider: $root.simulation.speed, sliderOptions: { min: 0, max: 5, step: 0.1 }"></div>
 
                     <div id="display-ui-element-buttons" class="element-label" data-bind="jqButtonset: true">
                         <input type="checkbox" id="steady-point-checkbox" data-bind="jqChecked: steadyPoint">
