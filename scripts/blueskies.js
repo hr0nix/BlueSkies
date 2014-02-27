@@ -676,7 +676,8 @@ function initialize() {
     });
 
     var $dzMenu = $("#dz-selection-menu"),
-        firstLevelPosition = { my: "left top", at: "left bottom" };
+        firstLevelPosition = { my: "left top", at: "left bottom" },
+        otherLevelsPosition = { my: "left top", at: "right top" };
     $dzMenu.menu({
         select: onDzMenuItemSelected,
         position: firstLevelPosition,
@@ -685,7 +686,7 @@ function initialize() {
         },
         focus: function(e, ui) {
             if (!ui.item.parent().is($dzMenu)) {
-                $(this).menu("option", "position", { my: "left top", at: "right top" });
+                $(this).menu("option", "position", otherLevelsPosition);
             }
         }
     });
