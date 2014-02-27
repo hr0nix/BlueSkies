@@ -72,7 +72,7 @@ body {
     padding: 13px 1em 15px;
 }
 
-#right-panel a[href="#"] {
+a.link-button {
     border-bottom: 1px dotted #000;
     text-decoration: none;
 }
