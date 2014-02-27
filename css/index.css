@@ -86,16 +86,10 @@ body {
 }
 
 .arrow-indicator {
-    position: absolute;
+    background-image: url('../images/windsock-base.png');
     padding: 0;
     margin-top: 15px;
     margin-right: 30px;
-}
-
-.arrow-indicator > img:last-child {
-    position: absolute;
-    top: 0;
-    left: 0;
 }
 
 #about-text a[href="#"] {
