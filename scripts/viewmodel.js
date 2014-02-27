@@ -36,9 +36,16 @@ function ViewModel() {
 
     self.wind = {
         // We use the azimuth of the wind speed vector here, not the navigational wind direction (i.e. where wind is blowing, not where _from_)
-        direction: ko.observable(Math.random() * Math.PI * 2),
-        speed: ko.observable(5 + Math.random() * 2 - 1)
+        direction: ko.observable(),
+        speed: ko.observable(),
+
+        randomize: function() {
+            self.wind.direction(Math.random() * Math.PI * 2);
+            self.wind.speed(2 + Math.random() * 2 - 1);
+        }
     };
+
+    self.wind.randomize();
 
     self.pattern = {
         selectedLandingDirection: ko.observable(0),
