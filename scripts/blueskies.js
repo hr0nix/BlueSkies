@@ -51,6 +51,8 @@ var enResources = {
         "m": "м",
         "ft": "футов",
         "paused": "", // too long anyway :)
+        "Pause": "Пауза",
+        "Unpause": "Продолжить",
         "Choose another landing area": "Выберите другую площадку приземления",
         "Legend": "Легенда",
         "Got it!": "Дальше",

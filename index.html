@@ -123,6 +123,7 @@
 
                     <div class="element-label">
                         <span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span>
+                        <a href="#" class="link-button float-right" data-bind="click: $root.simulation.togglePause, text: $root.simulation.pauseText"></a>
                         <span data-bind="html: formatSimulationSpeed($root.simulation.speed())"></span>
                     </div>
                     <div data-bind="jqSlider: $root.simulation.speed, sliderOptions: { min: 0, max: 5, step: 0.1 }"></div>

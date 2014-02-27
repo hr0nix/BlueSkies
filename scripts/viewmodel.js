@@ -87,6 +87,10 @@ function ViewModel() {
             }
         },
 
+        pauseText: ko.computed(function() {
+            return (self.simulation.speed() != 0 ? localize("Pause") : localize("Unpause")) + " (P)";
+        }, this, { deferEvaluation: true }),
+
         flying: ko.computed(function() {
             return self.simulation.started() && self.canopy.altitude() > eps;
         }, this, { deferEvaluation: true }),
