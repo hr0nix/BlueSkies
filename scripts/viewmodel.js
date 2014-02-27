@@ -224,6 +224,14 @@ function ViewModel() {
         tutorFinished: ko.observable(false)
     };
 
+    self.shareLocation = {
+        wind: ko.observable(false),
+        pattern: ko.observable(false),
+        GET: ko.computed(function() {
+            return getFullPath(window.location) + generateGETForLocation();
+        }, this, { deferEvaluation: true })
+    };
+
     self.persistence = {
         // List of observables to save and load
         _list: [

@@ -368,6 +368,18 @@ function generateGETForLocation() {
         result += "lat=" + latlng.lat() + "&lng=" + latlng.lng();
     }
 
+    if (viewModel.shareLocation.wind()) {
+        result += "&wind.direction=" + radToDeg(reportedWindDirection(viewModel.wind.direction())) +
+            "&wind.speed=" + viewModel.wind.speed();
+    }
+
+    if (viewModel.shareLocation.pattern()) {
+        result += "&pattern=" + viewModel.display.pattern();
+        if (!viewModel.pattern.intoWind()) {
+            result += "&landingDirection=" + radToDeg(viewModel.pattern.landingDirection());
+        }
+    }
+
     return result;
 }
 
@@ -403,8 +415,6 @@ function onShareLinkClick() {
     var shareDialogOptions = {
         title: localize("Share a link"),
         autoOpen: true,
-        resizable: true,
-        draggable: true,
         minHeight: 0,
         modal: true,
         width: "auto",
@@ -421,9 +431,7 @@ function onShareLinkClick() {
     };
     $("#share-dialog")
         .dialog(shareDialogOptions)
-        .children("input")
-            .val(getFullPath(window.location) + generateGETForLocation())
-            .focus()
+        .children("input:last-of-type")
             .get(0)
                 .select();
 }
@@ -488,6 +496,7 @@ function parseParameters() {
         lat = queryString.lat,
         lng = queryString.lng,
         windDirection = queryString['wind.direction'],
+        landingDirection = queryString['landingDirection'],
 
         viewModelMap = {
             dz: viewModel.location.id,
@@ -496,11 +505,10 @@ function parseParameters() {
 
             'debug':                viewModel.debug.on,
             'cheat':                viewModel.debug.cheats,
-            'display.pattern':      viewModel.display.pattern,
+            'pattern':              viewModel.display.pattern,
             'display.steadyPoint':  viewModel.display.steadyPoint,
             'display.reachset':     viewModel.display.reachset,
             'display.controlset':   viewModel.display.controlset,
-            'display.pattern':      viewModel.display.pattern,
             'display.fullscreen':   viewModel.display.fullscreen,
 
             'pattern.openingAltitude': viewModel.pattern.openingAltitude
@@ -513,6 +521,11 @@ function parseParameters() {
 
     if (windDirection) {
         viewModel.wind.direction(reportedWindDirection(degToRad(windDirection)));
+    }
+
+    if (landingDirection) {
+        viewModel.pattern.selectedLandingDirection(degToRad(landingDirection));
+        viewModel.pattern.intoWind(false);
     }
 
     for (var i in viewModelMap) {

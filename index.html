@@ -267,12 +267,24 @@
                     <p>Нажатием P можно приостановить или продолжить симуляцию: время останавливается, но купол можно повернуть для исследования достижимых точек на карте.</p>
                 </div>
             </div>
-            <div id="share-dialog">
+            <div id="share-dialog" data-bind="with: shareLocation">
                 <div>
                     <span lang="en">Copy the following link. It will lead to the current location:</span>
                     <span lang="ru">Скопируйте ссылку, она ведет к текущему положению на карте:</span>
                 </div>
-                <input type="text" readonly>
+                <div>
+                    <input id="share-wind" type="checkbox" data-bind="checked: wind">
+                    <label for="share-wind">
+                        <span lang="en">Wind</span>
+                        <span lang="ru">Ветер</span>
+                    </label>
+                    <input id="share-pattern" type="checkbox" data-bind="checked: pattern">
+                    <label for="share-pattern">
+                        <span lang="en">Pattern</span>
+                        <span lang="ru">Заход</span>
+                    </label>
+                </div>
+                <input type="text" readonly autofocus data-bind="value: GET">
             </div>
         </div>
 

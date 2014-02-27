@@ -174,7 +174,7 @@ body {
     height: 100%;
 }
 
-#share-dialog input {
+#share-dialog > input:last-of-type {
     width: 100%;
 }
 
