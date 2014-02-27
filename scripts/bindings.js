@@ -119,10 +119,6 @@ ko.bindingHandlers.jqProgressbar = {
 
 /// Presentation bindings
 ko.bindingHandlers.setLanguage = {
-    init: function(element, valueAccessor) {
-        var language = ko.unwrap(valueAccessor());
-        setLanguage(element, language);
-    },
     update: function(element, valueAccessor) {
         var language = ko.unwrap(valueAccessor());
         setLanguage(element, language);
