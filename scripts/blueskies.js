@@ -340,14 +340,10 @@ function createLatLng(coords) {
     return new google.maps.LatLng(coords[0], coords[1]);
 }
 
-function setDz(dz) {
-    viewModel.location.id(dz);
-}
-
 function setCustomDz(name, latlng) {
     viewModel.location.custom.name(name);
     viewModel.location.custom.coords(latlng);
-    setDz("custom");
+    viewModel.location.id("custom");
 }
 
 function defaultIfUndefined(x, def) {
@@ -469,7 +465,7 @@ function onDzMenuItemSelected(event, ui) {
     event.preventDefault();
     if (ui.item.attr('id')) {
         ga('send', 'event', 'dz', 'selected', ui.item.attr('id'));
-        setDz(ui.item.attr('id').replace("dz-", ""));
+        viewModel.location.id(ui.item.attr('id').replace("dz-", ""));
     }
 }
 
