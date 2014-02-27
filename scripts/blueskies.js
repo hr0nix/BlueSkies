@@ -466,8 +466,11 @@ function onTimeTick() {
 }
 
 function onDzMenuItemSelected(event, ui) {
-    ga('send', 'event', 'dz', 'selected', ui.item.attr('id'));
-    setDz(ui.item.attr('id').replace("dz-", ""));
+    event.preventDefault();
+    if (ui.item.attr('id')) {
+        ga('send', 'event', 'dz', 'selected', ui.item.attr('id'));
+        setDz(ui.item.attr('id').replace("dz-", ""));
+    }
 }
 
 function onFindNewDz() {
