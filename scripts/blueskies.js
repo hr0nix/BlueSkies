@@ -485,22 +485,40 @@ function onFindNewDz() {
 function parseParameters() {
     var queryString = getQueryString(),
 
-        lang = queryString.lang,
-        dz = queryString.dz,
         lat = queryString.lat,
-        lng = queryString.lng;
+        lng = queryString.lng,
+        windDirection = queryString['wind.direction'],
 
-    if (lang) {
-        viewModel.display.language(lang);
-    }
+        viewModelMap = {
+            dz: viewModel.location.id,
+            lang: viewModel.display.language,
+            'wind.speed': viewModel.wind.speed,
 
-    if (dz) {
-        setDz(dz);
-    }
+            'debug':                viewModel.debug.on,
+            'display.pattern':      viewModel.display.pattern,
+            'display.steadyPoint':  viewModel.display.steadyPoint,
+            'display.reachset':     viewModel.display.reachset,
+            'display.controlset':   viewModel.display.controlset,
+            'display.pattern':      viewModel.display.pattern,
+            'display.fullscreen':   viewModel.display.fullscreen,
+
+            'pattern.openingAltitude': viewModel.pattern.openingAltitude
+        };
 
     if (lat && lng) {
         var latlng = new google.maps.LatLng(lat, lng);
         setCustomDz("", latlng);
+    }
+
+    if (windDirection) {
+        viewModel.wind.direction(reportedWindDirection(degToRad(windDirection)));
+    }
+
+    for (var i in viewModelMap) {
+        var value = queryString[i];
+        if (value) {
+            viewModelMap[i](value);
+        }
     }
 }
 
