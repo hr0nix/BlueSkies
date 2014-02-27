@@ -74,7 +74,6 @@
                     <div>Coords: <span data-bind="text: formatCoords(location.coords())"></span></div>
                     <div>GET: <span data-bind="text: generateGETForLocation()"></span></div>
                     <div>loc: <span data-bind="text: formatCoords(canopy.location())"></span></div>
-                    <div><button data-bind="click: simulation.stop">Stop</button></div>
                     <div><input type="checkbox" data-bind="checked: display.fullscreen">Fullscreen </div>
                     <div><button data-bind="click: persistence.save">Save</button><button data-bind="click: persistence.load">Load</button><button
                     data-bind="click: persistence.reset">Reset</button></div>
@@ -111,7 +110,11 @@
                         <span data-bind="html: formatSimulationSpeed(simulation.speed())"></span>
                     </div>
                     <div data-bind="jqSlider: simulation.speed, sliderOptions: { min: 0, max: 5, step: 0.1 }"></div>
-                    <a href="#" class="link-button" data-bind="click: simulation.togglePause, text: simulation.pauseText"></a>
+                    <a href="#" class="link-button" data-bind="click: simulation.togglePause, text: simulation.pauseText"></a>,
+                    <a href="#" class="link-button" data-bind="click: simulation.stop">
+                        <span lang="en">Stop</span>
+                        <span lang="ru">Остановить</span>
+                    </a>
                 </div>
             </div>
             <div data-bind="with: display">
