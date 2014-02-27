@@ -495,6 +495,7 @@ function parseParameters() {
             'wind.speed': viewModel.wind.speed,
 
             'debug':                viewModel.debug.on,
+            'cheat':                viewModel.debug.cheats,
             'display.pattern':      viewModel.display.pattern,
             'display.steadyPoint':  viewModel.display.steadyPoint,
             'display.reachset':     viewModel.display.reachset,
@@ -636,6 +637,7 @@ function initCanopyMarker() {
     var options = {
         map: map,
         icon: viewModel.canopy.icon(),
+        draggable: !!viewModel.debug.cheats(),
         zIndex: 4
     };
     var canopyMarker = new google.maps.Marker(options);
