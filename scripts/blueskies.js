@@ -251,7 +251,7 @@ function computeHeadings(wind, pattern, speedH) {
 
 function computeLandingPattern(location, wind, pattern) {
     var controlPointAltitudes = [100, 200, 300],
-        patternMode = 0.85,
+        patternMode = 0.8,
         speedH = getCanopyHorizontalSpeed(patternMode),
         speedV = getCanopyVerticalSpeed(patternMode),
 
