@@ -19,14 +19,16 @@
     </head>
     <body data-bind="setLanguage: display.language">
         <div data-bind="css: display.fullscreen() ? 'map-fullscreen' : 'map-normal'">
-            <div id="map-canvas"></div>
-            <div id="wind-arrow" class="arrow-indicator">
+            <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading }"></div>
+            <div class="arrow-indicator" data-bind="mapControl: 'RIGHT_TOP'">
                 <img src="images/windsock.png" data-bind="rotate: radToDeg(wind.direction())">
             </div>
-            <div id="landing-direction-arrow" class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind()">
+            <div class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind(), mapControl: 'RIGHT_TOP'">
                 <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())">
             </div>
-            <ul id="dz-selection-menu" class="dz-selection-control" data-bind="currentDz: location.id">
+            <ul id="dz-selection-menu" class="dz-selection-control"
+                data-bind="currentDz: location.id,
+                mapControl: 'TOP_CENTER'">
                 <li><a href="#"><div id="selected-dz" data-bind="html: location.name"></div></a>
                     <ul>
                         <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
@@ -54,8 +56,13 @@
                 </li>
             </ul>
             <input id="dz-finder" class="dz-selection-control" type="text"
-                data-bind="value: location.finderText, attr: { placeholder: localize('Choose another landing area') }">
-            <button id="share-location" class="dz-selection-control" type="button" data-bind="attr: { title: localize('share-link') }">
+                data-bind="value: location.finderText, attr: { placeholder: localize('Choose another landing area') },
+                mapControl: 'TOP_CENTER',
+                mapFinder: onFindNewDz">
+            <button class="dz-selection-control" type="button"
+                data-bind="attr: { title: localize('share-link') },
+                mapControl: 'TOP_CENTER',
+                jqButton: onShareLinkClick">
                 <img src="images/share.png">
             </button>
         </div>

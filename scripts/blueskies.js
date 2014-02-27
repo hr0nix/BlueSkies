@@ -23,7 +23,15 @@ var prevUpdateTime;
 ////// Constants
 var eps = 1e-03, // Mostly used to compare altitude to zero
     altitudeProgressbarMax = 500,
-    headingSliderOptions = { min: 0, max: Math.PI * 2, step: Math.PI / 180 * 5 };
+    headingSliderOptions = { min: 0, max: Math.PI * 2, step: Math.PI / 180 * 5 },
+    mapOptions = {
+        zoom: defaultMapZoom,
+        minZoom: minMapZoom,
+        maxZoom: maxMapZoom,
+        streetViewControl: false,
+        keyboardShortcuts: false,
+        mapTypeId: google.maps.MapTypeId.SATELLITE
+    };
 
 ////// UI objects
 var map;
@@ -658,19 +666,6 @@ function initializeAnalyticsEvents() {
 }
 
 function initialize() {
-    var mapOptions = {
-        zoom: defaultMapZoom,
-        minZoom: minMapZoom,
-        maxZoom: maxMapZoom,
-        streetViewControl: false,
-        center: viewModel.location.coords(),
-        keyboardShortcuts: false,
-        mapTypeId: google.maps.MapTypeId.SATELLITE
-    };
-    map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
-
-    bindMapCenter(map, viewModel.map.center);
-    bindMapHeading(map, viewModel.map.heading);
     viewModel.display.fullscreen.subscribe(function() {
         google.maps.event.trigger(map, "resize");
     });
@@ -690,18 +685,6 @@ function initialize() {
             }
         }
     });
-
-    var $shareButton = $("#share-location");
-    $shareButton.button().click(onShareLinkClick);
-
-    var dzFinder = $("#dz-finder").get(0);
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push($dzMenu.get(0));
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(dzFinder);
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push($shareButton.get(0));
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#wind-arrow").get(0));
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push($("#landing-direction-arrow").get(0));
-    var dzFinderAutocomplete = new google.maps.places.Autocomplete(dzFinder);
-    google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', onFindNewDz);
 
     initLandingPattern();
     initDzMarker();

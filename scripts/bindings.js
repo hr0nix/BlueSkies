@@ -96,6 +96,12 @@ ko.bindingHandlers.jqButtonset = {
     }
 };
 
+ko.bindingHandlers.jqButton = {
+    init: function(element, valueAccessor) {
+        $(element).button().click(ko.unwrap(valueAccessor()));
+    }
+};
+
 ko.bindingHandlers.jqChecked = {
     after: ko.bindingHandlers.checked.after,
     init: ko.bindingHandlers.checked.init,
@@ -122,6 +128,31 @@ ko.bindingHandlers.setLanguage = {
     update: function(element, valueAccessor) {
         var language = ko.unwrap(valueAccessor());
         setLanguage(element, language);
+    }
+};
+
+/// Google maps bindings
+ko.bindingHandlers.Map = {
+    init: function(element, valueAccessor) {
+        var options = ko.unwrap(valueAccessor());
+        // setting a global here
+        map = new google.maps.Map(element, options.options);
+        bindMapCenter(map, options.center);
+        bindMapHeading(map, options.heading);
+    }
+};
+
+ko.bindingHandlers.mapControl = {
+    init: function(element, valueAccessor) {
+        var position = ko.unwrap(valueAccessor());
+        map.controls[google.maps.ControlPosition[position]].push(element);
+    }
+};
+
+ko.bindingHandlers.mapFinder = {
+    init: function(element, valueAccessor) {
+        var dzFinderAutocomplete = new google.maps.places.Autocomplete(element);
+        google.maps.event.addListener(dzFinderAutocomplete, 'place_changed', ko.unwrap(valueAccessor()));
     }
 };
 
