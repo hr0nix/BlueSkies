@@ -131,6 +131,7 @@ function ViewModel() {
     };
 
     self.map = {
+        center: ko.observable(),
         heading: ko.observable()
     };
 
@@ -175,6 +176,7 @@ function ViewModel() {
 
                 self.location.coords(id === "custom" ? self.location.custom.coords() : createLatLng(dropzones[id]));
                 self.location._id(id);
+                self.map.center(self.location.coords());
             },
             read: function() { return self.location._id(); },
             deferEvaluation: true

@@ -669,7 +669,7 @@ function initialize() {
     };
     map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
 
-    bindMapCenter(map, viewModel.location.id, viewModel.location.coords);
+    bindMapCenter(map, viewModel.map.center);
     bindMapHeading(map, viewModel.map.heading);
     viewModel.display.fullscreen.subscribe(function() {
         google.maps.event.trigger(map, "resize");

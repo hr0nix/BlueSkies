@@ -130,9 +130,9 @@ ko.bindingHandlers.setLanguage = {
 };
 
 /// Google maps binding helpers
-function bindMapCenter(map, detect, center) {
-    detect.subscribe(function() {
-        map.setCenter(center());
+function bindMapCenter(map, observable) {
+    observable.subscribe(function(newValue) {
+        map.setCenter(newValue);
         map.setZoom(defaultMapZoom);
     });
 }
