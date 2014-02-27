@@ -596,14 +596,14 @@ function initSteadyPointMarker() {
     bindMarkerPosition(steadyPointMarker, viewModel.analytics.steadyPoint);
 }
 
-function createCanopyMarkerIcon(canopyHeading) {
+function createCanopyMarkerIcon(canopyHeading, mapHeading) {
     return {
         path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
         scale: 5,
         fillColor: '#FF0000',
         fillOpacity: 1,
         strokeWeight: 2,
-        rotation: radToDeg(canopyHeading) - defaultIfUndefined(map.getHeading(), 0)
+        rotation: radToDeg(canopyHeading) - defaultIfUndefined(mapHeading, 0)
     };
 }
 
@@ -670,6 +670,7 @@ function initialize() {
     map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
 
     bindMapCenter(map, viewModel.location.id, viewModel.location.coords);
+    bindMapHeading(map, viewModel.map.heading);
     viewModel.display.fullscreen.subscribe(function() {
         google.maps.event.trigger(map, "resize");
     });

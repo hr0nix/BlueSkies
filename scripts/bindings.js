@@ -137,6 +137,12 @@ function bindMapCenter(map, detect, center) {
     });
 }
 
+function bindMapHeading(map, observable) {
+    google.maps.event.addListener(map, 'heading_changed', function() {
+        observable(map.getHeading());
+    });
+}
+
 function bindMarkerPosition(marker, observable) {
     google.maps.event.addListener(marker, 'drag', function() {
         observable(marker.getPosition());

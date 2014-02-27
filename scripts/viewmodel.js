@@ -112,7 +112,7 @@ function ViewModel() {
         }, this, { deferEvaluation: true }),
 
         icon: ko.computed(function() {
-            return createCanopyMarkerIcon(self.canopy.heading());
+            return createCanopyMarkerIcon(self.canopy.heading(), self.map.heading());
         }, this, { deferEvaluation: true }),
 
         modeChange: function(amount) {
@@ -128,6 +128,10 @@ function ViewModel() {
             self.canopy.altitude(self.canopy.altitude() - time * self.canopy.speedV());
             self.canopy.location(moveInWind(self.canopy.location(), self.wind.speed(), self.wind.direction(), self.canopy.speedH(), self.canopy.heading(), time));
         }
+    };
+
+    self.map = {
+        heading: ko.observable()
     };
 
     self.location = {
