@@ -28,7 +28,7 @@
             </div>
             <div data-bind="mapControl: 'RIGHT_BOTTOM'">
                 <input id="checkbox-fullscreen" type="checkbox" data-bind="checked: display.fullscreen">
-                <label for="checkbox-fullscreen"><button><span class="ui-icon" data-bind="css: display.fullscreen() ? 'ui-icon-arrowstop-1-w' : 'ui-icon-arrowstop-1-e'"></span></button></label>
+                <label for="checkbox-fullscreen"><button data-bind="attr: { title: localize(display.fullscreen() ? 'Normal' : 'Fullscreen') }"><span class="ui-icon" data-bind="css: display.fullscreen() ? 'ui-icon-arrowstop-1-w' : 'ui-icon-arrowstop-1-e'"></span></button></label>
             </div>
             <ul id="dz-selection-menu" class="dz-selection-control"
                 data-bind="currentDz: location.id,
