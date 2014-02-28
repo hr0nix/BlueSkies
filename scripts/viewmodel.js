@@ -19,7 +19,8 @@ function ViewModel() {
     };
 
     self.parameters = {
-        embedded: ko.observable(false)
+        embedded: ko.observable(false),
+        startable: ko.observable(true)
     }
 
     self.display = {

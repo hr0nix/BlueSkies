@@ -218,6 +218,9 @@ function onShareLinkClick() {
 }
 
 function onMapRightClick(event) {
+    if (!viewModel.parameters.startable()) {
+        return;
+    }
     viewModel.simulation.start(event.latLng);
     prevUpdateTime = new Date().getTime();
 
@@ -262,6 +265,7 @@ function parseParameters(viewModel) {
             'cheat':                viewModel.debug.cheats,
             'pattern':              viewModel.display.pattern,
             'embedded':             viewModel.parameters.embedded,
+            'startable':            viewModel.parameters.startable,
             'display.steadyPoint':  viewModel.display.steadyPoint,
             'display.reachset':     viewModel.display.reachset,
             'display.controlset':   viewModel.display.controlset,
