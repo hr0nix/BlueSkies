@@ -275,6 +275,9 @@ function parseParameters(viewModel) {
             'canopy.heading':       viewModel.canopy.heading,
             'canopy.mode':          viewModel.canopy.mode,
 
+            'map.center':           viewModel.map.center,
+            'map.zoom':             viewModel.map.zoom,
+
             'pattern.openingAltitude': viewModel.pattern.openingAltitude
         };
 
