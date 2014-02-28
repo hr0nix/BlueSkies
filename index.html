@@ -108,13 +108,16 @@
                     <div class="element-label">
                         <span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span>
                         <span data-bind="html: formatSimulationSpeed(simulation.speed())"></span>
+                        <span class="float-right">
+                            <a href="#" class="no-underline" data-bind="click: simulation.togglePause, attr: { title: simulation.pauseText }">
+                                <span class="ui-icon ui-icon-pause link-icon"></span>
+                            </a>
+                            <a href="#" class="no-underline" data-bind="click: simulation.stop, attr: { title: localize('Stop') }">
+                                <span class="ui-icon ui-icon-close link-icon"></span>
+                            </a>
+                        </span>
                     </div>
                     <div data-bind="jqSlider: simulation.speed, sliderOptions: { min: 0, max: 5, step: 0.1 }"></div>
-                    <a href="#" class="link-button" data-bind="click: simulation.togglePause, text: simulation.pauseText"></a>,
-                    <a href="#" class="link-button" data-bind="click: simulation.stop">
-                        <span lang="en">Stop</span>
-                        <span lang="ru">Остановить</span>
-                    </a>
                 </div>
             </div>
             <div data-bind="with: display">

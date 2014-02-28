@@ -77,6 +77,16 @@ a.link-button {
     text-decoration: none;
 }
 
+a.no-underline {
+    text-decoration: none;
+}
+
+.link-icon
+{
+    display:inline-block;
+    vertical-align: middle;
+}
+
 .element-label {
     margin-top: 15px;
     font-family: Georgia, serif;
