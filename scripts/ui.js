@@ -286,9 +286,16 @@ function parseParameters(viewModel) {
 
     for (var i in viewModelMap) {
         var value = queryString[i];
-        if (value) {
-            viewModelMap[i](value);
+
+        if (!value) {
+            continue;
         }
+        var tryparse = parseInt(value);
+        if (!isNaN(tryparse)) {
+            value = tryparse;
+        }
+
+        viewModelMap[i](value);
     }
 }
 
