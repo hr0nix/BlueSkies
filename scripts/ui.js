@@ -269,6 +269,12 @@ function parseParameters(viewModel) {
             'display.controlset':   viewModel.display.controlset,
             'display.fullscreen':   viewModel.display.fullscreen,
 
+            'simulation.speed':     viewModel.simulation.speed,
+            'canopy.location':      viewModel.canopy.location,
+            'canopy.altitude':      viewModel.canopy.altitude,
+            'canopy.heading':       viewModel.canopy.heading,
+            'canopy.mode':          viewModel.canopy.mode,
+
             'pattern.openingAltitude': viewModel.pattern.openingAltitude
         };
 
