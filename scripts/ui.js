@@ -96,10 +96,6 @@ function formatCoords(latlng, significantDigits) {
         + ')';
 }
 
-function createLatLng(coords) {
-    return new google.maps.LatLng(coords[0], coords[1]);
-}
-
 function setCustomDz(name, latlng) {
     viewModel.location.custom.name(name);
     viewModel.location.custom.coords(latlng);

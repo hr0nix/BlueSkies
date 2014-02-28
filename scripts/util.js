@@ -28,3 +28,7 @@ function isDialogOpen(id) {
     var $id = $(id);
     return $id.data("ui-dialog") && $id.dialog("isOpen");
 }
+
+function createLatLng(coords) {
+    return new google.maps.LatLng(coords[0], coords[1]);
+}
