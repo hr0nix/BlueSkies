@@ -221,13 +221,13 @@ function ViewModel() {
             if (!(self.display.reachset() && self.simulation.flying())) {
                 return undefined;
             }
-            return computeReachSet(self.canopy.location(), self.canopy.altitude(), true);
+            return computeReachSet(self.canopy.location(), self.canopy.altitude(), self.wind, true);
         }, this, { deferEvaluation: true }),
         controlSet: ko.computed(function() {
             if (!self.display.controlset()) {
                 return undefined;
             }
-            return computeReachSet(self.location.coords(), self.reachSetAltitude(), false);
+            return computeReachSet(self.location.coords(), self.reachSetAltitude(), self.wind, false);
         }, this, { deferEvaluation: true })
     };
 
