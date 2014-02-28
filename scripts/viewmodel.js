@@ -18,6 +18,10 @@ function ViewModel() {
         cheats: ko.observable(false)
     };
 
+    self.parameters = {
+        embedded: ko.observable(false)
+    }
+
     self.display = {
         language: ko.observable("en"),
         unitSystem: ko.observable("metric"),
@@ -305,6 +309,16 @@ function ViewModel() {
             self.persistence.saveOnExit(false);
         }
     };
+
+    self.persistence.load();
+    parseParameters(self);
+    if (!self.parameters.embedded()) {
+        $(window).on('beforeunload', function() {
+            if (self.persistence.saveOnExit()) {
+                self.persistence.save();
+            }
+        });
+    }
 }
 
 window.viewModel = new ViewModel();

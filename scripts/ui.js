@@ -245,7 +245,7 @@ function onFindNewDz() {
 
 ////// Initialization
 
-function parseParameters() {
+function parseParameters(viewModel) {
     var queryString = getQueryString(),
 
         lat = queryString.lat,
@@ -261,6 +261,7 @@ function parseParameters() {
             'debug':                viewModel.debug.on,
             'cheat':                viewModel.debug.cheats,
             'pattern':              viewModel.display.pattern,
+            'embedded':             viewModel.parameters.embedded,
             'display.steadyPoint':  viewModel.display.steadyPoint,
             'display.reachset':     viewModel.display.reachset,
             'display.controlset':   viewModel.display.controlset,
@@ -457,14 +458,6 @@ function initialize() {
         google.maps.event.trigger(map, "resize");
     });
 
-    $(window).on('beforeunload', function() {
-        if (viewModel.persistence.saveOnExit()) {
-            viewModel.persistence.save();
-        }
-    });
-    viewModel.persistence.load();
-    parseParameters();
-
     var $dzMenu = $("#dz-selection-menu"),
         firstLevelPosition = { my: "left top", at: "left bottom" },
         otherLevelsPosition = { my: "left top", at: "right top" };
@@ -503,7 +496,9 @@ function initialize() {
         .keyup(onKeyUp);
     window.setInterval(onTimeTick, updateInterval);
 
-    startTutor("#tutor-dialogs");
+    if (!viewModel.parameters.embedded()) {
+        startTutor("#tutor-dialogs");
+    }
 
     initializeAnalyticsEvents();
 }

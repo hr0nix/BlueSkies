@@ -29,13 +29,14 @@
             <div class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind(), mapControl: 'RIGHT_TOP'">
                 <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())">
             </div>
-            <div data-bind="mapControl: 'RIGHT_BOTTOM'">
+            <div data-bind="mapControl: 'RIGHT_BOTTOM', visible: !parameters.embedded()">
                 <input id="checkbox-fullscreen" type="checkbox" data-bind="checked: display.fullscreen">
                 <label for="checkbox-fullscreen"><button data-bind="attr: { title: localize(display.fullscreen() ? 'Normal' : 'Fullscreen') }"><span class="ui-icon" data-bind="css: display.fullscreen() ? 'ui-icon-arrowstop-1-w' : 'ui-icon-arrowstop-1-e'"></span></button></label>
             </div>
             <ul id="dz-selection-menu" class="dz-selection-control"
                 data-bind="currentDz: location.id,
-                mapControl: 'TOP_CENTER'">
+                mapControl: 'TOP_CENTER',
+                visible: !parameters.embedded()">
                 <li><a href="#"><div id="selected-dz" data-bind="html: location.name"></div></a>
                     <ul>
                         <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
@@ -65,11 +66,13 @@
             <input id="dz-finder" class="dz-selection-control" type="text"
                 data-bind="value: location.finderText, attr: { placeholder: localize('Type address') },
                 mapControl: 'TOP_CENTER',
-                mapFinder: onFindNewDz">
+                mapFinder: onFindNewDz,
+                visible: !parameters.embedded()">
             <button class="dz-selection-control" type="button"
                 data-bind="attr: { title: localize('share-link') },
                 mapControl: 'TOP_CENTER',
-                jqButton: onShareLinkClick">
+                jqButton: onShareLinkClick,
+                visible: !parameters.embedded()">
                 <img src="images/share.png">
             </button>
         </div>
@@ -212,7 +215,7 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div data-bind="visible: !parameters.embedded()">
                 <h3><span lang="en">Info</span><span lang="ru">Информация</span></h3>
                 <div id="about-text">
                     <div lang="en">
