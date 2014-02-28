@@ -1,3 +1,4 @@
+(function() {
 function ViewModel() {
     var self = this;
     var dropzones = {
@@ -31,6 +32,10 @@ function ViewModel() {
 
         maxAltitude: ko.computed(function() {
             return Math.max(altitudeProgressbarMax, self.pattern.openingAltitude());
+        }, this, { deferEvaluation: true }),
+
+        useMetric: ko.computed(function() {
+            return self.display.unitSystem() === "metric";
         }, this, { deferEvaluation: true })
     };
 
@@ -302,5 +307,8 @@ function ViewModel() {
     };
 }
 
-var viewModel = new ViewModel();
+window.viewModel = new ViewModel();
+
 ko.applyBindings(viewModel);
+
+})();

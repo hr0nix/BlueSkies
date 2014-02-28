@@ -1,3 +1,4 @@
+(function() {
 var enResources = {
         "ms": "m/s",
         "paused": "(paused)",
@@ -60,3 +61,9 @@ function setLanguage(element, language) {
         $rightclick.dialog("option", "position", $rightclick.dialog("option", "position"));
     }
 }
+
+// Export
+window.localize = localize;
+window.setLanguage = setLanguage;
+
+})();

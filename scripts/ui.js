@@ -61,24 +61,16 @@ function metersPerSecToMilesPerHour(metersPerSec) {
     return metersPerSec * 2.23693629;
 }
 
-function clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
-}
-
-function useMetricSystem() {
-    return viewModel.display.unitSystem() === "metric";
-}
-
 function formatSpeed(metersPerSec, significantDigits) {
     significantDigits = significantDigits || 0;
-    return useMetricSystem()
+    return viewModel.display.useMetric()
         ? $.number(metersPerSec, significantDigits) + " " + localize("ms")
         : $.number(metersPerSecToMilesPerHour(metersPerSec), significantDigits) + " " + localize("mph");
 }
 
 function formatAltitude(meters, significantDigits) {
     significantDigits = significantDigits || 0;
-    return useMetricSystem()
+    return viewModel.display.useMetric()
         ? $.number(meters, significantDigits) + " " + localize("m")
         : $.number(metersToFeet(meters), significantDigits) + " " + localize("ft");
 }

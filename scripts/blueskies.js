@@ -1,3 +1,4 @@
+(function() {
 ////// Parameters
 // Canopy modes
 var horizontalSpeeds = [0, 2.5, 5, 7.5, 10],
@@ -6,28 +7,6 @@ var horizontalSpeeds = [0, 2.5, 5, 7.5, 10],
     lastReachSetSteps = 3; // Experiments show that only the faster modes are efficient enough to be on the edge of reachability sets, so we only compute and draw those
 
 ////// Helpers
-
-function degToRad(deg) {
-    return deg * Math.PI / 180;
-}
-
-function radToDeg(rad) {
-    return rad * 180 / Math.PI;
-}
-
-function normalizeAngle(angle) {
-    while (angle > 2 * Math.PI) {
-        angle -= 2 * Math.PI;
-    }
-    while (angle < 0) {
-        angle += 2 * Math.PI;
-    }
-    return angle;
-}
-
-function reportedWindDirection(direction) {
-    return normalizeAngle(direction + Math.PI);
-}
 
 function moveCoords(coords, dx, dy) {
     var earthRadius = 6378137,
@@ -177,3 +156,12 @@ function computeLandingPattern(location, wind, pattern) {
 
     return result;
 }
+
+// Export
+window.getCanopyHorizontalSpeed = getCanopyHorizontalSpeed;
+window.getCanopyVerticalSpeed = getCanopyVerticalSpeed;
+window.computeLandingPattern = computeLandingPattern;
+window.computeReachSet = computeReachSet;
+window.lastReachSetSteps = lastReachSetSteps;
+
+})();
