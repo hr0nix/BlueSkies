@@ -213,8 +213,7 @@ function onShareLinkClick() {
     $("#share-dialog")
         .dialog(shareDialogOptions)
         .children("input:last-of-type")
-            .get(0)
-                .select();
+        .on('focus', function() { this.select(); });
 }
 
 function onMapRightClick(event) {
