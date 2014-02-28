@@ -154,8 +154,13 @@ function ViewModel() {
 
     self.map = {
         center: ko.observable(),
-        heading: ko.observable()
+        heading: ko.observable(),
+        zoom: ko.observable(defaultMapZoom)
     };
+
+    self.map.center.subscribe(function() {
+        self.map.zoom(defaultMapZoom);
+    });
 
     self.location = {
         _id: ko.observable().extend({ notify: 'always' }),

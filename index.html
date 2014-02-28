@@ -22,7 +22,7 @@
     </head>
     <body data-bind="setLanguage: display.language">
         <div data-bind="css: display.fullscreen() ? 'map-fullscreen' : 'map-normal'">
-            <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading }"></div>
+            <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading, zoom: map.zoom }"></div>
             <div class="arrow-indicator" data-bind="mapControl: 'RIGHT_TOP'">
                 <img src="images/windsock.png" data-bind="rotate: radToDeg(wind.direction())">
             </div>

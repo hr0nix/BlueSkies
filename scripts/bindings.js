@@ -137,6 +137,7 @@ ko.bindingHandlers.Map = {
         var options = ko.unwrap(valueAccessor());
         // setting a global here
         map = new google.maps.Map(element, options.options);
+        bindMapZoom(map, options.zoom);
         bindMapCenter(map, options.center);
         bindMapHeading(map, options.heading);
     }
@@ -161,7 +162,17 @@ function bindMapCenter(map, observable) {
     map.setCenter(observable());
     observable.subscribe(function(newValue) {
         map.setCenter(newValue);
-        map.setZoom(defaultMapZoom);
+    });
+}
+
+function bindMapZoom(map, observable) {
+    map.setZoom(observable());
+    observable.subscribe(function(newValue) {
+        map.setZoom(newValue);
+    });
+
+    google.maps.event.addListener(map, 'zoom_changed', function() {
+        observable(map.getZoom());
     });
 }
 
