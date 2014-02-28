@@ -40,6 +40,7 @@ var map;
 var enResources = {
         "ms": "m/s",
         "paused": "(paused)",
+        "Type address": "Start typing any address here",
         "accuracy trick": "Accuracy trick: you'll land there",
         "controlset": "Points you can reach the landing target from (at the current altitude)",
         "reachset": "The area on the ground still reachable from the current position",
@@ -54,7 +55,7 @@ var enResources = {
         "Pause": "Пауза",
         "Unpause": "Продолжить",
         "Stop": "Остановить",
-        "Choose another landing area": "Выберите другую площадку приземления",
+        "Type address": "Введите любой адрес",
         "Legend": "Легенда",
         "Got it!": "Дальше",
         "Skip tutor": "Пропустить введение",
