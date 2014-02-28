@@ -193,6 +193,7 @@ a.no-underline {
 }
 
 #share-dialog > input:last-of-type {
+    text-overflow: ellipsis;
     width: 100%;
 }
 
