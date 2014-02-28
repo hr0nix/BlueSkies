@@ -118,6 +118,11 @@ a.no-underline {
 #about-text a > img {
     vertical-align: middle;
     margin-right: 5px;
+    opacity: 0.6;
+}
+
+#about-text a:hover > img {
+    opacity: 1;
 }
 
 #about-text p:first-of-type {
