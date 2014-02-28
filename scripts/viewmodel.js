@@ -251,6 +251,7 @@ function ViewModel() {
     };
 
     self.shareLocation = {
+        language: ko.observable(false),
         wind: ko.observable(false),
         pattern: ko.observable(false),
         GET: ko.computed(function() {

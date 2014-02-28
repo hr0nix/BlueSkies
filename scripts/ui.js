@@ -131,6 +131,10 @@ function generateGETForLocation() {
         }
     }
 
+    if (viewModel.shareLocation.language()) {
+        result += '&lang=' + viewModel.display.language();
+    }
+
     return result;
 }
 
