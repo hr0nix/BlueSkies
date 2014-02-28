@@ -224,7 +224,9 @@ function onMapRightClick(event) {
     viewModel.simulation.start(event.latLng);
     prevUpdateTime = new Date().getTime();
 
-    $("#tutor-rightclick").dialog("close");
+    if (isDialogOpen("#tutor-rightclick")) {
+        $("#tutor-rightclick").dialog("close");
+    }
 }
 
 function onDzMenuItemSelected(event, ui) {

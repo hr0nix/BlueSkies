@@ -47,11 +47,6 @@ function setLanguage(element, language) {
         $(element).find(":lang(" + lang + ")").toggle(lang == language);
     }
 
-    var isDialogOpen = function(id) {
-        var $id = $(id);
-        return $id.data("ui-dialog") && $id.dialog("isOpen");
-    };
-
     if (isDialogOpen("#legend-dialog")) {
         showLegendDialog("#legend-dialog");
     }

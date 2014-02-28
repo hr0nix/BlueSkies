@@ -23,3 +23,8 @@ function reportedWindDirection(direction) {
 function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
 }
+
+function isDialogOpen(id) {
+    var $id = $(id);
+    return $id.data("ui-dialog") && $id.dialog("isOpen");
+}
