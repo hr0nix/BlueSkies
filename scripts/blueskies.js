@@ -158,6 +158,7 @@ function computeLandingPattern(location, wind, pattern) {
 }
 
 // Export
+window.moveInWind = moveInWind;
 window.getCanopyHorizontalSpeed = getCanopyHorizontalSpeed;
 window.getCanopyVerticalSpeed = getCanopyVerticalSpeed;
 window.computeLandingPattern = computeLandingPattern;
