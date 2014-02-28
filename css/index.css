@@ -107,6 +107,14 @@ a.no-underline {
     margin-right: 30px;
 }
 
+#checkbox-fullscreen {
+    display: none;
+}
+
+#checkbox-fullscreen + label > button {
+    padding: 0;
+}
+
 #about-text a > img {
     vertical-align: middle;
     margin-right: 5px;
