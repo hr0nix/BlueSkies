@@ -433,26 +433,26 @@ function initCanopyMarker() {
     bindIcon(canopyMarker, viewModel.canopy.icon);
 }
 
-function createReachSetCircles(color) {
-    var circles = [];
-    for (var i = 0; i < lastReachSetSteps; i++) {
-        var circleOptions = {
-            strokeColor: color,
-            strokeOpacity: 0.0,
-            fillColor: color,
-            fillOpacity: 0.15,
-            map: map,
-            zIndex: 0
-        };
-        var circle = new google.maps.Circle(circleOptions);
-        circles.push(circle);
-        google.maps.event.addListener(circle, "rightclick", onMapRightClick);
+function initReachSets() {
+    function createReachSetCircles(color) {
+        var circles = [];
+        for (var i = 0; i < lastReachSetSteps; i++) {
+            var circleOptions = {
+                strokeColor: color,
+                strokeOpacity: 0.0,
+                fillColor: color,
+                fillOpacity: 0.15,
+                map: map,
+                zIndex: 0
+            };
+            var circle = new google.maps.Circle(circleOptions);
+            circles.push(circle);
+            google.maps.event.addListener(circle, "rightclick", onMapRightClick);
+        }
+
+        return circles;
     }
 
-    return circles;
-}
-
-function initReachSets() {
     bindCircles(createReachSetCircles('#FF0000'), viewModel.analytics.reachSet);
     bindCircles(createReachSetCircles('#0000FF'), viewModel.analytics.controlSet);
 }
