@@ -113,7 +113,7 @@
                         <span data-bind="html: formatSimulationSpeed(simulation.speed())"></span>
                         <span class="float-right">
                             <a href="#" class="no-underline" data-bind="click: simulation.togglePause, attr: { title: simulation.pauseText }">
-                                <span class="ui-icon ui-icon-pause link-icon"></span>
+                                <span class="ui-icon link-icon" data-bind="css: simulation.speed() != 0 ? 'ui-icon-pause' : 'ui-icon-play'"></span>
                             </a>
                             <a href="#" class="no-underline" data-bind="click: simulation.stop, attr: { title: localize('Stop') }">
                                 <span class="ui-icon ui-icon-close link-icon"></span>
