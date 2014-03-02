@@ -248,7 +248,6 @@ function onFindNewDz() {
 }
 
 ////// Initialization
-
 function parseParameters(viewModel) {
     var queryString = getQueryString(),
 
@@ -265,7 +264,6 @@ function parseParameters(viewModel) {
             'debug':                viewModel.debug.on,
             'cheat':                viewModel.debug.cheats,
             'pattern':              viewModel.display.pattern,
-            'embedded':             viewModel.parameters.embedded,
             'startable':            viewModel.parameters.startable,
             'display.steadyPoint':  viewModel.display.steadyPoint,
             'display.reachset':     viewModel.display.reachset,
