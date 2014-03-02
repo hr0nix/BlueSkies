@@ -317,15 +317,20 @@ function ViewModel() {
         }
     };
 
-    self.persistence.load();
-    parseParameters(self);
+    (function checkEmbedded() {
+        var queryString = getQueryString();
+        self.parameters.embedded(queryString.embedded);
+    })();
+
     if (!self.parameters.embedded()) {
+        self.persistence.load();
         $(window).on('beforeunload', function() {
             if (self.persistence.saveOnExit()) {
                 self.persistence.save();
             }
         });
     }
+    parseParameters(self);
 }
 
 window.viewModel = new ViewModel();
