@@ -75,3 +75,11 @@ function formatCoords(latlng, significantDigits) {
         + $.number(latlng.lng(), significantDigits)
         + ')';
 }
+
+function createBlueSkiesControl(element) {
+    var $frame = $(element).children("iframe");
+    $frame.load(function() {
+        var contentWindow = $frame.get(0).contentWindow;
+        contentWindow.ko.applyBindings(contentWindow.viewModel, $(element).get(0));
+    });
+}
