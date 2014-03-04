@@ -13,7 +13,7 @@
     </head>
     <body>
         <p>Let's take a look at the following situation. You're opened far upwind of the landing area and you're trying to reach it.</p>
-        <div id="sht1">
+        <div>
             <p data-bind="html: formatCoords(location.coords())"></p>
             <iframe src="index.html?embedded=1&display.fullscreen=1"></iframe>
         </div>
@@ -22,7 +22,9 @@
         </div>
 
         <script>
-            createBlueSkiesControl("#sht1");
+            $("body > div").BlueSkies(function(viewModel) {
+                viewModel.display.steadyPoint(true);
+            });
         </script>
     </body>
 </html>
