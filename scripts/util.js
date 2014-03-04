@@ -76,10 +76,14 @@ function formatCoords(latlng, significantDigits) {
         + ')';
 }
 
-function createBlueSkiesControl(element) {
+function createBlueSkiesControl(element, callback) {
     var $frame = $(element).children("iframe");
     $frame.load(function() {
-        var contentWindow = $frame.get(0).contentWindow;
-        contentWindow.ko.applyBindings(contentWindow.viewModel, $(element).get(0));
+        var contentWindow = $frame.get(0).contentWindow,
+            viewModel = contentWindow.viewModel;
+        contentWindow.ko.applyBindings(viewModel, $(element).get(0));
+        if (callback) {
+            callback(viewModel);
+        }
     });
 }
