@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Control set</title>
+        <meta charset="utf-8">
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
+        <script src="scripts/jquery.number.js"></script>
+        <script src="scripts/blueskies.js"></script>
+        <script src="scripts/util.js"></script>
+        <script src="scripts/ga.js"></script>
+        <link rel="stylesheet" href="css/smoothness-theme/jquery-ui-1.10.4.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="css/common.css" />
+        <link rel="stylesheet" type="text/css" href="css/article.css" />
+    </head>
+    <body>
+        <h1>Control set</h1>
+        <p>When thinking about reaching the target area from particular location it can be useful to think about <em>the control set</em>: a set of points, where you can reach the target from.</p>
+        <p>It is important to understand how the shape of this set depends on wind speed and direction. In the following demonstration try changing the wind speed and direction. The blue area on the map shows which points you can reach the target area from if you're at altitude of 700m</p>
+        <div>
+            <div id="wind-conditions" data-bind="with: wind">
+                <h3><span lang="en">Wind conditions</span><span lang="ru">Ветер</span></h3>
+                <div>
+                    <div class="element-label">
+                        <span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span>
+                        <a href="#" class="link-button float-right" data-bind="click: randomize">Randomize</a>
+                        <span data-bind="html: formatHeading(reportedWindDirection(direction()))"></span>
+                    </div>
+                    <div data-bind="jqSlider: direction, sliderOptions: headingSliderOptions"></div>
+                    <div class="element-label">
+                        Wind speed: <span data-bind="html: formatSpeed(speed(), 1)"></span>
+                    </div>
+                    <div data-bind="jqSlider: speed, sliderOptions: { min: 0, max: 13, step: 0.1 }"></div>
+                </div>
+            </div>
+            <iframe src="index.html?embedded=1&display.fullscreen=1&display.controlset=1&canopy.altitude=500&map.zoom=14&startable=0"></iframe>
+        </div>
+
+        <script>
+            $("body > div").BlueSkies(function(viewModel) {
+                viewModel.display.steadyPoint(true);
+                viewModel.simulation.speed(0);
+                var target = viewModel.location.coords();
+                viewModel.simulation.start();
+            });
+        </script>
+    </body>
+</html>
