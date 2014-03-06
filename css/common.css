@@ -1,0 +1,65 @@
+a.link-button {
+    border-bottom: 1px dotted #000;
+    text-decoration: none;
+}
+
+a.no-underline {
+    text-decoration: none;
+}
+
+.element-label {
+    margin-top: 15px;
+    font-family: Georgia, serif;
+}
+
+.element-label:first-child {
+    margin-top: 0px;
+}
+
+.element-label + div {
+    margin-top: 6px;
+}
+
+.ruler, .ruler li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: inline-block;
+}
+
+.ruler {
+    padding-left: 1px;
+    padding-right: 1px;
+    width: 100%;
+}
+
+.ruler li {
+    padding-left: 2cm; /* Modify this to distribute the markers */
+    width: 2em;
+    margin: .64em -1em -.64em;
+    text-align: center;
+    position: relative;
+}
+
+.ruler li:before {
+    content: '';
+    position: absolute;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    height: .64em;
+    top: -.64em;
+    right: 1em;
+}
+
+.no-padding {
+    padding-bottom: 1px !important;
+    padding-top: 2px !important;
+}
+
+.float-right {
+    float: right;
+}
+
+:lang(ru) {
+    display: none;
+}
