@@ -24,12 +24,14 @@
     <body data-bind="setLanguage: display.language">
         <div data-bind="css: display.fullscreen() ? 'map-fullscreen' : 'map-normal'">
             <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading, zoom: map.zoom }"></div>
+
             <div class="arrow-indicator" data-bind="mapControl: 'RIGHT_TOP'">
                 <img src="images/windsock.png" data-bind="rotate: radToDeg(wind.direction())">
             </div>
             <div class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind(), mapControl: 'RIGHT_TOP'">
                 <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())">
             </div>
+
             <div data-bind="mapControl: 'RIGHT_BOTTOM', visible: !parameters.embedded()">
                 <input id="checkbox-fullscreen" type="checkbox" data-bind="checked: display.fullscreen">
                 <label for="checkbox-fullscreen"><button data-bind="attr: { title: localize(display.fullscreen() ? 'Normal' : 'Fullscreen') }"><span class="ui-icon" data-bind="css: display.fullscreen() ? 'ui-icon-arrowstop-1-w' : 'ui-icon-arrowstop-1-e'"></span></button></label>
@@ -401,6 +403,8 @@
         </div>
         <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
         <script src="scripts/bindings.js"></script>
+        <script src="scripts/component.js"></script>
         <script src="scripts/viewmodel.js"></script>
+        <script src="scripts/index.js"></script>
     </body>
 </html>

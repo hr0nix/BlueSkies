@@ -430,51 +430,17 @@ function initializeAnalyticsEvents() {
 }
 
 function initialize() {
-    viewModel.display.fullscreen.subscribe(function() {
-        google.maps.event.trigger(map, "resize");
-    });
-
-    var $dzMenu = $("#dz-selection-menu"),
-        firstLevelPosition = { my: "left top", at: "left bottom" },
-        otherLevelsPosition = { my: "left top", at: "right top" };
-    $dzMenu.menu({
-        select: onDzMenuItemSelected,
-        position: firstLevelPosition,
-        blur: function() {
-            $(this).menu("option", "position", firstLevelPosition);
-        },
-        focus: function(e, ui) {
-            if (!ui.item.parent().is($dzMenu)) {
-                $(this).menu("option", "position", otherLevelsPosition);
-            }
-        }
-    });
-
     initLandingPattern();
     initDzMarker();
     initSteadyPointMarker();
     initCanopyMarker();
     initReachSets();
 
-    var accordionOptions = { collapsible: true, heightStyle: "content" };
-    $("#right-panel > div").accordion(accordionOptions);
-
-    $(".legend-button").click(function() {
-        showLegendDialog("#legend-dialog");
-    });
-    $(".about-button").click(function() {
-        showAboutDialog("#about-dialog");
-    });
-
     google.maps.event.addListener(map, "rightclick", onMapRightClick);
     $(document)
         .keydown(onKeyDown)
         .keyup(onKeyUp);
     window.setInterval(onTimeTick, updateInterval);
-
-    if (!viewModel.parameters.embedded()) {
-        startTutor("#tutor-dialogs");
-    }
 
     initializeAnalyticsEvents();
 }

@@ -3,10 +3,14 @@
     <head>
         <title>Control set</title>
         <meta charset="utf-8">
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
         <script src="scripts/jquery.number.js"></script>
+        <script src="scripts/jquery.cookie.js"></script>
         <script src="scripts/blueskies.js"></script>
+        <script src="scripts/ui.js"></script>
+        <script src="scripts/loc.js"></script>
         <script src="scripts/util.js"></script>
         <script src="scripts/ga.js"></script>
         <link rel="stylesheet" href="css/smoothness-theme/jquery-ui-1.10.4.custom.min.css">
@@ -33,16 +37,21 @@
                     <div data-bind="jqSlider: speed, sliderOptions: { min: 0, max: 13, step: 0.1 }"></div>
                 </div>
             </div>
-            <iframe src="index.html?embedded=1&display.fullscreen=1&display.controlset=1&canopy.altitude=500&map.zoom=14&startable=0"></iframe>
+
+            <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading, zoom: map.zoom }"></div>
+
+            <div style="display:none">
+                <div class="arrow-indicator" data-bind="mapControl: 'RIGHT_TOP'">
+                    <img src="images/windsock.png" data-bind="rotate: radToDeg(wind.direction())"/>
+                </div>
+                <div class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind(), mapControl: 'RIGHT_TOP'">
+                    <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())"/>
+                </div>
+            </div>
         </div>
 
-        <script>
-            $("body > div").BlueSkies(function(viewModel) {
-                viewModel.display.steadyPoint(true);
-                viewModel.simulation.speed(0);
-                var target = viewModel.location.coords();
-                viewModel.simulation.start();
-            });
-        </script>
+        <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
+        <script src="scripts/bindings.js"></script>
+        <script src="scripts/viewmodel.js"></script>
     </body>
 </html>
