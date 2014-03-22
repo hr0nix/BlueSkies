@@ -430,6 +430,8 @@ function initializeAnalyticsEvents() {
 }
 
 function initialize() {
+    ko.applyBindings(viewModel);
+
     initLandingPattern();
     initDzMarker();
     initSteadyPointMarker();

@@ -1,4 +1,7 @@
-$(document).ready(function () {
+(function () {
+    viewModel.persistence.init();
+    parseParameters(viewModel);
+
     viewModel.display.fullscreen.subscribe(function() {
         google.maps.event.trigger(map, "resize");
     });
@@ -29,4 +32,4 @@ $(document).ready(function () {
         showAboutDialog("#about-dialog");
     });
     startTutor("#tutor-dialogs");
-});
+})();

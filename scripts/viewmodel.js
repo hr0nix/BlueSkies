@@ -284,6 +284,15 @@ function ViewModel() {
 
         saveOnExit: ko.observable(true),
 
+        init: function() {
+            self.persistence.load();
+            $(window).on('beforeunload', function() {
+                if (self.persistence.saveOnExit()) {
+                    self.persistence.save();
+                }
+            });
+        },
+
         save: function() {
             if (!localStorage) {
                 return;
@@ -316,25 +325,7 @@ function ViewModel() {
             self.persistence.saveOnExit(false);
         }
     };
-
-    (function checkEmbedded() {
-        var queryString = getQueryString();
-        self.parameters.embedded(queryString.embedded);
-    })();
-
-    if (!self.parameters.embedded()) {
-        self.persistence.load();
-        $(window).on('beforeunload', function() {
-            if (self.persistence.saveOnExit()) {
-                self.persistence.save();
-            }
-        });
-    }
-    parseParameters(self);
 }
 
 window.viewModel = new ViewModel();
-
-ko.applyBindings(viewModel);
-
 })();
