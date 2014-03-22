@@ -19,8 +19,18 @@
     </head>
     <body>
         <h1>Control set</h1>
-        <p>When thinking about reaching the target area from particular location it can be useful to think about <em>the control set</em>: a set of points, where you can reach the target from.</p>
-        <p>It is important to understand how the shape of this set depends on wind speed and direction. In the following demonstration try changing the wind speed and direction. The blue area on the map shows which points you can reach the target area from if you're at altitude of 700m</p>
+        <p>When thinking about reaching the target area from a particular location it can be useful to visualize <em>the control set</em>: a set of
+        points where you can reach the target from.</p>
+        <p>Think about spotting: you want to be able to reach the landing area from the opening point.</p>
+        <p>It is important to understand how the shape of this set depends on wind speed and direction. For example, in low/no wind conditions the
+        cotnrol set is a nearly perfect circle. Think about it, it's quite logical: your canopy can fly equally(?) well in any direction.</p>
+        <p>In stronger winds, however, the control set gets shifted upwind: you can reach the target area from further away if you have to return
+        downwind as opposed to trying to fly into the wind. For overwhelmingly strong winds the landing target even lies outside the control set: if
+        you open right above the target, you still cannot reach it, as you will get blown back by the strong wind.</p>
+        <p>As the windspeed increases, note that the control set does not simply shift upwind, it stretches along the wind direction. The reason is
+        that flying in brakes gives even more significant benefits with a significant tailwind.</p>
+        <p>In the following demonstration try changing the wind speed and direction. The blue area on the map shows which points you can reach the
+        target area from if you're at altitude of 700m.</p>
         <div>
             <div id="wind-conditions" data-bind="with: wind">
                 <h3><span lang="en">Wind conditions</span><span lang="ru">Ветер</span></h3>
@@ -55,7 +65,8 @@
         <script src="scripts/viewmodel.js"></script>
         <script>
             viewModel.display.controlset(true);
-            viewModel.pattern.openingAltitude(300);
+            viewModel.pattern.openingAltitude(700);
+            viewModel.map.zoom(13);
         </script>
     </body>
 </html>
