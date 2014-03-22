@@ -75,18 +75,3 @@ function formatCoords(latlng, significantDigits) {
         + $.number(latlng.lng(), significantDigits)
         + ')';
 }
-
-jQuery.fn.extend({
-    BlueSkies: function(callback) {
-        var $frame = $(this).children("iframe");
-        $frame.load(function() {
-            var $parent = $(this).parent(),
-                contentWindow = this.contentWindow,
-                viewModel = contentWindow.viewModel;
-            contentWindow.ko.applyBindings(viewModel, $parent.get(0));
-            if (callback) {
-                callback(viewModel);
-            }
-        });
-    }
-});
