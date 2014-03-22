@@ -8,3 +8,15 @@ body {
     height: 600px;
     border: none;
 }
+
+.settings-pane {
+    width: 25em;
+    margin: 1em 1em 1em;
+    padding: 5px;
+    background-color: #f2f2f2;
+    border: 2px outset;
+}
+
+.settings-pane > :first-child {
+    margin-top: 0;
+}

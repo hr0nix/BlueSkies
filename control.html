@@ -31,32 +31,30 @@
         that flying in brakes gives even more significant benefits with a significant tailwind.</p>
         <p>In the following demonstration try changing the wind speed and direction. The blue area on the map shows which points you can reach the
         target area from if you're at altitude of 700m.</p>
-        <div>
-            <div id="wind-conditions" data-bind="with: wind">
-                <h3><span lang="en">Wind conditions</span><span lang="ru">Ветер</span></h3>
-                <div>
-                    <div class="element-label">
-                        <span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span>
-                        <a href="#" class="link-button float-right" data-bind="click: randomize">Randomize</a>
-                        <span data-bind="html: formatHeading(reportedWindDirection(direction()))"></span>
-                    </div>
-                    <div data-bind="jqSlider: direction, sliderOptions: headingSliderOptions"></div>
-                    <div class="element-label">
-                        Wind speed: <span data-bind="html: formatSpeed(speed(), 1)"></span>
-                    </div>
-                    <div data-bind="jqSlider: speed, sliderOptions: { min: 0, max: 13, step: 0.1 }"></div>
+        <div class="settings-pane" data-bind="with: wind">
+            <h3>Wind conditions</h3>
+            <a href="#" class="link-button float-right" data-bind="click: randomize">Randomize</a>
+            <div>
+                <div class="element-label">
+                    Wind direction:
+                    <span data-bind="html: formatHeading(reportedWindDirection(direction()))"></span>
                 </div>
+                <div data-bind="jqSlider: direction, sliderOptions: headingSliderOptions"></div>
+                <div class="element-label">
+                    Wind speed: <span data-bind="html: formatSpeed(speed(), 1)"></span>
+                </div>
+                <div data-bind="jqSlider: speed, sliderOptions: { min: 0, max: 13, step: 0.1 }"></div>
             </div>
+        </div>
 
-            <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading, zoom: map.zoom }"></div>
+        <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading, zoom: map.zoom }"></div>
 
-            <div style="display:none">
-                <div class="arrow-indicator" data-bind="mapControl: 'RIGHT_TOP'">
-                    <img src="images/windsock.png" data-bind="rotate: radToDeg(wind.direction())"/>
-                </div>
-                <div class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind(), mapControl: 'RIGHT_TOP'">
-                    <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())"/>
-                </div>
+        <div style="display:none">
+            <div class="arrow-indicator" data-bind="mapControl: 'RIGHT_TOP'">
+                <img src="images/windsock.png" data-bind="rotate: radToDeg(wind.direction())"/>
+            </div>
+            <div class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind(), mapControl: 'RIGHT_TOP'">
+                <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())"/>
             </div>
         </div>
 
@@ -64,6 +62,7 @@
         <script src="scripts/bindings.js"></script>
         <script src="scripts/viewmodel.js"></script>
         <script>
+            viewModel.parameters.startable(false);
             viewModel.display.controlset(true);
             viewModel.pattern.openingAltitude(700);
             viewModel.map.zoom(13);
