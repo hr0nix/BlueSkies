@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Control set</title>
-        <meta charset="utf-8">
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
-        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-        <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
-        <script src="scripts/jquery.number.js"></script>
-        <script src="scripts/jquery.cookie.js"></script>
-        <script src="scripts/blueskies.js"></script>
-        <script src="scripts/ui.js"></script>
-        <script src="scripts/loc.js"></script>
-        <script src="scripts/util.js"></script>
-        <script src="scripts/ga.js"></script>
-        <link rel="stylesheet" href="css/smoothness-theme/jquery-ui-1.10.4.custom.min.css">
-        <link rel="stylesheet" type="text/css" href="css/common.css" />
-        <link rel="stylesheet" type="text/css" href="css/article.css" />
-    </head>
-    <body>
+<head>
+    <title>Control set</title>
+    <meta charset="utf-8">
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
+    <script src="scripts/jquery.number.js"></script>
+    <script src="scripts/jquery.cookie.js"></script>
+    <script src="scripts/blueskies.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/loc.js"></script>
+    <script src="scripts/util.js"></script>
+    <script src="scripts/ga.js"></script>
+    <link rel="stylesheet" href="css/smoothness-theme/jquery-ui-1.10.4.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+    <link rel="stylesheet" type="text/css" href="css/article.css" />
+</head>
+<body>
+    <article>
         <h1>Control set</h1>
         <p>When thinking about reaching the target area from a particular location it can be useful to visualize <em>the control set</em>: a set of
         points where you can reach the target from.</p>
         <p>Think about spotting: you want to be able to reach the landing area from the opening point.</p>
         <p>It is important to understand how the shape of this set depends on wind speed and direction. For example, in low/no wind conditions the
-        cotnrol set is a nearly perfect circle. Think about it, it's quite logical: your canopy can fly equally(?) well in any direction.</p>
+        cotnrol set is a nearly perfect circle centered in the landing spot. Think about it, it's quite logical: your canopy can fly equally(?) well in any direction.</p>
         <p>In stronger winds, however, the control set gets shifted upwind: you can reach the target area from further away if you have to return
         downwind as opposed to trying to fly into the wind. For overwhelmingly strong winds the landing target even lies outside the control set: if
         you open right above the target, you still cannot reach it, as you will get blown back by the strong wind.</p>
         <p>As the windspeed increases, note that the control set does not simply shift upwind, it stretches along the wind direction. The reason is
-        that flying in brakes gives even more significant benefits with a significant tailwind.</p>
+        that flying in brakes gives even more significant benefits with a strong tailwind.</p>
         <p>In the following demonstration try changing the wind speed and direction. The blue area on the map shows which points you can reach the
         target area from if you're at altitude of 700m.</p>
         <div class="settings-pane" data-bind="with: wind">
@@ -57,15 +58,16 @@
                 <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())"/>
             </div>
         </div>
+    </article>
 
-        <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
-        <script src="scripts/bindings.js"></script>
-        <script src="scripts/viewmodel.js"></script>
-        <script>
-            viewModel.parameters.startable(false);
-            viewModel.display.controlset(true);
-            viewModel.pattern.openingAltitude(700);
-            viewModel.map.zoom(13);
-        </script>
-    </body>
+    <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
+    <script src="scripts/bindings.js"></script>
+    <script src="scripts/viewmodel.js"></script>
+    <script>
+        viewModel.parameters.startable(false);
+        viewModel.display.controlset(true);
+        viewModel.pattern.openingAltitude(700);
+        viewModel.map.zoom(13);
+    </script>
+</body>
 </html>

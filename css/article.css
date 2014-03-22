@@ -1,6 +1,13 @@
 body {
+    background-color: #eef1ff;
+}
+
+article {
     margin-left: 10em;
     margin-right: 10em;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #999999;
 }
 
 #map-canvas {
@@ -13,7 +20,7 @@ body {
     width: 25em;
     margin: 1em 1em 1em;
     padding: 5px;
-    background-color: #f2f2f2;
+    background-color: #e2e2e2;
     border: 2px outset;
 }
 
