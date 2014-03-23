@@ -125,9 +125,9 @@ ko.bindingHandlers.Map = {
         var options = ko.unwrap(valueAccessor());
         // setting a global here
         map = new google.maps.Map(element, options.options);
-        bindMapZoom(map, options.zoom);
-        bindMapCenter(map, options.center);
-        bindMapHeading(map, options.heading);
+        bindMapZoom(map, options.to.zoom);
+        bindMapCenter(map, options.to.center);
+        bindMapHeading(map, options.to.heading);
     }
 };
 

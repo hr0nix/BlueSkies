@@ -39,7 +39,7 @@
         <p>If you decide later that you want to change the reference location, you can come back to this page at any time and do it.</p>
 
         <!-- ko with: sim -->
-        <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading, zoom: map.zoom }"></div>
+        <div id="map-canvas" data-bind="Map: { options: mapOptions, to: map }"></div>
         <input id="dz-finder" placeholder="Find your DZ" class="dz-selection-control" type="text"
             data-bind="value: location.finderText,
             mapControl: 'TOP_LEFT',
