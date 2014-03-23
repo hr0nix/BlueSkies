@@ -18,6 +18,11 @@
     <link rel="stylesheet" type="text/css" href="css/article.css" />
 </head>
 <body>
+    <nav>
+        <ul data-bind="foreach: pages">
+            <li><a data-bind="text: ($index() + 1) + '. ' + title, attr: { href: $parent.skipCurrent(url) }"></a></li>
+        </ul>
+    </nav>
     <article>
         <h1>Control set</h1>
         <p>When thinking about reaching the target area from a particular location it can be useful to visualize <em>the control set</em>: a set of

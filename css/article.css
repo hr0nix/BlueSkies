@@ -10,6 +10,19 @@ article {
     border: 1px solid #999999;
 }
 
+nav {
+    position: fixed;
+    margin-top: 1em;
+    padding: 0.5em;
+    border: 1px solid #999999;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 #map-canvas {
     width: 100%;
     height: 600px;

@@ -18,6 +18,12 @@
     <link rel="stylesheet" type="text/css" href="css/article.css" />
 </head>
 <body>
+    <nav>
+        <ul data-bind="foreach: pages">
+            <li><a data-bind="text: ($index() + 1) + '. ' + title, attr: { href: $parent.skipCurrent(url) }"></a></li>
+        </ul>
+    </nav>
+
     <article>
         <h1>Find your DZ</h1>
         <p>Let's find your favorite DZ. All the following examples will use it as a reference.</p>
