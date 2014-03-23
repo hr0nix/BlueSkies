@@ -17,13 +17,21 @@
     <link rel="stylesheet" type="text/css" href="css/article.css" />
 </head>
 <body>
-    <nav>
-        <ul data-bind="foreach: pages">
-            <li><a data-bind="text: ($index() + 1) + '. ' + title, attr: { href: $parent.skipCurrent(url) }"></a></li>
-        </ul>
-    </nav>
+    <div class="container">
+    <aside>
+        <nav>
+            <header>
+            <h4>Navigation</h4>
+            </header>
+            <ul data-bind="foreach: pages">
+                <li><a data-bind="text: ($index() + 1) + '. ' + title, attr: { href: $parent.skipCurrent(url) }"></a></li>
+            </ul>
+        </nav>
+    </aside>
     <article>
+        <header>
         <h1>Control set</h1>
+        </header>
         <p>When thinking about reaching the target area from a particular location it can be useful to visualize <em>the control set</em>: a set of
         points where you can reach the target from.</p>
         <p>Think about spotting: you want to be able to reach the landing area from the opening point.</p>
@@ -65,6 +73,7 @@
         </div>
         <!-- /ko -->
     </article>
+    </div>
 
     <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
     <script src="scripts/bindings.js"></script>

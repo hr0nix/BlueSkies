@@ -2,19 +2,32 @@ body {
     background-color: #eef1ff;
 }
 
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    width: 900px;
+}
+
 article {
-    margin-left: 10em;
-    margin-right: 10em;
-    padding: 1em;
+    width: 702px;
+    padding: 22px;
+    float: right;
     background-color: #f9f9f9;
     border: 1px solid #999999;
 }
 
+article header h1 {
+    margin-top: 4px;
+}
+
+aside {
+position: fixed;
+    float: left;
+}
+
 nav {
-    position: fixed;
     margin-top: 1em;
     padding: 0.5em;
-    border: 1px solid #999999;
 }
 
 nav ul {

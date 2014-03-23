@@ -17,14 +17,21 @@
     <link rel="stylesheet" type="text/css" href="css/article.css" />
 </head>
 <body>
-    <nav>
-        <ul data-bind="foreach: pages">
-            <li><a data-bind="text: ($index() + 1) + '. ' + title, attr: { href: $parent.skipCurrent(url) }"></a></li>
-        </ul>
-    </nav>
-
+    <div class="container">
+    <aside>
+        <nav>
+            <header>
+            <h4>Navigation</h4>
+            </header>
+            <ul data-bind="foreach: pages">
+                <li><a data-bind="text: ($index() + 1) + '. ' + title, attr: { href: $parent.skipCurrent(url) }"></a></li>
+            </ul>
+        </nav>
+    </aside>
     <article>
+        <header>
         <h1>Find your DZ</h1>
+        </header>
         <p>Let's find your favorite DZ. All the following examples will use it as a reference.</p>
         <p>Just use Google Maps here to find it. Start typing the address in the field below.</p>
         <p>Don't forget to drag the yellow circle on the map to specify the exact landing target, i.e. pea gravel, accuracy target etc. You can zoom
@@ -38,13 +45,14 @@
             mapControl: 'TOP_LEFT',
             mapFinder: onFindNewDz">
         <button class="dz-selection-control" type="button"
-            data-bind="mapControl: 'TOP_LEFT',
+            data-bind="mapControl: 'BOTTOM_CENTER',
             fadeVisible: location.id() === 'custom',
             jqButton: saveArticleSettings">
             Save and continue with the article
         </button>
         <!-- /ko -->
     </article>
+    </div>
 
     <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
     <script src="scripts/bindings.js"></script>
