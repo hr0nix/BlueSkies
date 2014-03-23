@@ -25,14 +25,16 @@ function NavigationViewModel() {
         return { url: element[0], title: element[1] };
     });
 
-    self.skipCurrent = function(url) {
-        var url = ko.unwrap(url);
-        if (url !== window.location.pathname.split('/').pop()) {
-            return url;
-        } else {
-            return null;
+    self.current = (function() {
+        for (var i = 0; i < self.pages.length; i++) {
+            var currentPage = window.location.pathname.split('/').pop()
+            if (self.pages[i].url === currentPage) {
+                return i;
+            }
         }
-    }
+
+        throw "Unknown page";
+    })();
 }
 
 ko.applyBindings(new NavigationViewModel());

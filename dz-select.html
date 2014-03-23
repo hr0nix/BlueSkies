@@ -24,7 +24,7 @@
             <h4>Navigation</h4>
             </header>
             <ul data-bind="foreach: pages">
-                <li><a data-bind="text: ($index() + 1) + '. ' + title, attr: { href: $parent.skipCurrent(url) }"></a></li>
+                <li><a data-bind="text: ($index() + 1) + '. ' + title, attr: { href: $index() == $parent.current ? null : url }"></a></li>
             </ul>
         </nav>
     </aside>
@@ -45,6 +45,8 @@
             mapControl: 'TOP_LEFT',
             mapFinder: onFindNewDz">
         <!-- /ko -->
+
+        <p data-bind="if: current < pages.length - 1"><a data-bind="attr: {href: pages[current + 1].url}">Next (<span data-bind="text: pages[current + 1].title"></span>)&gt;&gt;<a></p>
     </article>
     </div>
 
