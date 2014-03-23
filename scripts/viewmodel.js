@@ -1,3 +1,4 @@
+(function() {
 function ViewModel() {
     var self = this;
     var dropzones = {
@@ -17,6 +18,11 @@ function ViewModel() {
         cheats: ko.observable(false)
     };
 
+    self.parameters = {
+        embedded: ko.observable(false),
+        startable: ko.observable(true)
+    }
+
     self.display = {
         language: ko.observable("en"),
         unitSystem: ko.observable("metric"),
@@ -31,6 +37,10 @@ function ViewModel() {
 
         maxAltitude: ko.computed(function() {
             return Math.max(altitudeProgressbarMax, self.pattern.openingAltitude());
+        }, this, { deferEvaluation: true }),
+
+        useMetric: ko.computed(function() {
+            return self.display.unitSystem() === "metric";
         }, this, { deferEvaluation: true })
     };
 
@@ -144,8 +154,13 @@ function ViewModel() {
 
     self.map = {
         center: ko.observable(),
-        heading: ko.observable()
+        heading: ko.observable(),
+        zoom: ko.observable(defaultMapZoom)
     };
+
+    self.map.center.subscribe(function() {
+        self.map.zoom(defaultMapZoom);
+    });
 
     self.location = {
         _id: ko.observable().extend({ notify: 'always' }),
@@ -221,13 +236,13 @@ function ViewModel() {
             if (!(self.display.reachset() && self.simulation.flying())) {
                 return undefined;
             }
-            return computeReachSet(self.canopy.location(), self.canopy.altitude(), true);
+            return computeReachSet(self.canopy.location(), self.canopy.altitude(), self.wind, true);
         }, this, { deferEvaluation: true }),
         controlSet: ko.computed(function() {
             if (!self.display.controlset()) {
                 return undefined;
             }
-            return computeReachSet(self.location.coords(), self.reachSetAltitude(), false);
+            return computeReachSet(self.location.coords(), self.reachSetAltitude(), self.wind, false);
         }, this, { deferEvaluation: true })
     };
 
@@ -236,6 +251,7 @@ function ViewModel() {
     };
 
     self.shareLocation = {
+        language: ko.observable(false),
         wind: ko.observable(false),
         pattern: ko.observable(false),
         GET: ko.computed(function() {
@@ -268,27 +284,40 @@ function ViewModel() {
 
         saveOnExit: ko.observable(true),
 
-        save: function() {
+        init: function() {
+            self.persistence.load();
+            $(window).on('beforeunload', function() {
+                if (self.persistence.saveOnExit()) {
+                    self.persistence.save();
+                }
+            });
+        },
+
+        save: function(what, where) {
+            what = what || self.persistence._list;
+            where = where || 'persistence';
             if (!localStorage) {
                 return;
             }
 
-            var saveData = self.persistence._list.map(function(observable) {
+            var saveData = what.map(function(observable) {
                 return observable();
             });
 
-            localStorage.persistence = JSON.stringify(saveData);
+            localStorage[where] = JSON.stringify(saveData);
             localStorage.version = self.persistence._version;
         },
 
-        load: function() {
+        load: function(what, where) {
+            what = what || self.persistence._list;
+            where = where || 'persistence';
             if (!localStorage || localStorage.version != self.persistence._version) {
                 return;
             }
 
-            var saveData = JSON.parse(localStorage.persistence);
+            var saveData = JSON.parse(localStorage[where]);
             for (var i = 0; i < saveData.length; i++ ) {
-                self.persistence._list[i](saveData[i]);
+                what[i](saveData[i]);
             }
         },
 
@@ -302,5 +331,5 @@ function ViewModel() {
     };
 }
 
-var viewModel = new ViewModel();
-ko.applyBindings(viewModel);
+window.viewModel = new ViewModel();
+})();

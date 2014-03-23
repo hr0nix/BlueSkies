@@ -1,0 +1,42 @@
+body {
+    background-color: #eef1ff;
+}
+
+article {
+    margin-left: 10em;
+    margin-right: 10em;
+    padding: 1em;
+    background-color: #f9f9f9;
+    border: 1px solid #999999;
+}
+
+nav {
+    position: fixed;
+    margin-top: 1em;
+    padding: 0.5em;
+    border: 1px solid #999999;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#map-canvas {
+    width: 100%;
+    height: 600px;
+    border: none;
+}
+
+.settings-pane {
+    width: 25em;
+    margin: 1em 1em 1em;
+    padding: 5px;
+    background-color: #e2e2e2;
+    border: 2px outset;
+}
+
+.settings-pane > :first-child {
+    margin-top: 0;
+}
