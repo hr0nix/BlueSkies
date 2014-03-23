@@ -293,27 +293,31 @@ function ViewModel() {
             });
         },
 
-        save: function() {
+        save: function(what, where) {
+            what = what || self.persistence._list;
+            where = where || 'persistence';
             if (!localStorage) {
                 return;
             }
 
-            var saveData = self.persistence._list.map(function(observable) {
+            var saveData = what.map(function(observable) {
                 return observable();
             });
 
-            localStorage.persistence = JSON.stringify(saveData);
+            localStorage[where] = JSON.stringify(saveData);
             localStorage.version = self.persistence._version;
         },
 
-        load: function() {
+        load: function(what, where) {
+            what = what || self.persistence._list;
+            where = where || 'persistence';
             if (!localStorage || localStorage.version != self.persistence._version) {
                 return;
             }
 
-            var saveData = JSON.parse(localStorage.persistence);
+            var saveData = JSON.parse(localStorage[where]);
             for (var i = 0; i < saveData.length; i++ ) {
-                self.persistence._list[i](saveData[i]);
+                what[i](saveData[i]);
             }
         },
 

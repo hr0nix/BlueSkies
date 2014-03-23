@@ -14,6 +14,32 @@ a.no-underline {
     margin-right: 30px;
 }
 
+.dz-selection-control {
+    margin-top: 16px;
+    margin-left: 5px;
+    font-size: 15px;
+    font-weight: 300;
+    height: 32px;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#dz-selection-menu {
+    width: 11em;
+    border-radius: 2px 0 0 2px;
+}
+
+#dz-finder {
+    padding: 0 11px 0 13px;
+    width: 400px;
+    outline: none;
+    background-color: #fff;
+    text-overflow: ellipsis;
+    border-radius: 0 2px 2px 0;
+}
+
 .element-label {
     margin-top: 15px;
     font-family: Georgia, serif;

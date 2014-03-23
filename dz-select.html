@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find your DZ</title>
+    <meta charset="utf-8">
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
+    <script src="scripts/jquery.number.js"></script>
+    <script src="scripts/jquery.cookie.js"></script>
+    <script src="scripts/blueskies.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/loc.js"></script>
+    <script src="scripts/util.js"></script>
+    <script src="scripts/ga.js"></script>
+    <link rel="stylesheet" href="css/smoothness-theme/jquery-ui-1.10.4.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+    <link rel="stylesheet" type="text/css" href="css/article.css" />
+</head>
+<body>
+    <article>
+        <h1>Find your DZ</h1>
+        <p>Let's find your favorite DZ. All the following examples will use it as a reference.</p>
+        <p>Just use Google Maps here to find it. Start typing the address in the field below.</p>
+        <p>Don't forget to drag the yellow circle on the map to specify the exact landing target, i.e. pea gravel, accuracy target etc. You can zoom
+        the camera to do it more precisely.</p>
+        <p>If you decide later that you want to change the reference location, you can come back to this page at any time and do it.</p>
+        <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading, zoom: map.zoom }"></div>
+        <input id="dz-finder" placeholder="Find your DZ" class="dz-selection-control" type="text"
+            data-bind="value: location.finderText,
+            mapControl: 'TOP_LEFT',
+            mapFinder: onFindNewDz">
+        <button class="dz-selection-control" type="button"
+            data-bind="mapControl: 'TOP_LEFT',
+            fadeVisible: location.id() === 'custom',
+            jqButton: saveArticleSettings">
+            Save and continue with the article
+        </button>
+    </article>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
+    <script src="scripts/bindings.js"></script>
+    <script src="scripts/viewmodel.js"></script>
+    <script src="scripts/article.js"></script>
+    <script>
+        loadArticleSettings();
+        viewModel.parameters.startable(false);
+        defaultMapZoom = 13;
+    </script>
+</body>
+</html>
