@@ -36,32 +36,19 @@
                 <label for="checkbox-fullscreen"><button data-bind="attr: { title: localize(display.fullscreen() ? 'Normal' : 'Fullscreen') }"><span class="ui-icon" data-bind="css: display.fullscreen() ? 'ui-icon-arrowstop-1-w' : 'ui-icon-arrowstop-1-e'"></span></button></label>
             </div>
             <ul id="dz-selection-menu" class="dz-selection-control"
-                data-bind="currentDz: location.id,
-                mapControl: 'TOP_CENTER',
-                visible: !parameters.embedded()">
+                data-bind="mapControl: 'TOP_CENTER', visible: !parameters.embedded()">
                 <li><a href="#"><div data-bind="html: location.name"></div></a>
                     <ul>
-                        <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
-                            <ul>
-                                <li id="dz-uk-sibson"><a href="#"><span lang="en">Sibson</span><span lang="ru">Сибсон</span></a></li>
-                                <li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
+                    <!-- ko foreach: dzMenu -->
+                        <li>
+                            <a href="#"><span data-bind="text: localize(name)"></span></a>
+                            <ul data-bind="foreach: members">
+                                <li data-bind="attr: {'data-dz-id': $data}, css: {'current-dz': $data === $root.location.id()}"><a href="#"><span
+                                data-bind="text: localize($data)"></span></a></li>
                             </ul>
                         </li>
-                        <li><a href="#"><span lang="en">Russia</span><span lang="ru">Россия</span></a>
-                            <ul>
-                                <li id="dz-ru-puschino"><a href="#"><span lang="en">Puschino</span><span lang="ru">Пущино</span></a></li>
-                                <li id="dz-ru-kolomna"><a href="#"><span lang="en">Kolomna</span><span lang="ru">Коломна</span></a></li>
-                                <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#"><span lang="en">Other</span><span lang="ru">Другое</span></a>
-                            <ul>
-                                <li id="dz-other-dubai"><a href="#"><span lang="en">Skydive Dubai</span><span lang="ru">Дубай</span></a></li>
-                                <li id="dz-other-red-square"><a href="#"><span lang="en">Red Square</span><span lang="ru">Красная площадь</span></a></li>
-                                <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
-                            </ul>
-                        </li>
-                        <li id="dz-custom" data-bind="visible: location.custom.available"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
+                    <!-- /ko -->
+                        <li data-dz-id="custom" data-bind="visible: location.custom.available, css: {'current-dz': location.id() == 'custom'}"><a href="#" data-bind="text: localize('custom')"></a></li>
                     </ul>
                 </li>
             </ul>

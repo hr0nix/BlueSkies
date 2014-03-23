@@ -187,9 +187,10 @@ function onMapRightClick(event) {
 
 function onDzMenuItemSelected(event, ui) {
     event.preventDefault();
-    if (ui.item.attr('id')) {
-        ga('send', 'event', 'dz', 'selected', ui.item.attr('id'));
-        viewModel.location.id(ui.item.attr('id').replace("dz-", ""));
+    var dzid = ui.item.data('dz-id');
+    if (dzid) {
+        ga('send', 'event', 'dz', 'selected', dzid);
+        viewModel.location.id(dzid);
     }
 }
 

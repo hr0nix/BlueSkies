@@ -13,6 +13,21 @@ function ViewModel() {
         "custom": null
     };
 
+    self.dzMenu = [
+        {
+            name: 'uk',
+            members: [ 'uk-sibson', 'uk-chatteris' ]
+        },
+        {
+            name: 'ru',
+            members: [ 'ru-puschino', 'ru-vatulino', 'ru-kolomna' ],
+        },
+        {
+            name: 'other',
+            members: [ 'other-dubai', 'other-red-square', 'other-statue-of-liberty' ]
+        }
+    ];
+
     self.debug = {
         on: ko.observable(false),
         cheats: ko.observable(false)
@@ -210,7 +225,7 @@ function ViewModel() {
         }).extend({ notify: 'always' }),
 
         name: ko.computed(function() {
-            return $("#dz-" + self.location.id() + "> a").html();
+            return localize(self.location.id());
         }, this, { deferEvaluation: true }),
         finderText: ko.computed(function() {
             return (self.location.id() == 'custom' ? self.location.custom.name() : '')

@@ -6,7 +6,22 @@ var enResources = {
         "accuracy trick": "Accuracy trick: you'll land there",
         "controlset": "Points you can reach the landing target from (at the current altitude)",
         "reachset": "The area on the ground still reachable from the current position",
-        "share-link": "Get link to current location"
+        "share-link": "Get link to current location",
+
+        "uk": "UK",
+        "ru": "Russia",
+        "other": "Other",
+
+        "uk-sibson": "Sibson",
+        "uk-chatteris": "Chatteris",
+        "ru-puschino": "Puschino",
+        "ru-kolomna": "Kolomna",
+        "ru-vatulino": "Vatulino",
+        "other-dubai": "Dubai",
+        "other-red-square": "Red Square",
+        "other-statue-of-liberty": "Statue of Liberty",
+
+        "custom": "From search"
     },
     ruResources = {
         "ms": "м/с",
@@ -27,7 +42,21 @@ var enResources = {
         "accuracy trick": "Точка приземления",
         "controlset": "КВК: из каких точек все еще можно попасть в цель (с текущей высоты)",
         "reachset": "Точки на земле, в которые еще можно попасть из текущего положения",
-        "share-link": "Получить ссылку на текущую точку"
+        "share-link": "Получить ссылку на текущую точку",
+
+        "uk": "Англия",
+        "ru": "Россия",
+        "other": "Другое",
+
+        "uk-sibson": "Сибсон",
+        "ru-puschino": "Пущино",
+        "ru-kolomna": "Коломна",
+        "ru-vatulino": "Ватулино",
+        "other-dubai": "Дубай",
+        "other-red-square": "Красная площадь",
+        "other-statue-of-liberty": "Статуя свободы",
+
+        "custom": "Из поиска"
     },
     langResources = {
         "en": enResources,
