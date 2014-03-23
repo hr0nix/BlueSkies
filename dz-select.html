@@ -31,6 +31,8 @@
         <p>Don't forget to drag the yellow circle on the map to specify the exact landing target, i.e. pea gravel, accuracy target etc. You can zoom
         the camera to do it more precisely.</p>
         <p>If you decide later that you want to change the reference location, you can come back to this page at any time and do it.</p>
+
+        <!-- ko with: simulator -->
         <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading, zoom: map.zoom }"></div>
         <input id="dz-finder" placeholder="Find your DZ" class="dz-selection-control" type="text"
             data-bind="value: location.finderText,
@@ -42,6 +44,7 @@
             jqButton: saveArticleSettings">
             Save and continue with the article
         </button>
+        <!-- /ko -->
     </article>
 
     <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>

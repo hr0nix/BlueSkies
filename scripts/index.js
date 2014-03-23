@@ -1,6 +1,7 @@
 (function () {
     viewModel.persistence.init();
     parseParameters(viewModel);
+    ko.applyBindings(viewModel);
 
     viewModel.display.fullscreen.subscribe(function() {
         google.maps.event.trigger(map, "resize");

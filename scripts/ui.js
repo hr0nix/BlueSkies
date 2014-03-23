@@ -430,12 +430,6 @@ function initializeAnalyticsEvents() {
 }
 
 function initialize() {
-    var $element = $('article');
-    if ($element.length == 0) {
-        $element = $('body');
-    }
-    ko.applyBindings(viewModel, $element.get(0));
-
     initLandingPattern();
     initDzMarker();
     initSteadyPointMarker();

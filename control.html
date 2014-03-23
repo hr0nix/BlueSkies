@@ -36,7 +36,8 @@
         <p>As the windspeed increases, note that the control set does not simply shift upwind, it stretches along the wind direction. The reason is
         that flying in brakes gives even more significant benefits with a strong tailwind.</p>
         <p>In the following demonstration try changing the wind speed and direction. The blue area on the map shows which points you can reach the
-        target area from if you're at altitude of <span data-bind="text: pattern.openingAltitude"></span>m.</p>
+        target area from if you're at altitude of <span data-bind="text: simulator.pattern.openingAltitude"></span>m.</p>
+        <!-- ko with: simulator -->
         <div class="settings-pane" data-bind="with: wind">
             <h3>Wind conditions</h3>
             <a href="#" class="link-button float-right" data-bind="click: randomize">Randomize</a>
@@ -63,6 +64,7 @@
                 <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())"/>
             </div>
         </div>
+        <!-- /ko -->
     </article>
 
     <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>

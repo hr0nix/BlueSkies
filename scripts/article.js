@@ -31,7 +31,9 @@ function NavigationViewModel() {
             return null;
         }
     }
+
+    self.simulator = viewModel;
 }
 
-ko.applyBindings(new NavigationViewModel(), $('nav').get(0));
+ko.applyBindings(new NavigationViewModel());
 })();
