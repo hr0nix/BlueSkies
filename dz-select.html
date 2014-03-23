@@ -44,12 +44,6 @@
             data-bind="value: location.finderText,
             mapControl: 'TOP_LEFT',
             mapFinder: onFindNewDz">
-        <button class="dz-selection-control" type="button"
-            data-bind="mapControl: 'BOTTOM_CENTER',
-            fadeVisible: location.id() === 'custom',
-            jqButton: saveArticleSettings">
-            Save and continue with the article
-        </button>
         <!-- /ko -->
     </article>
     </div>
@@ -60,6 +54,9 @@
     <script src="scripts/article.js"></script>
     <script>
         loadArticleSettings();
+        $(window).on('beforeunload', function() {
+            saveArticleSettings();
+        });
         sim.parameters.startable(false);
         defaultMapZoom = 13;
     </script>
