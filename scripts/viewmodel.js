@@ -1,5 +1,5 @@
 (function() {
-function ViewModel() {
+function SimulatorViewModel() {
     var self = this;
     var dropzones = {
         "uk-sibson": [52.560706, -0.395692],
@@ -113,7 +113,7 @@ function ViewModel() {
         },
 
         pauseText: ko.computed(function() {
-            return (self.simulation.speed() != 0 ? localize("Pause") : localize("Unpause")) + " (P)";
+            return localize(self.simulation.speed() != 0 ? "Pause" : "Unpause") + " (P)";
         }, this, { deferEvaluation: true }),
 
         flying: ko.computed(function() {
@@ -346,5 +346,5 @@ function ViewModel() {
     };
 }
 
-window.viewModel = new ViewModel();
+window.sim = new SimulatorViewModel();
 })();

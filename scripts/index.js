@@ -1,9 +1,9 @@
 (function () {
-    viewModel.persistence.init();
-    parseParameters(viewModel);
-    ko.applyBindings(viewModel);
+    sim.persistence.init();
+    parseParameters(sim);
+    ko.applyBindings(sim);
 
-    viewModel.display.fullscreen.subscribe(function() {
+    sim.display.fullscreen.subscribe(function() {
         google.maps.event.trigger(map, "resize");
     });
 

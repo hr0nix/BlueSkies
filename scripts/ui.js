@@ -54,9 +54,9 @@ function getQueryString() {
 }
 
 function setCustomDz(name, latlng) {
-    viewModel.location.custom.name(name);
-    viewModel.location.custom.coords(latlng);
-    viewModel.location.id("custom");
+    sim.location.custom.name(name);
+    sim.location.custom.coords(latlng);
+    sim.location.id("custom");
 }
 
 function defaultIfUndefined(x, def) {
@@ -69,27 +69,27 @@ function getFullPath(location) {
 
 function generateGETForLocation() {
     var result = "?";
-    if (viewModel.location.id() != "custom") {
-        result += "dz=" + viewModel.location.id();
+    if (sim.location.id() != "custom") {
+        result += "dz=" + sim.location.id();
     } else {
-        var latlng = viewModel.location.custom.coords();
+        var latlng = sim.location.custom.coords();
         result += "lat=" + latlng.lat() + "&lng=" + latlng.lng();
     }
 
-    if (viewModel.shareLocation.wind()) {
-        result += "&wind.direction=" + radToDeg(reportedWindDirection(viewModel.wind.direction())) +
-            "&wind.speed=" + viewModel.wind.speed();
+    if (sim.shareLocation.wind()) {
+        result += "&wind.direction=" + radToDeg(reportedWindDirection(sim.wind.direction())) +
+            "&wind.speed=" + sim.wind.speed();
     }
 
-    if (viewModel.shareLocation.pattern()) {
-        result += "&pattern=" + viewModel.display.pattern();
-        if (!viewModel.pattern.intoWind()) {
-            result += "&landingDirection=" + radToDeg(viewModel.pattern.landingDirection());
+    if (sim.shareLocation.pattern()) {
+        result += "&pattern=" + sim.display.pattern();
+        if (!sim.pattern.intoWind()) {
+            result += "&landingDirection=" + radToDeg(sim.pattern.landingDirection());
         }
     }
 
-    if (viewModel.shareLocation.language()) {
-        result += '&lang=' + viewModel.display.language();
+    if (sim.shareLocation.language()) {
+        result += '&lang=' + sim.display.language();
     }
 
     return result;
@@ -103,11 +103,11 @@ function onKeyDown(e) {
         pressedKeys[e.which] = true;
     }
 
-    if (viewModel.simulation.flying()) {
+    if (sim.simulation.flying()) {
         if (e.which == $.ui.keyCode.UP) {
-            viewModel.canopy.modeChange(+canopyModeUpdateSpeed);
+            sim.canopy.modeChange(+canopyModeUpdateSpeed);
         } else if (e.which == $.ui.keyCode.DOWN) {
-            viewModel.canopy.modeChange(-canopyModeUpdateSpeed);
+            sim.canopy.modeChange(-canopyModeUpdateSpeed);
         }
     }
 }
@@ -119,32 +119,32 @@ function onKeyUp(e) {
     }
 
     if (String.fromCharCode(e.which) == "P") {
-        viewModel.simulation.togglePause();
+        sim.simulation.togglePause();
     }
 }
 
 function onTimeTick() {
-    if (viewModel.simulation.flying()) {
+    if (sim.simulation.flying()) {
         var currentUpdateTime = new Date().getTime(),
             dt = (currentUpdateTime - prevUpdateTime) / 1000.0;
         prevUpdateTime = currentUpdateTime;
 
         if (pressedKeys[$.ui.keyCode.LEFT]) {
-            viewModel.canopy.steeringInput(-headingUpdateSpeed * dt);
+            sim.canopy.steeringInput(-headingUpdateSpeed * dt);
         } else if (pressedKeys[$.ui.keyCode.RIGHT]) {
-            viewModel.canopy.steeringInput(+headingUpdateSpeed * dt);
+            sim.canopy.steeringInput(+headingUpdateSpeed * dt);
         }
 
-        dt *= viewModel.simulation.speed(); // Only do it here because we don't want the responsiveness to be affected by the simulationSpeed, only the descent. Or do we?
-        dt = Math.min(dt, viewModel.canopy.altitude() / viewModel.canopy.speedV()); // We don't want to go below ground
+        dt *= sim.simulation.speed(); // Only do it here because we don't want the responsiveness to be affected by the simulationSpeed, only the descent. Or do we?
+        dt = Math.min(dt, sim.canopy.altitude() / sim.canopy.speedV()); // We don't want to go below ground
 
-        viewModel.canopy.descend(dt);
+        sim.canopy.descend(dt);
 
-        if (!viewModel.simulation.flying()) {
-            var distance = google.maps.geometry.spherical.computeDistanceBetween(viewModel.canopy.location(), viewModel.location.coords());
+        if (!sim.simulation.flying()) {
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(sim.canopy.location(), sim.location.coords());
             ga('send', 'event', 'simulation', 'finished');
             ga('send', 'event', 'simulation', 'finished', 'distance', Math.floor(distance));
-            ga('send', 'event', 'simulation', 'finished', 'angle-into-wind', Math.floor(radToDeg(normalizeAngle(Math.abs(viewModel.canopy.heading() - normalizeAngle(viewModel.wind.direction() - Math.PI))))));
+            ga('send', 'event', 'simulation', 'finished', 'angle-into-wind', Math.floor(radToDeg(normalizeAngle(Math.abs(sim.canopy.heading() - normalizeAngle(sim.wind.direction() - Math.PI))))));
         }
     }
 }
@@ -174,10 +174,10 @@ function onShareLinkClick() {
 }
 
 function onMapRightClick(event) {
-    if (!viewModel.parameters.startable()) {
+    if (!sim.parameters.startable()) {
         return;
     }
-    viewModel.simulation.start(event.latLng);
+    sim.simulation.start(event.latLng);
     prevUpdateTime = new Date().getTime();
 
     if (isDialogOpen("#tutor-rightclick")) {
@@ -190,7 +190,7 @@ function onDzMenuItemSelected(event, ui) {
     var dzid = ui.item.data('dz-id');
     if (dzid) {
         ga('send', 'event', 'dz', 'selected', dzid);
-        viewModel.location.id(dzid);
+        sim.location.id(dzid);
     }
 }
 
@@ -206,7 +206,7 @@ function onFindNewDz() {
 }
 
 ////// Initialization
-function parseParameters(viewModel) {
+function parseParameters(sim) {
     var queryString = getQueryString(),
 
         lat = queryString.lat,
@@ -215,29 +215,29 @@ function parseParameters(viewModel) {
         landingDirection = queryString['landingDirection'],
 
         viewModelMap = {
-            dz: viewModel.location.id,
-            lang: viewModel.display.language,
-            'wind.speed': viewModel.wind.speed,
+            dz: sim.location.id,
+            lang: sim.display.language,
+            'wind.speed': sim.wind.speed,
 
-            'debug':                viewModel.debug.on,
-            'cheat':                viewModel.debug.cheats,
-            'pattern':              viewModel.display.pattern,
-            'startable':            viewModel.parameters.startable,
-            'display.steadyPoint':  viewModel.display.steadyPoint,
-            'display.reachset':     viewModel.display.reachset,
-            'display.controlset':   viewModel.display.controlset,
-            'display.fullscreen':   viewModel.display.fullscreen,
+            'debug':                sim.debug.on,
+            'cheat':                sim.debug.cheats,
+            'pattern':              sim.display.pattern,
+            'startable':            sim.parameters.startable,
+            'display.steadyPoint':  sim.display.steadyPoint,
+            'display.reachset':     sim.display.reachset,
+            'display.controlset':   sim.display.controlset,
+            'display.fullscreen':   sim.display.fullscreen,
 
-            'simulation.speed':     viewModel.simulation.speed,
-            'canopy.location':      viewModel.canopy.location,
-            'canopy.altitude':      viewModel.canopy.altitude,
-            'canopy.heading':       viewModel.canopy.heading,
-            'canopy.mode':          viewModel.canopy.mode,
+            'simulation.speed':     sim.simulation.speed,
+            'canopy.location':      sim.canopy.location,
+            'canopy.altitude':      sim.canopy.altitude,
+            'canopy.heading':       sim.canopy.heading,
+            'canopy.mode':          sim.canopy.mode,
 
-            'map.center':           viewModel.map.center,
-            'map.zoom':             viewModel.map.zoom,
+            'map.center':           sim.map.center,
+            'map.zoom':             sim.map.zoom,
 
-            'pattern.openingAltitude': viewModel.pattern.openingAltitude
+            'pattern.openingAltitude': sim.pattern.openingAltitude
         };
 
     if (lat && lng) {
@@ -246,12 +246,12 @@ function parseParameters(viewModel) {
     }
 
     if (windDirection) {
-        viewModel.wind.direction(reportedWindDirection(degToRad(windDirection)));
+        sim.wind.direction(reportedWindDirection(degToRad(windDirection)));
     }
 
     if (landingDirection) {
-        viewModel.pattern.selectedLandingDirection(degToRad(landingDirection));
-        viewModel.pattern.intoWind(false);
+        sim.pattern.selectedLandingDirection(degToRad(landingDirection));
+        sim.pattern.intoWind(false);
     }
 
     for (var i in viewModelMap) {
@@ -318,11 +318,11 @@ function initLandingPattern() {
         strokeOpacity: 1.0,
         strokeWeight: 2,
         zIndex: 1,
-        path: viewModel.pattern.points()
+        path: sim.pattern.points()
     });
 
-    bindVisibility(landingPatternLine, viewModel.pattern.show);
-    bindPolyline(landingPatternLine, viewModel.pattern.points);
+    bindVisibility(landingPatternLine, sim.pattern.show);
+    bindPolyline(landingPatternLine, sim.pattern.points);
 }
 
 function initDzMarker() {
@@ -332,26 +332,26 @@ function initDzMarker() {
             strokeColor: 'yellow',
             scale: 8
         },
-        position: viewModel.location.coords(),
+        position: sim.location.coords(),
         draggable: true,
         map: map,
         zIndex: 2
     };
 
     var dzMarker = new google.maps.Marker(options);
-    bindMarkerPosition(dzMarker, viewModel.location.coords);
+    bindMarkerPosition(dzMarker, sim.location.coords);
 
     google.maps.event.addListener(dzMarker, 'drag', function() {
-        if (viewModel.location.id() == 'custom') {
-            viewModel.location.custom.coords(dzMarker.getPosition());
+        if (sim.location.id() == 'custom') {
+            sim.location.custom.coords(dzMarker.getPosition());
         }
     });
 }
 
 function initSteadyPointMarker() {
     var options = {
-        visible: viewModel.display.steadyPoint(),
-        position: viewModel.analytics.steadyPoint(),
+        visible: sim.display.steadyPoint(),
+        position: sim.analytics.steadyPoint(),
         map: map,
         icon: {
             path: google.maps.SymbolPath.CIRCLE,
@@ -364,8 +364,8 @@ function initSteadyPointMarker() {
     };
     var steadyPointMarker = new google.maps.Marker(options);
 
-    bindVisibility(steadyPointMarker, viewModel.display.steadyPoint);
-    bindMarkerPosition(steadyPointMarker, viewModel.analytics.steadyPoint);
+    bindVisibility(steadyPointMarker, sim.display.steadyPoint);
+    bindMarkerPosition(steadyPointMarker, sim.analytics.steadyPoint);
 }
 
 function createCanopyMarkerIcon(canopyHeading, mapHeading) {
@@ -382,13 +382,13 @@ function createCanopyMarkerIcon(canopyHeading, mapHeading) {
 function initCanopyMarker() {
     var options = {
         map: map,
-        icon: viewModel.canopy.icon(),
-        draggable: !!viewModel.debug.cheats(),
+        icon: sim.canopy.icon(),
+        draggable: !!sim.debug.cheats(),
         zIndex: 4
     };
     var canopyMarker = new google.maps.Marker(options);
-    bindMarkerPosition(canopyMarker, viewModel.canopy.location);
-    bindIcon(canopyMarker, viewModel.canopy.icon);
+    bindMarkerPosition(canopyMarker, sim.canopy.location);
+    bindIcon(canopyMarker, sim.canopy.icon);
 }
 
 function initReachSets() {
@@ -411,8 +411,8 @@ function initReachSets() {
         return circles;
     }
 
-    bindCircles(createReachSetCircles('#FF0000'), viewModel.analytics.reachSet);
-    bindCircles(createReachSetCircles('#0000FF'), viewModel.analytics.controlSet);
+    bindCircles(createReachSetCircles('#FF0000'), sim.analytics.reachSet);
+    bindCircles(createReachSetCircles('#0000FF'), sim.analytics.controlSet);
 }
 
 function initializeAnalyticsEvents() {
@@ -422,7 +422,7 @@ function initializeAnalyticsEvents() {
 
     google.maps.event.addListener(map, "rightclick", function() {
         ga('send', 'event', 'simulation', 'started');
-        ga('send', 'event', 'simulation', 'started', 'altitude', viewModel.pattern.openingAltitude());
+        ga('send', 'event', 'simulation', 'started', 'altitude', sim.pattern.openingAltitude());
     });
 
     $("input").change(function() {

@@ -31,7 +31,7 @@
         the camera to do it more precisely.</p>
         <p>If you decide later that you want to change the reference location, you can come back to this page at any time and do it.</p>
 
-        <!-- ko with: simulator -->
+        <!-- ko with: sim -->
         <div id="map-canvas" data-bind="Map: { options: mapOptions, center: map.center, heading: map.heading, zoom: map.zoom }"></div>
         <input id="dz-finder" placeholder="Find your DZ" class="dz-selection-control" type="text"
             data-bind="value: location.finderText,
@@ -52,7 +52,7 @@
     <script src="scripts/article.js"></script>
     <script>
         loadArticleSettings();
-        viewModel.parameters.startable(false);
+        sim.parameters.startable(false);
         defaultMapZoom = 13;
     </script>
 </body>

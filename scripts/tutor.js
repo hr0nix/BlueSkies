@@ -9,7 +9,7 @@ function startTutor(id) {
     function nextDialog() {
         if (nextDialogIndex < allDialogs.size()) {
             if (nextDialogIndex == allDialogs.size() - 1) {
-                viewModel.misc.tutorFinished(true);
+                sim.misc.tutorFinished(true);
                 ga('send', 'event', 'tutor', 'finished', {'nonInteraction': true});
             }
 
@@ -128,7 +128,7 @@ function startTutor(id) {
         $(this).dialog(commonOptions).dialog("option", specific);
     });
 
-    var finished = viewModel.misc.tutorFinished();
+    var finished = sim.misc.tutorFinished();
     nextDialogIndex = finished ? allDialogs.size() - 1 : 0;
     nextDialog();
 

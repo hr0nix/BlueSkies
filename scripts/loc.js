@@ -65,7 +65,7 @@ var enResources = {
 
 function localize(id) {
     return defaultIfUndefined(
-        langResources[viewModel.display.language()][id],    // First, try current language
+        langResources[sim.display.language()][id],    // First, try current language
         defaultIfUndefined(
             langResources['en'][id],                        // then english
             id                                              // else simply use the id itself

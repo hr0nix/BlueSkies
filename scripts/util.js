@@ -43,14 +43,14 @@ function metersPerSecToMilesPerHour(metersPerSec) {
 
 function formatSpeed(metersPerSec, significantDigits) {
     significantDigits = significantDigits || 0;
-    return viewModel.display.useMetric()
+    return sim.display.useMetric()
         ? $.number(metersPerSec, significantDigits) + " " + localize("ms")
         : $.number(metersPerSecToMilesPerHour(metersPerSec), significantDigits) + " " + localize("mph");
 }
 
 function formatAltitude(meters, significantDigits) {
     significantDigits = significantDigits || 0;
-    return viewModel.display.useMetric()
+    return sim.display.useMetric()
         ? $.number(meters, significantDigits) + " " + localize("m")
         : $.number(metersToFeet(meters), significantDigits) + " " + localize("ft");
 }
