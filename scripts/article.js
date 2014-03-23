@@ -1,7 +1,8 @@
 (function() {
 var what = [
         sim.location.custom.coordsJS,
-        sim.location.custom.name
+        sim.location.custom.name,
+        sim.location.id
     ],
     where = 'article';
 
@@ -11,8 +12,9 @@ window.saveArticleSettings = function () {
 
 window.loadArticleSettings = function () {
     sim.persistence.load(what, where);
-    sim.location.id('custom');
 };
+
+loadArticleSettings();
 
 function NavigationViewModel() {
     var self = this;

@@ -326,7 +326,7 @@ function SimulatorViewModel() {
         load: function(what, where) {
             what = what || self.persistence._list;
             where = where || 'persistence';
-            if (!localStorage || localStorage.version != self.persistence._version) {
+            if (!localStorage || localStorage.version != self.persistence._version || !localStorage[where]) {
                 return;
             }
 
