@@ -1,4 +1,5 @@
 (function() {
+"use strict";
 function SimulatorViewModel() {
     var self = this;
     var dropzones = {

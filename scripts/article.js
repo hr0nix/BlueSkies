@@ -1,4 +1,5 @@
 (function() {
+"use strict";
 var what = [
         sim.location.custom.coordsJS,
         sim.location.custom.name,

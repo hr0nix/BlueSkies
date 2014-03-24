@@ -1,4 +1,5 @@
 /// Different custom bindings
+"use strict";
 
 (function() {
 var rotateDiv = function(div, angle) {

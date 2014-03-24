@@ -1,4 +1,5 @@
 (function() {
+"use strict";
 ////// Parameters
 // Canopy modes
 var horizontalSpeeds = [0, 2.5, 5, 7.5, 10],
@@ -145,9 +146,8 @@ function computeLandingPattern(location, wind, pattern) {
 
         result = [location];
     for (var i = 0; i < controlPointAltitudes.length; i++) {
-        time = (controlPointAltitudes[i] - prevAltitude) / speedV;
-
-        var point = moveInWind(prevPoint, windSpeed, windDirection, speedH, heading[i], -time); // Note that we specify the wind speed and canopy heading as though we're flying the pattern. But we give negative time, so we get the point where we need to start to arrive where we need.
+        var time = (controlPointAltitudes[i] - prevAltitude) / speedV,
+            point = moveInWind(prevPoint, windSpeed, windDirection, speedH, heading[i], -time); // Note that we specify the wind speed and canopy heading as though we're flying the pattern. But we give negative time, so we get the point where we need to start to arrive where we need.
 
         prevPoint = point;
         prevAltitude = controlPointAltitudes[i];
@@ -164,5 +164,4 @@ window.getCanopyVerticalSpeed = getCanopyVerticalSpeed;
 window.computeLandingPattern = computeLandingPattern;
 window.computeReachSet = computeReachSet;
 window.lastReachSetSteps = lastReachSetSteps;
-
 })();

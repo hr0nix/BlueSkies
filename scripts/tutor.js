@@ -1,3 +1,4 @@
+"use strict";
 function startTutor(id) {
     var allDialogs, // List of all dialog objects, populated from html automagically
         nextDialogIndex;

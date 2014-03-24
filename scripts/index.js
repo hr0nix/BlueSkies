@@ -1,4 +1,5 @@
 (function () {
+"use strict";
     sim.persistence.init();
     parseParameters(sim);
     ko.applyBindings(sim);

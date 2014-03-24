@@ -1,3 +1,4 @@
+"use strict";
 // Time
 var updateInterval = 20.0,
     headingUpdateSpeed = Math.PI / 4, // Radians __per second__

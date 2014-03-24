@@ -1,4 +1,5 @@
 (function() {
+"use strict";
 var enResources = {
         "ms": "m/s",
         "paused": "(paused)",
