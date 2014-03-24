@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Pattern</title>
+    <meta charset="utf-8">
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=geometry,places"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
+    <script src="scripts/jquery.number.js"></script>
+    <script src="scripts/blueskies.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/loc.js"></script>
+    <script src="scripts/util.js"></script>
+    <script src="scripts/ga.js"></script>
+    <link rel="stylesheet" href="css/smoothness-theme/jquery-ui-1.10.4.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+    <link rel="stylesheet" type="text/css" href="css/article.css" />
+</head>
+<body>
+    <div class="container">
+    <aside>
+        <nav>
+            <header>
+            <h4>Navigation</h4>
+            </header>
+            <ul data-bind="foreach: pages">
+                <li><a data-bind="text: ($index() + 1) + '. ' + title, attr: { href: $index() == $parent.current ? null : url }"></a></li>
+            </ul>
+        </nav>
+    </aside>
+    <article>
+        <header>
+        <h1>The Pattern</h1>
+        </header>
+        <p>Let's start with the concept you're familiar with: the landing pattern.</p>
+        <p>It is very important to set the landing pattern points when preparing for the jump. To do this for every possible wind conditions we need
+        to learn to visualize and predict how the wind direction and speed affects the properties of the landing pattern.</p>
+        <p>Assume the normal into-the-wind landing pattern. Naturally, changing the wind direction simply rotates the pattern. You can try it and see
+        for yourself on the map below!</p>
+        <p>Next, let's try changing the wind speed. On a no wind day we have a pattern with equal leg lengths. Note how as the wind speed increases, the into the
+        wind leg shrinks as the ground speed is reduced when flying into the wind. Next, you need to crab more on the crosswind leg, which makes it
+        shorter as well.</p>
+        <!-- ko with: sim-->
+        <div class="settings-pane" data-bind="with: wind">
+            <h3>Wind conditions</h3>
+            <a href="#" class="link-button float-right" data-bind="click: randomize">Randomize</a>
+            <div>
+                <div class="element-label">
+                    Wind direction:
+                    <span data-bind="html: formatHeading(reportedWindDirection(direction()))"></span>
+                </div>
+                <div data-bind="jqSlider: direction, sliderOptions: headingSliderOptions"></div>
+                <div class="element-label">
+                    Wind speed: <span data-bind="html: formatSpeed(speed(), 1)"></span>
+                </div>
+                <div data-bind="jqSlider: speed, sliderOptions: { min: 0, max: 7, step: 0.1 }"></div>
+            </div>
+        </div>
+        <div class="settings-pane">
+            Landing pattern:
+            <span id="pattern-menu" data-bind="jqButtonset: true">
+                <input id="pattern-rhs" type="radio" name="pattern" value="rhs" data-bind="jqChecked: display.pattern">
+                <label for="pattern-rhs">Right hand
+                </label>
+
+                <input id="pattern-lhs" type="radio" name="pattern" value="lhs" data-bind="jqChecked: display.pattern">
+                <label for="pattern-lhs">Left hand
+                </label>
+            </span>
+        </div>
+
+        <div id="map-canvas" data-bind="Map: { options: mapOptions, to: map }"></div>
+
+        <div style="display:none">
+            <div class="arrow-indicator" data-bind="mapControl: 'RIGHT_TOP'">
+                <img src="images/windsock.png" data-bind="rotate: radToDeg(wind.direction())"/>
+            </div>
+            <div class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind(), mapControl: 'RIGHT_TOP'">
+                <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())"/>
+            </div>
+        </div>
+        <!-- /ko -->
+        <p data-bind="if: !isLastPage"><a data-bind="attr: {href: nextPage.url}">Next (<span data-bind="text: nextPage.title"></span>)&gt;&gt;<a></p>
+    </article>
+    </div>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
+    <script src="scripts/bindings.js"></script>
+    <script src="scripts/viewmodel.js"></script>
+    <script src="scripts/article.js"></script>
+    <script>
+        sim.parameters.startable(false);
+        sim.display.pattern('rhs');
+        sim.pattern.openingAltitude(700);
+        sim.map.zoom(15);
+    </script>
+</body>
+</html>

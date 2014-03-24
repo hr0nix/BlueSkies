@@ -21,6 +21,7 @@ function NavigationViewModel() {
     var self = this;
     self.pages = [
         ['dz-select.html', 'Find your DZ'],
+        ['pattern.html', 'The pattern'],
         ['control.html', 'Control set']
     ].map(function (element) {
         return { url: element[0], title: element[1] };
