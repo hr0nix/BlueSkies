@@ -21,7 +21,7 @@ article header h1 {
 }
 
 aside {
-position: fixed;
+    position: fixed;
     float: left;
 }
 
@@ -37,6 +37,7 @@ nav ul {
 }
 
 #map-canvas {
+    clear: both;
     width: 100%;
     height: 600px;
     border: none;
@@ -44,10 +45,10 @@ nav ul {
 
 .settings-pane {
     width: 25em;
-    margin: 1em 1em 1em;
+    margin: 0em 1em 0.5em;
     padding: 5px;
     background-color: #e2e2e2;
-    border: 2px outset;
+    border: 1px outset;
 }
 
 .settings-pane > :first-child {
