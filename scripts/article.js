@@ -27,7 +27,7 @@ function NavigationViewModel() {
 
     self.current = (function() {
         for (var i = 0; i < self.pages.length; i++) {
-            var currentPage = window.location.pathname.split('/').pop()
+            var currentPage = window.location.pathname.split('/').pop();
             if (self.pages[i].url === currentPage) {
                 return i;
             }
