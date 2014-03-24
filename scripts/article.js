@@ -35,6 +35,10 @@ function NavigationViewModel() {
 
         throw "Unknown page";
     })();
+
+    self.isLastPage = self.current == self.pages.length - 1;
+    self.currentPage = self.pages[self.current];
+    self.nextPage = self.isLastPage ? null : self.pages[self.current + 1];
 }
 
 ko.applyBindings(new NavigationViewModel());

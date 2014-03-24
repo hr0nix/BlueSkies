@@ -46,7 +46,7 @@
             mapFinder: onFindNewDz">
         <!-- /ko -->
 
-        <p data-bind="if: current < pages.length - 1"><a data-bind="attr: {href: pages[current + 1].url}">Next (<span data-bind="text: pages[current + 1].title"></span>)&gt;&gt;<a></p>
+        <p data-bind="if: !isLastPage"><a data-bind="attr: {href: nextPage.url}">Next (<span data-bind="text: nextPage.title"></span>)&gt;&gt;<a></p>
     </article>
     </div>
 
