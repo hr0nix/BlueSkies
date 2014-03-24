@@ -10,157 +10,213 @@
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
         <script src="scripts/jquery.number.js"></script>
-        <script src="scripts/jquery.cookie.js"></script>
         <script src="scripts/blueskies.js"></script>
+        <script src="scripts/ui.js"></script>
+        <script src="scripts/loc.js"></script>
+        <script src="scripts/util.js"></script>
         <script src="scripts/tutor.js"></script>
         <script src="scripts/ga.js"></script>
         <link rel="stylesheet" href="css/smoothness-theme/jquery-ui-1.10.4.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="css/common.css" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
     </head>
-    <body>
-        <div id="map-canvas-container">
-            <div id="map-canvas"></div>
-            <div id="wind-arrow" class="arrow-indicator"><img src="images/windsock-base.png"><img src="images/windsock.png"></div>
-            <div id="landing-direction-arrow" class="arrow-indicator"><img src="images/windsock-base.png"><img src="images/arrow.png"></div>
-            <ul id="dz-selection-menu" class="dz-selection-control">
-                <li><a href="#"><div id="selected-dz"><span lang="en">Pick a dropzone</span><span lang="ru">Дропзона</span></div></a>
+    <body data-bind="setLanguage: display.language">
+        <div data-bind="css: display.fullscreen() ? 'map-fullscreen' : 'map-normal'">
+            <div id="map-canvas" data-bind="Map: { options: mapOptions, to: map }"></div>
+
+            <div class="arrow-indicator" data-bind="mapControl: 'RIGHT_TOP'">
+                <img src="images/windsock.png" data-bind="rotate: radToDeg(wind.direction())">
+            </div>
+            <div class="arrow-indicator" data-bind="fadeVisible: !pattern.intoWind(), mapControl: 'RIGHT_TOP'">
+                <img src="images/arrow.png" data-bind="rotate: radToDeg(pattern.landingDirection())">
+            </div>
+
+            <div data-bind="mapControl: 'RIGHT_BOTTOM', visible: !parameters.embedded()">
+                <input id="checkbox-fullscreen" type="checkbox" data-bind="checked: display.fullscreen">
+                <label for="checkbox-fullscreen"><button data-bind="attr: { title: localize(display.fullscreen() ? 'Normal' : 'Fullscreen') }"><span class="ui-icon" data-bind="css: display.fullscreen() ? 'ui-icon-arrowstop-1-w' : 'ui-icon-arrowstop-1-e'"></span></button></label>
+            </div>
+            <ul id="dz-selection-menu" class="dz-selection-control"
+                data-bind="mapControl: 'TOP_CENTER', visible: !parameters.embedded()">
+                <li><a href="#"><div data-bind="html: location.name"></div></a>
                     <ul>
-                        <li><a href="#"><span lang="en">UK</span><span lang="ru">Англия</span></a>
-                            <ul>
-                                <li id="dz-uk-sibson"><a href="#"><span lang="en">Sibson</span><span lang="ru">Сибсон</span></a></li>
-                                <li id="dz-uk-chatteris"><a href="#">Chatteris</a></li>
+                    <!-- ko foreach: dzMenu -->
+                        <li>
+                            <a href="#"><span data-bind="text: localize(name)"></span></a>
+                            <ul data-bind="foreach: members">
+                                <li data-bind="attr: {'data-dz-id': $data}, css: {'current-dz': $data === $root.location.id()}"><a href="#"><span
+                                data-bind="text: localize($data)"></span></a></li>
                             </ul>
                         </li>
-                        <li><a href="#"><span lang="en">Russia</span><span lang="ru">Россия</span></a>
-                            <ul>
-                                <li id="dz-ru-puschino"><a href="#"><span lang="en">Puschino</span><span lang="ru">Пущино</span></a></li>
-                                <li id="dz-ru-kolomna"><a href="#"><span lang="en">Kolomna</span><span lang="ru">Коломна</span></a></li>
-                                <li id="dz-ru-vatulino"><a href="#"><span lang="en">Vatulino</span><span lang="ru">Ватулино</span></a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#"><span lang="en">Other</span><span lang="ru">Другое</span></a>
-                            <ul>
-                                <li id="dz-other-dubai"><a href="#"><span lang="en">Skydive Dubai</span><span lang="ru">Дубай</span></a></li>
-                                <li id="dz-other-red-square"><a href="#"><span lang="en">Red Square</span><span lang="ru">Красная площадь</span></a></li>
-                                <li id="dz-other-statue-of-liberty"><a href="#"><span lang="en">Statue of Liberty</span><span lang="ru">Статуя свободы</span></a></li>
-                            </ul>
-                        </li>
-                        <li id="dz-custom"><a href="#"><span lang="en">From search</span><span lang="ru">Из поиска</span></a></li>
+                    <!-- /ko -->
+                        <li data-dz-id="custom" data-bind="visible: location.custom.available, css: {'current-dz': location.id() == 'custom'}"><a href="#" data-bind="text: localize('custom')"></a></li>
                     </ul>
                 </li>
             </ul>
-            <input id="dz-finder" class="dz-selection-control" type="text">
-            <button id="share-location" class="dz-selection-control" type="button">
-                <span lang="en"><img src="images/share.png" title="Get link to current location"></span>
-                <span lang="ru"><img src="images/share.png" title="Получить ссылку на текущую точку"></span>
+            <input id="dz-finder" class="dz-selection-control" type="text"
+                data-bind="value: location.finderText, attr: { placeholder: localize('Type address') },
+                mapControl: 'TOP_CENTER',
+                mapFinder: onFindNewDz,
+                visible: !parameters.embedded()">
+            <button class="dz-selection-control" type="button"
+                data-bind="attr: { title: localize('share-link') },
+                mapControl: 'TOP_CENTER',
+                jqButton: onShareLinkClick,
+                visible: !parameters.embedded()">
+                <img src="images/share.png">
             </button>
         </div>
 
-        <div id="right-panel">
-            <div id="status">
-                <h3><span lang="en">Canopy status</span><span lang="ru">Состояние</span></h3>
+        <div id="right-panel" data-bind="fadeVisible: !display.fullscreen()">
+            <div data-bind="if: debug.on">
+                <h3>Debug</h3>
                 <div>
-                    <div class="element-label"><span lang="en">Altitude: </span><span lang="ru">Высота: </span><span id="altitude-value"></span></div>
-                    <div>
-                        <div id="altitude-progressbar"> </div>
-                        <ul id="altitude-ruler" class="ruler"><li>100</li><li>200</li><li>300</li></ul>
-                    </div>
-                    <div class="element-label"><span lang="en">Brake application: </span><span lang="ru">Режим купола: </span></div>
-                    <div id="mode-progressbar"></div>
-                    <div class="element-label"><span lang="en">Horizontal speed: </span><span lang="ru">Горизонталь: </span><span id="horizontal-speed-value"></span></div>
-                    <div class="element-label"><span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span><span id="vertical-speed-value"></span></div>
-                    <div class="element-label" style="display:none"><span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span><span id="canopy-heading-value"></span></div>
+                    <div>Coords: <span data-bind="text: formatCoords(location.coords())"></span></div>
+                    <div>GET: <span data-bind="text: generateGETForLocation()"></span></div>
+                    <div>loc: <span data-bind="text: formatCoords(canopy.location())"></span></div>
+                    <div><input type="checkbox" data-bind="checked: display.fullscreen">Fullscreen </div>
+                    <div><button data-bind="click: persistence.save">Save</button><button data-bind="click: persistence.load">Load</button><button
+                    data-bind="click: persistence.reset">Reset</button></div>
                 </div>
             </div>
-            <div>
+            <div id="status" data-bind="slideVisible: simulation.flying">
+                <h3><span lang="en">Canopy status</span><span lang="ru">Состояние</span></h3>
+                <div>
+                    <div class="element-label">
+                        <span lang="en">Altitude: </span><span lang="ru">Высота: </span>
+                        <span data-bind="html: formatAltitude(canopy.altitude(), 0)"></span>
+                    </div>
+                    <div>
+                        <div data-bind="jqProgressbar: { value: canopy.altitude(), max: display.maxAltitude() }"></div>
+                        <ul class="ruler" data-bind="ruler: display.maxAltitude"><li>100</li><li>200</li><li>300</li></ul>
+                    </div>
+                    <div class="element-label"><span lang="en">Brake application: </span><span lang="ru">Режим купола: </span></div>
+                    <div data-bind="jqProgressbar: { value: canopy.mode(), max: 1 }"></div>
+                    <div class="element-label">
+                        <span lang="en">Horizontal speed: </span><span lang="ru">Горизонталь: </span>
+                        <span data-bind="html: formatSpeed(canopy.speedH(), 1)"></span>
+                    </div>
+                    <div class="element-label">
+                        <span lang="en">Vertical speed: </span><span lang="ru">Вертикаль: </span>
+                        <span data-bind="html: formatSpeed(canopy.speedV(), 1)"></span>
+                    </div>
+                    <div class="element-label" style="display:none">
+                        <span lang="en">Canopy heading: </span><span lang="ru">Направление купола: </span>
+                        <span data-bind="html: formatHeading(canopy.heading(), 0)"></span>
+                    </div>
+
+                    <div class="element-label">
+                        <span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span>
+                        <span data-bind="html: formatSimulationSpeed(simulation.speed())"></span>
+                        <span class="float-right">
+                            <a href="#" class="no-underline" data-bind="click: simulation.togglePause, attr: { title: simulation.pauseText }">
+                                <span class="ui-icon link-icon" data-bind="css: simulation.speed() != 0 ? 'ui-icon-pause' : 'ui-icon-play'"></span>
+                            </a>
+                            <a href="#" class="no-underline" data-bind="click: simulation.stop, attr: { title: localize('Stop') }">
+                                <span class="ui-icon ui-icon-close link-icon"></span>
+                            </a>
+                        </span>
+                    </div>
+                    <div data-bind="jqSlider: simulation.speed, sliderOptions: { min: 0, max: 5, step: 0.1 }"></div>
+                </div>
+            </div>
+            <div data-bind="with: display">
                 <h3><span lang="en">Display options</span><span lang="ru">Отображение</span></h3>
                 <div>
                     <div>
-                        <span id="language-menu">
-                            <input id="select-lang-en" type="radio" name="language" checked="checked"><label for="select-lang-en"><img src="images/GB.png"></label>
-                            <input id="select-lang-ru" type="radio" name="language"><label for="select-lang-ru"><img src="images/RU.png"></label>
-                        </span>
-                        <span id="system-menu">
-                            <input id="select-metric" type="radio" name="system" checked="checked"><label for="select-metric"><span lang="en">Metric</span><span lang="ru">СИ</span></label>
-                            <input id="select-imperial" type="radio" name="system"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
+                        <span data-bind="jqButtonset: true, no_padding: true">
+                            <input id="select-lang-en" type="radio" name="language" value="en" data-bind="jqChecked: language"><label for="select-lang-en"><img src="images/GB.png"></label>
+                            <input id="select-lang-ru" type="radio" name="language" value="ru" data-bind="jqChecked: language"><label for="select-lang-ru"><img src="images/RU.png"></label>
+                        </span>&nbsp;
+                        <span data-bind="jqButtonset: true">
+                            <input id="select-metric" type="radio" name="system" value="metric" data-bind="jqChecked: unitSystem"><label for="select-metric"><span lang="en">Metric</span><span lang="ru">СИ</span></label>
+                            <input id="select-imperial" type="radio" name="system" value="imperial" data-bind="jqChecked: unitSystem"><label for="select-imperial"><span lang="en">Imperial</span><span lang="ru">Английская</span></label>
                         </span>
                     </div>
 
-                    <div class="element-label"><span lang="en">Simulation speed: </span><span lang="ru">Течение времени: </span><span id="simulation-speed-value"></span></div>
-                    <div id="simulation-speed-slider"></div>
-                    <div id="display-ui-element-buttons" class="element-label">
-                        <input type="checkbox" id="steady-point-checkbox"><label for="steady-point-checkbox">
-                            <span lang="en">
-                            <img src="images/steady.png" title="Accuracy trick: you'll land there">
-                            </span>
-                            <span lang="ru">
-                            <img src="images/steady.png" title="Точка приземления">
-                            </span>
+                    <div id="display-ui-element-buttons" class="element-label" data-bind="jqButtonset: true">
+                        <input type="checkbox" id="steady-point-checkbox" data-bind="jqChecked: steadyPoint">
+                        <label for="steady-point-checkbox">
+                            <img src="images/steady.png" data-bind="attr: { title: localize('accuracy trick') }">
                         </label>
-                        <input type="checkbox" id="show-controllability-set-checkbox"><label for="show-controllability-set-checkbox">
-                            <span lang="en">
-                            <img src="images/control.png" title="Points you can reach the landing target from (at the current altitude)">
-                            </span>
-                            <span lang="ru">
-                            <img src="images/control.png" title="КВК: из каких точек все еще можно попасть в цель (с текущей высоты)">
-                            </span>
+                        <input type="checkbox" id="show-controllability-set-checkbox" data-bind="jqChecked: controlset">
+                        <label for="show-controllability-set-checkbox">
+                            <img src="images/control.png" data-bind="attr: { title: localize('controlset') }">
                         </label>
-                        <input type="checkbox" id="show-reachability-set-checkbox"><label for="show-reachability-set-checkbox">
-                            <span lang="en">
-                            <img src="images/reach.png" title="The area on the ground still reachable from the current position">
-                            </span>
-                            <span lang="ru">
-                            <img src="images/reach.png" title="Точки на земле, в которые еще можно попасть из текущего положения">
-                            </span>
+                        <input type="checkbox" id="show-reachability-set-checkbox" data-bind="jqChecked: reachset">
+                        <label for="show-reachability-set-checkbox">
+                            <img src="images/reach.png" data-bind="attr: { title: localize('reachset') }">
                         </label>
                     </div>
                 </div>
             </div>
-            <div>
+            <div id="wind-conditions" data-bind="with: wind">
                 <h3><span lang="en">Wind conditions</span><span lang="ru">Ветер</span></h3>
                 <div>
-                    <div class="element-label"><span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span><span id="wind-direction-value"></span></div>
-                    <div id="wind-direction-slider"></div>
-                    <div class="element-label"><span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span><span id="wind-speed-value"></span></div>
-                    <div id="wind-speed-slider"></div>
+                    <div class="element-label">
+                        <span lang="en">Wind direction: </span><span lang="ru">Направление ветра: </span>
+                        <a href="#" class="link-button float-right" data-bind="click: randomize">
+                            <span lang="en">Randomize</span>
+                            <span lang="ru">Случайный</span>
+                        </a>
+                        <span data-bind="html: formatHeading(reportedWindDirection(direction()))"></span>
+                    </div>
+                    <div data-bind="jqSlider: direction, sliderOptions: headingSliderOptions"></div>
+                    <div class="element-label">
+                        <span lang="en">Wind speed: </span><span lang="ru">Скорость ветра: </span>
+                        <span data-bind="html: formatSpeed(speed(), 1)"></span>
+                    </div>
+                    <div data-bind="jqSlider: speed, sliderOptions: { min: 0, max: 13, step: 0.1 }"></div>
                 </div>
             </div>
-            <div>
+            <div id="pattern-settings" data-bind="with: pattern">
                 <h3><span lang="en">Pattern settings</span><span lang="ru">Коробочка</span></h3>
                 <div>
-                    <div class="element-label"><span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span><span id="opening-altitude-value"></span></div>
-                    <div id="opening-altitude-slider"></div>
-                    <div class="element-label"><span lang="en">Landing direction: </span><span lang="ru">Курс приземления: </span><span
-                        id="landing-direction-value"></span>
+                    <div class="element-label">
+                        <span lang="en">Opening altitude: </span><span lang="ru">Высота раскрытия: </span>
+                        <span data-bind="html: formatAltitude(openingAltitude())"></span>
+                    </div>
+                    <div data-bind="jqSlider: openingAltitude, sliderOptions: { min: 100, max: 3000, step: 50 }"></div>
+
+                    <div class="element-label"><span lang="en">Landing direction: </span><span lang="ru">Курс приземления: </span>
+                        <span data-bind="html: formatHeading(landingDirection())"></span>
                         <span class="float-right">
-                            <input id="into-the-wind" type="checkbox" checked="checked"><label for="into-the-wind"><span lang="en">Into the
-                            wind</span><span lang="ru">Против ветра</span></label>
+                            <input id="into-the-wind" type="checkbox" data-bind="checked: intoWind">
+                            <label for="into-the-wind"><span lang="en">Into the wind</span><span lang="ru">Против ветра</span></label>
                         </span>
                     </div>
-                    <div id="landing-direction-slider"></div>
+                    <div data-bind="jqSlider: selectedLandingDirection, sliderOptions: headingSliderOptions, slideVisible: !intoWind()"></div>
+
                     <div class="element-label">
                         <span lang="en">Landing pattern:</span><span lang="ru">Круг захода:</span>&nbsp;
-                        <span id="pattern-menu">
-                            <input id="pattern-hide" type="radio" name="pattern" checked="checked"><label for="pattern-hide"><span lang="en">Hide</span><span lang="ru">Нет</span></label>
-                            <input id="pattern-rhs" type="radio" name="pattern"><label for="pattern-rhs"><span lang="en">Right</span><span lang="ru">Правым</span></label>
-                            <input id="pattern-lhs" type="radio" name="pattern"><label for="pattern-lhs"><span lang="en">Left</span><span lang="ru">Левым</span></label>
+                        <span id="pattern-menu" data-bind="jqButtonset: true">
+                            <input id="pattern-hide" type="radio" name="pattern" value="hide" data-bind="jqChecked: $root.display.pattern">
+                            <label for="pattern-hide"><span lang="en">Hide</span><span lang="ru">Нет</span>
+                            </label>
+
+                            <input id="pattern-rhs" type="radio" name="pattern" value="rhs" data-bind="jqChecked: $root.display.pattern">
+                            <label for="pattern-rhs"><span lang="en">Right</span><span lang="ru">Правым</span>
+                            </label>
+
+                            <input id="pattern-lhs" type="radio" name="pattern" value="lhs" data-bind="jqChecked: $root.display.pattern">
+                            <label for="pattern-lhs"><span lang="en">Left</span><span lang="ru">Левым</span>
+                            </label>
                         </span>
                     </div>
                 </div>
             </div>
-            <div>
+            <div data-bind="visible: !parameters.embedded()">
                 <h3><span lang="en">Info</span><span lang="ru">Информация</span></h3>
                 <div id="about-text">
                     <div lang="en">
-                        <p>Try and play with the simulator. If you're stuck, you can get some help from <a href="#" class="legend-button">the
-                        legend</a> or you can <a href="#" class="tutor-button">restart the tutor</a> to go through the set of the dialogs again.</p> 
-                        <p><a href="#" class="about-button">Read more</a> about the project in general.</p>
+                        <p>Try and play with the simulator. If you're stuck, you can get some help from <a href="#" class="link-button legend-button">the
+                        legend</a> or you can <a href="#" class="link-button tutor-button">restart the tutor</a> to go through the set of the dialogs again.</p>
+                        <p><a href="#" class="link-button about-button">Read more</a> about the project in general.</p>
                         <p><a href="https://github.com/hr0nix/BlueSkies"><img src="images/GitHub-Mark-32px.png">Check out on github</a></p>
                     </div>
                     <div lang="ru">
-                        <p>Поэкспериментируйте с симулятором. Если вы запутались, попробуйте заглянуть в <a href="#" class="legend-button">легенду</a>
-                        или <a href="#" class="tutor-button">пересмотреть введение</a>.</p> 
-                        <p>Общая информация <a href="#" class="about-button">о симуляторе</a> (English).</p>
+                        <p>Поэкспериментируйте с симулятором. Если вы запутались, попробуйте заглянуть в <a href="#" class="link-button legend-button">легенду</a>
+                        или <a href="#" class="link-button tutor-button">пересмотреть введение</a>.</p>
+                        <p>Общая информация <a href="#" class="link-button about-button">о симуляторе</a> (English).</p>
                         <p><a href="https://github.com/hr0nix/BlueSkies"><img src="images/GitHub-Mark-32px.png">Страница симулятора на github</a></p>
                     </div>
                 </div>
@@ -221,15 +277,33 @@
                     <p>Нажатием P можно приостановить или продолжить симуляцию: время останавливается, но купол можно повернуть для исследования достижимых точек на карте.</p>
                 </div>
             </div>
-            <div id="share-dialog">
+            <div id="share-dialog" data-bind="with: shareLocation">
                 <div>
                     <span lang="en">Copy the following link. It will lead to the current location:</span>
                     <span lang="ru">Скопируйте ссылку, она ведет к текущему положению на карте:</span>
                 </div>
-                <input type="text" readonly>
+                <div>
+                    <span lang="en">Also share: </span>
+                    <span lang="ru">Добавить в ссылку:</span>
+                    <input id="share-wind" type="checkbox" data-bind="checked: wind">
+                    <label for="share-wind">
+                        <span lang="en">Wind</span>
+                        <span lang="ru">Ветер</span>
+                    </label>
+                    <input id="share-pattern" type="checkbox" data-bind="checked: pattern">
+                    <label for="share-pattern">
+                        <span lang="en">Pattern</span>
+                        <span lang="ru">Заход</span>
+                    </label>
+                    <input id="share-language" type="checkbox" data-bind="checked: language">
+                    <label for="share-language">
+                        <span lang="en">Language</span>
+                        <span lang="ru">Язык</span>
+                    </label>
+                </div>
+                <input type="text" readonly autofocus data-bind="value: GET">
             </div>
         </div>
-
 
         <div id="tutor-dialogs" style="display:none">
             <!-- Here we simply define all the dialogs we need in the order we need them to be displayed -->
@@ -315,5 +389,9 @@
                 </div>
             </div>
         </div>
+        <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.js"></script>
+        <script src="scripts/bindings.js"></script>
+        <script src="scripts/viewmodel.js"></script>
+        <script src="scripts/index.js"></script>
     </body>
 </html>

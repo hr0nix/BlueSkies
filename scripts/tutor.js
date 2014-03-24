@@ -1,6 +1,7 @@
+"use strict";
 function startTutor(id) {
-    var allDialogs; // List of all dialog objects, populated from html automagically
-    var nextDialogIndex;
+    var allDialogs, // List of all dialog objects, populated from html automagically
+        nextDialogIndex;
 
     function closeDialog() {
         $(this).dialog("close");
@@ -9,7 +10,7 @@ function startTutor(id) {
     function nextDialog() {
         if (nextDialogIndex < allDialogs.size()) {
             if (nextDialogIndex == allDialogs.size() - 1) {
-                saveSetting("tutor-finished", true);
+                sim.misc.tutorFinished(true);
                 ga('send', 'event', 'tutor', 'finished', {'nonInteraction': true});
             }
 
@@ -44,15 +45,15 @@ function startTutor(id) {
         }
         ],
         open: function() {
-            if ($(this).dialog('option', "performHighlighting")) {
-                var of = $($(this).dialog('option', 'position').of);
-                of.addClass(highlightClass);
+            var $this = $(this);
+            if ($this.dialog('option', "performHighlighting")) {
+                $($this.dialog('option', 'position').of).addClass(highlightClass);
             }
         },
         close: function() {
-            if ($(this).dialog('option', "performHighlighting")) {
-                var of = $($(this).dialog('option', 'position').of);
-                of.removeClass(highlightClass);
+            var $this = $(this);
+            if ($this.dialog('option', "performHighlighting")) {
+                $($this.dialog('option', 'position').of).removeClass(highlightClass);
             }
             nextDialog();
         }
@@ -63,7 +64,7 @@ function startTutor(id) {
             modal: true,
             performHighlighting: false,
             position: {
-                of: "#map-canvas-container"
+                of: "#map-canvas"
             }
         },
         "dz-selection": {
@@ -76,14 +77,14 @@ function startTutor(id) {
         "target": {
             performHighlighting: false,
             position: {
-                of: "#map-canvas-container",
+                of: "#map-canvas",
                 my: "left top",
                 at: "center+10 center+10"
             }
         },
         "wind": {
             position: {
-                of: $("#wind-direction-slider").parent().parent(),
+                of: "#wind-conditions",
                 my: "right top",
                 at: "left top"
             }
@@ -97,7 +98,7 @@ function startTutor(id) {
         },
         "pattern": {
             position: {
-                of: $("#opening-altitude-slider").parent().parent(),
+                of: "#pattern-settings",
                 my: "right top",
                 at: "left top"
             }
@@ -114,7 +115,7 @@ function startTutor(id) {
             performHighlighting: false,
             buttons: [],
             position: {
-                of: "#map-canvas-container",
+                of: "#map-canvas",
                 my: "center bottom",
                 at: "center bottom-50"
             }
@@ -123,19 +124,14 @@ function startTutor(id) {
 
     var allDialogs = $(id).children("div");
 
-    allDialogs.each(function(){
+    allDialogs.each(function() {
         var specific = specificOptions[$(this).attr("id").replace("tutor-","")];
         $(this).dialog(commonOptions).dialog("option", specific);
     });
 
-    var finished = readSetting("tutor-finished", false);
+    var finished = sim.misc.tutorFinished();
     nextDialogIndex = finished ? allDialogs.size() - 1 : 0;
     nextDialog();
-    if (finished) {
-        setTimeout(function() {
-            $("#tutor-rightclick").dialog("close");
-        }, 3000);
-    }
 
     $(".tutor-button").click(function() {
         ga('send', 'event', 'tutor', 'restart');
