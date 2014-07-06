@@ -57,7 +57,11 @@ function SimulatorViewModel() {
 
         useMetric: ko.computed(function() {
             return self.display.unitSystem() === "metric";
-        }, this, { deferEvaluation: true })
+        }, this, { deferEvaluation: true }),
+
+        toggleFullscreen: function() {
+            self.display.fullscreen(!self.display.fullscreen());
+        }
     };
 
     self.wind = {

@@ -52,11 +52,7 @@ body {
     vertical-align: middle;
 }
 
-#checkbox-fullscreen {
-    display: none;
-}
-
-#checkbox-fullscreen + label > button {
+#button-fullscreen {
     padding: 0;
 }
 
