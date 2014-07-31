@@ -10,7 +10,13 @@ function SimulatorViewModel() {
         "ru-vatulino": [55.663505, 36.142181],
         "other-dubai": [25.090282, 55.135681],
         "other-red-square": [55.754216, 37.620083],
-        "other-statue-of-liberty": [40.690531, -74.04575],
+        "us-lodi": [38.199366, -121.264474],
+        "us-chicago": [41.399797, -88.792626],
+        "us-elsinore": [33.631444, -117.296746],
+        "us-eloy": [32.805771, -111.581645],
+        "us-perris": [33.761911, -117.217576],
+        "us-skydance": [38.584191, -121.851634],
+        "us-statue-of-liberty": [40.690531, -74.04575],
         "custom": null
     };
 
@@ -24,8 +30,12 @@ function SimulatorViewModel() {
             members: [ 'ru-puschino', 'ru-vatulino', 'ru-kolomna' ],
         },
         {
+            name: 'us',
+            members: [ 'us-lodi', 'us-elsinore', 'us-skydance', 'us-eloy', 'us-perris', 'us-chicago', 'us-statue-of-liberty' ]
+        },
+        {
             name: 'other',
-            members: [ 'other-dubai', 'other-red-square', 'other-statue-of-liberty' ]
+            members: [ 'other-dubai', 'other-red-square' ]
         }
     ];
 
