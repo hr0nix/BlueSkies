@@ -11,6 +11,7 @@ var enResources = {
 
         "uk": "UK",
         "ru": "Russia",
+        "us": "United States",
         "other": "Other",
 
         "uk-sibson": "Sibson",
@@ -20,7 +21,13 @@ var enResources = {
         "ru-vatulino": "Vatulino",
         "other-dubai": "Dubai",
         "other-red-square": "Red Square",
-        "other-statue-of-liberty": "Statue of Liberty",
+        "us-lodi": "Lodi",
+        "us-elsinore": "Elsinore",
+        "us-eloy": "Eloy",
+        "us-perris": "Perris",
+        "us-skydance": "Davis",
+        "us-chicago": "Chicago",
+        "us-statue-of-liberty": "Statue of Liberty",
 
         "custom": "From search"
     },
@@ -47,6 +54,7 @@ var enResources = {
 
         "uk": "Англия",
         "ru": "Россия",
+        "us": "США",
         "other": "Другое",
 
         "uk-sibson": "Сибсон",
@@ -55,7 +63,7 @@ var enResources = {
         "ru-vatulino": "Ватулино",
         "other-dubai": "Дубай",
         "other-red-square": "Красная площадь",
-        "other-statue-of-liberty": "Статуя свободы",
+        "us-statue-of-liberty": "Статуя свободы",
 
         "custom": "Из поиска"
     },
